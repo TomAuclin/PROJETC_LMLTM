@@ -2,7 +2,7 @@
       
 // Constructeur de la liste chaînée oui
 ListeChainee::ListeChainee() : head(nullptr) {}
-// coucou
+
 // Ajoute une image à la liste
 void ListeChainee::ajouterImage(const Image& img) {
     auto nouveau = std::make_shared<Node>(img);
