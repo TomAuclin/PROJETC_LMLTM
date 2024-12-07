@@ -1,6 +1,6 @@
 #include "ListeChainee.hpp"
-
-// Constructeur de la liste chaînée
+      
+// Constructeur de la liste chaînée oui
 ListeChainee::ListeChainee() : head(nullptr) {}
 
 // Ajoute une image à la liste
