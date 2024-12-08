@@ -1,0 +1,33 @@
+\doxysection{Image.\+cpp}
+\hypertarget{_image_8cpp_source}{}\label{_image_8cpp_source}\index{Descripteurs/Image.cpp@{Descripteurs/Image.cpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}Image.hpp"{}}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \mbox{\hyperlink{class_image_af4f7d53a426ab9ca3e421448d4870bab}{Image::Image}}(\textcolor{keyword}{const}\ std::string\&\ src,\ \textcolor{keyword}{const}\ std::string\&\ tit,\ \textcolor{keywordtype}{int}\ num,\ \textcolor{keywordtype}{double}\ prx,\ \textcolor{keywordtype}{char}\ acc,\ \textcolor{keyword}{const}\ std::string\&\ typ)}
+\DoxyCodeLine{00005\ \ \ \ \ :\ source(src),\ titre(tit),\ numero(num),\ prix(prx),\ acces(acc),\ type(typ)\ \{\}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ std::string\ \mbox{\hyperlink{class_image_ad72789742cd2fef7de9add5b6ae404c9}{Image::getDescripteur}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00009\ \ \ \ \ std::ostringstream\ descripteur;}
+\DoxyCodeLine{00010\ \ \ \ \ descripteur\ <<\ \textcolor{stringliteral}{"{}Source:\ "{}}\ <<\ source\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Titre:\ "{}}\ <<\ titre\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Numero:\ "{}}\ <<\ numero\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Prix:\ "{}}\ <<\ prix\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Acces:\ "{}}\ <<\ acces\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}Type:\ "{}}\ <<\ type\ <<\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}};}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordflow}{return}\ descripteur.str();}
+\DoxyCodeLine{00017\ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_a1a3e6be4de21a7bfc13e0f7c8f83320f}{Image::getNumero}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordflow}{return}\ numero;}
+\DoxyCodeLine{00022\ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \mbox{\hyperlink{class_image_a0294f63700543e11c0f0da85601c7ae5}{Image::\string~Image}}()\ \{}
+\DoxyCodeLine{00025\ \ \ \ }
+\DoxyCodeLine{00026\ \}}
+\DoxyCodeLine{00027\ }
+
+\end{DoxyCode}

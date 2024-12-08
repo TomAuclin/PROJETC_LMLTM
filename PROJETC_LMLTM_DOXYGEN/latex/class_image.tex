@@ -1,0 +1,66 @@
+\doxysection{Image Class Reference}
+\hypertarget{class_image}{}\label{class_image}\index{Image@{Image}}
+
+
+{\ttfamily \#include $<$Image.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_image_af4f7d53a426ab9ca3e421448d4870bab}{Image}} (const std\+::string \&src, const std\+::string \&tit, int num, double prx, char acc, const std\+::string \&typ)
+\item 
+std\+::string \mbox{\hyperlink{class_image_ad72789742cd2fef7de9add5b6ae404c9}{get\+Descripteur}} () const
+\item 
+int \mbox{\hyperlink{class_image_a1a3e6be4de21a7bfc13e0f7c8f83320f}{get\+Numero}} () const
+\item 
+\mbox{\hyperlink{class_image_a0294f63700543e11c0f0da85601c7ae5}{\texorpdfstring{$\sim$}{\string~}\+Image}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Classe \doxylink{class_image}{Image}
+
+Représente une image avec son Descripteur \+: ses caractéristiques. Cette classe stocke les informations relatives à une image, telles que son source, son titre, son numéro d\textquotesingle{}identification, son prix, son statut d\textquotesingle{}accès et son type. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_image_af4f7d53a426ab9ca3e421448d4870bab}\index{Image@{Image}!Image@{Image}}
+\index{Image@{Image}!Image@{Image}}
+\doxysubsubsection{\texorpdfstring{Image()}{Image()}}
+{\footnotesize\ttfamily \label{class_image_af4f7d53a426ab9ca3e421448d4870bab} 
+Image\+::\+Image (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{src}{, }\item[{const std\+::string \&}]{tit}{, }\item[{int}]{num}{, }\item[{double}]{prx}{, }\item[{char}]{acc}{, }\item[{const std\+::string \&}]{typ}{}\end{DoxyParamCaption})}
+
+Constructeur de la classe \doxylink{class_image}{Image}.
+
+Initialise un objet \doxylink{class_image}{Image} avec \+:
+
+src La source de l\textquotesingle{}image. tit Le titre de l\textquotesingle{}image. num Le numéro d\textquotesingle{}identification de l\textquotesingle{}image. prx Le prix de l\textquotesingle{}image. acc Le statut d\textquotesingle{}accès de l\textquotesingle{}image. typ Le type de l\textquotesingle{}image. \Hypertarget{class_image_a0294f63700543e11c0f0da85601c7ae5}\index{Image@{Image}!````~Image@{\texorpdfstring{$\sim$}{\string~}Image}}
+\index{````~Image@{\texorpdfstring{$\sim$}{\string~}Image}!Image@{Image}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Image()}{\string~Image()}}
+{\footnotesize\ttfamily \label{class_image_a0294f63700543e11c0f0da85601c7ae5} 
+Image\+::\texorpdfstring{$\sim$}{\string~}\+Image (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Destructeur de la classe \doxylink{class_image}{Image}.
+
+Ce destructeur est responsable de la libération des ressources allouées par \doxylink{class_image}{Image}. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_image_ad72789742cd2fef7de9add5b6ae404c9}\index{Image@{Image}!getDescripteur@{getDescripteur}}
+\index{getDescripteur@{getDescripteur}!Image@{Image}}
+\doxysubsubsection{\texorpdfstring{getDescripteur()}{getDescripteur()}}
+{\footnotesize\ttfamily \label{class_image_ad72789742cd2fef7de9add5b6ae404c9} 
+std\+::string Image\+::get\+Descripteur (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+Retourne une chaîne de caractères décrivant l\textquotesingle{}image. \Hypertarget{class_image_a1a3e6be4de21a7bfc13e0f7c8f83320f}\index{Image@{Image}!getNumero@{getNumero}}
+\index{getNumero@{getNumero}!Image@{Image}}
+\doxysubsubsection{\texorpdfstring{getNumero()}{getNumero()}}
+{\footnotesize\ttfamily \label{class_image_a1a3e6be4de21a7bfc13e0f7c8f83320f} 
+int Image\+::get\+Numero (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+Retourne le numéro d\textquotesingle{}identification de l\textquotesingle{}image.
+
+Le numéro de l\textquotesingle{}image. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Descripteurs/Image.\+hpp\item 
+Descripteurs/Image.\+cpp\end{DoxyCompactItemize}

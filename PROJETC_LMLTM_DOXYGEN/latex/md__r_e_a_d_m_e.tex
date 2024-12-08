@@ -1,0 +1,176 @@
+\chapter{README}
+\hypertarget{md__r_e_a_d_m_e}{}\label{md__r_e_a_d_m_e}\index{README@{README}}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md0}{}\doxysubsection{\texorpdfstring{autotoc\+\_\+md0}{autotoc\+\_\+md0}}\label{md__r_e_a_d_m_e_autotoc_md0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysection{\texorpdfstring{{\bfseries{Instructions pour travailler avec le repository}}}{{\bfseries{Instructions pour travailler avec le repository}}}}\label{md__r_e_a_d_m_e_autotoc_md1}
+Ce document explique les étapes pour configurer votre environnement local, cloner le repository, et contribuer au projet.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysubsection{\texorpdfstring{{\bfseries{1. Prérequis}}}{{\bfseries{1. Prérequis}}}}\label{md__r_e_a_d_m_e_autotoc_md3}
+Avant de commencer, assurez-\/vous que votre machine dispose de \+:
+\begin{DoxyItemize}
+\item {\bfseries{Git}} installé. ~\newline
+ (Pour installer Git \+: \href{https://git-scm.com/book/en/v2/Getting-Started-Installing-Git}{\texttt{ Documentation Git}})
+\item Un compte Git\+Hub configuré avec une clé SSH ou un accès HTTPS.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysubsection{\texorpdfstring{{\bfseries{2. Cloner le repository}}}{{\bfseries{2. Cloner le repository}}}}\label{md__r_e_a_d_m_e_autotoc_md5}
+Pour obtenir une copie locale du projet \+:
+
+
+\begin{DoxyEnumerate}
+\item Accédez à l\textquotesingle{}URL du repository Git\+Hub.
+\item Copiez le lien HTTPS ou SSH.
+\item Dans un terminal, exécutez \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ <URL\_DU\_REPOSITORY>}
+
+\end{DoxyCode}
+ Par exemple \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/votre\_nom\_utilisateur/Projet-\/C.git}
+
+\end{DoxyCode}
+
+\item Accédez au dossier cloné \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ Projet-\/C}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsection{\texorpdfstring{{\bfseries{3. Configuration initiale}}}{{\bfseries{3. Configuration initiale}}}}\label{md__r_e_a_d_m_e_autotoc_md7}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md8}{}\doxysubsubsection{\texorpdfstring{{\bfseries{3.\+1 Configurer votre identité Git}}}{{\bfseries{3.\+1 Configurer votre identité Git}}}}\label{md__r_e_a_d_m_e_autotoc_md8}
+Ces informations seront associées à vos commits \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ config\ -\/-\/global\ user.name\ "{}VotreNom"{}}
+\DoxyCodeLine{git\ config\ -\/-\/global\ user.email\ "{}VotreEmail@exemple.com"{}}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md9}{}\doxysubsubsection{\texorpdfstring{{\bfseries{3.\+2 Vérifier le lien avec le repository Git\+Hub}}}{{\bfseries{3.\+2 Vérifier le lien avec le repository Git\+Hub}}}}\label{md__r_e_a_d_m_e_autotoc_md9}
+Pour vérifier que votre projet est bien connecté \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ remote\ -\/v}
+
+\end{DoxyCode}
+ Vous devez voir une ligne indiquant l’\+URL du repository Git\+Hub.
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md11}{}\doxysubsection{\texorpdfstring{{\bfseries{4. Travailler sur le projet}}}{{\bfseries{4. Travailler sur le projet}}}}\label{md__r_e_a_d_m_e_autotoc_md11}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md12}{}\doxysubsubsection{\texorpdfstring{{\bfseries{4.\+1 Mettre à jour votre copie locale}}}{{\bfseries{4.\+1 Mettre à jour votre copie locale}}}}\label{md__r_e_a_d_m_e_autotoc_md12}
+Avant de commencer à travailler, assurez-\/vous d’avoir la dernière version du code \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ pull}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md13}{}\doxysubsubsection{\texorpdfstring{{\bfseries{4.\+2 Ajouter de nouvelles modifications}}}{{\bfseries{4.\+2 Ajouter de nouvelles modifications}}}}\label{md__r_e_a_d_m_e_autotoc_md13}
+Après avoir fait des modifications dans vos fichiers \+:
+\begin{DoxyEnumerate}
+\item Vérifiez les fichiers modifiés \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ status}
+
+\end{DoxyCode}
+
+\item Ajoutez les fichiers au suivi \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ add\ .}
+
+\end{DoxyCode}
+
+\item Faites un commit avec un message clair décrivant les changements \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ commit\ -\/m\ "{}Description\ de\ vos\ modifications"{}}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}\hypertarget{md__r_e_a_d_m_e_autotoc_md14}{}\doxysubsubsection{\texorpdfstring{{\bfseries{4.\+3 Envoyer les modifications sur Git\+Hub}}}{{\bfseries{4.\+3 Envoyer les modifications sur Git\+Hub}}}}\label{md__r_e_a_d_m_e_autotoc_md14}
+Poussez vos changements vers le repository distant \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ push}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md16}{}\doxysubsection{\texorpdfstring{{\bfseries{5. Créer et utiliser des branches}}}{{\bfseries{5. Créer et utiliser des branches}}}}\label{md__r_e_a_d_m_e_autotoc_md16}
+Pour travailler sur une nouvelle fonctionnalité ou correction de bug, créez une branche séparée \+:
+\begin{DoxyEnumerate}
+\item Créez une nouvelle branche \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ checkout\ -\/b\ nom\_de\_la\_branche}
+
+\end{DoxyCode}
+
+\item Faites vos modifications, ajoutez, et commitez comme d’habitude.
+\item Envoyez votre branche sur Git\+Hub \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ push\ -\/u\ origin\ nom\_de\_la\_branche}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}
+
+Pour revenir à la branche principale ({\ttfamily main}) \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ checkout\ main}
+
+\end{DoxyCode}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md18}{}\doxysubsection{\texorpdfstring{{\bfseries{6. Résoudre les conflits}}}{{\bfseries{6. Résoudre les conflits}}}}\label{md__r_e_a_d_m_e_autotoc_md18}
+En cas de conflit lors d’un {\ttfamily git pull} ou {\ttfamily git merge} \+:
+\begin{DoxyEnumerate}
+\item Git indiquera les fichiers en conflit. Ouvrez ces fichiers pour résoudre les différences manuellement.
+\item Une fois les conflits résolus, ajoutez les fichiers corrigés \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ add\ fichier\_conflit}
+
+\end{DoxyCode}
+
+\item Terminez le merge avec un commit \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ commit\ -\/m\ "{}Conflit\ résolu"{}}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md20}{}\doxysubsection{\texorpdfstring{{\bfseries{7. Récapitulatif des commandes utiles}}}{{\bfseries{7. Récapitulatif des commandes utiles}}}}\label{md__r_e_a_d_m_e_autotoc_md20}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Commande    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Action   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Commande    }\\\cline{1-2}
+\endhead
+Cloner le repository   &{\ttfamily git clone \texorpdfstring{$<$}{<}URL\texorpdfstring{$>$}{>}}    \\\cline{1-2}
+Vérifier l’état des fichiers   &{\ttfamily git status}    \\\cline{1-2}
+Ajouter des fichiers au suivi   &{\ttfamily git add .}    \\\cline{1-2}
+Faire un commit   &{\ttfamily git commit -\/m "{}\+Message descriptif"{}}    \\\cline{1-2}
+Pousser les modifications   &{\ttfamily git push}    \\\cline{1-2}
+Mettre à jour votre copie   &{\ttfamily git pull}    \\\cline{1-2}
+Créer une branche   &{\ttfamily git checkout -\/b nom\+\_\+de\+\_\+la\+\_\+branche}    \\\cline{1-2}
+Changer de branche   &{\ttfamily git checkout nom\+\_\+de\+\_\+la\+\_\+branche}    \\\cline{1-2}
+Supprimer une branche   &{\ttfamily git branch -\/d nom\+\_\+de\+\_\+la\+\_\+branche}   \\\cline{1-2}
+\end{longtabu}
+
+
+\DoxyHorRuler{0}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md22}{}\doxysubsection{\texorpdfstring{{\bfseries{8. En cas de problème}}}{{\bfseries{8. En cas de problème}}}}\label{md__r_e_a_d_m_e_autotoc_md22}
+Si vous rencontrez des difficultés \+:
+\begin{DoxyEnumerate}
+\item Vérifiez les messages d’erreur affichés dans le terminal.
+\item Consultez la \href{https://git-scm.com/doc}{\texttt{ documentation officielle Git}}.
+\item Contactez un membre de l\textquotesingle{}équipe pour assistance.
+\end{DoxyEnumerate}
+
+\DoxyHorRuler{0}
+ 

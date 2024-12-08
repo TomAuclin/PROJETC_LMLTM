@@ -1,0 +1,34 @@
+\doxysection{Liste\+Chainee.\+hpp}
+\hypertarget{_liste_chainee_8hpp_source}{}\label{_liste_chainee_8hpp_source}\index{Descripteurs/ListeChainee.hpp@{Descripteurs/ListeChainee.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ LISTECHAINEE\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ LISTECHAINEE\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}Image.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_liste_chainee}{ListeChainee}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{struct\ }Node\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_image}{Image}}\ data;\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ std::shared\_ptr<Node>\ next;\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ Node(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_image}{Image}}\&\ img)\ :\ data(img),\ next(\textcolor{keyword}{nullptr})\ \{\}}
+\DoxyCodeLine{00033\ \ \ \ \ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ std::shared\_ptr<Node>\ head;\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00038\ \ \ \ \ }
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{class_liste_chainee_a7b6dd6c1d93fd41d708f6d0eea9515a3}{ListeChainee}}();}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_liste_chainee_a31a6d5d97504bb345dae09495e0fe19e}{ajouterImage}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_image}{Image}}\&\ img);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00054\ \ \ \ \ std::string\ \mbox{\hyperlink{class_liste_chainee_ade199464839e405ebc845c0b0818e9ac}{rechercherImageParNumero}}(\textcolor{keywordtype}{int}\ numero)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{class_liste_chainee_a8b09e9d6af4dd15b1b425558646f0131}{\string~ListeChainee}}();}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00066\ }
+
+\end{DoxyCode}
