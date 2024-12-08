@@ -56,7 +56,7 @@ public:
     /**
      *Destructeur de la classe ListeChainee.
      *
-     * pour libérer la mémoire allouée dynamiquement.
+     * pour libérer la mémoire 
      *
      */
     ~ListeChainee();

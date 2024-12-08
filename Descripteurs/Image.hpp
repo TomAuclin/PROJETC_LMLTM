@@ -4,13 +4,13 @@
 #include <string>
 #include <sstream>
 
-/**
+/*
  * Classe Image
  * 
  * Représente une image avec son Descripteur : ses caractéristiques.
  * Cette classe stocke les informations relatives à une image, telles que son 
  * source, son titre, son numéro d'identification, son prix, son statut d'accès 
- * et son type. 
+ * et son type
  */
 class Image {
     private:

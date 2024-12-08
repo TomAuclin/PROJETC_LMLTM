@@ -38,7 +38,7 @@ std::string ListeChainee::rechercherImageParNumero(int numero) const {
     return "Image non trouvée."; // Retourne un message si aucune image ne correspond
 }
 
-
+// Destructeur de la classe ListeChainee
 ListeChainee::~ListeChainee() {
     while (head) { // Tant qu'il y a des nœuds
         auto temp = head; // Sauvegarde le nœud courant
