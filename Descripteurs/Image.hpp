@@ -17,6 +17,8 @@ class Image {
         Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ);
         std::string getDescripteur() const;
         int getNumero() const;
+        //destructeur
+        ~Image();
 };
 
 #endif

@@ -19,6 +19,7 @@ public:
     ListeChainee();
     void ajouterImage(const Image& img);
     std::string rechercherImageParNumero(int numero) const;
+    ~ListeChainee();
 };
 
 #endif
