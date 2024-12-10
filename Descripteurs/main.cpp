@@ -8,6 +8,7 @@ int main() {
     ListeChainee liste;
 
     /// Gratuites :
+    ///salut
     liste.ajouterImage(Image("Open Sources", "Baboon_couleur.png", 1, 0, 'O', "couleur"));
     liste.ajouterImage(Image("Open Sources", "Baboon_gris.pgm", 2, 0, 'O', "gris"));
     liste.ajouterImage(Image("Open Sources", "Barbara_couleur.png", 3, 0, 'O', "couleur"));
