@@ -14,6 +14,7 @@ std::string Image::getDescripteur() const {
                 << "Acces : " << acces << "\n"
                 << "Type : " << type << "\n"
                 << "Nombre de traitement possible : " << nbTraitementPossible << "\n";
+                
     return descripteur.str();
 }
 

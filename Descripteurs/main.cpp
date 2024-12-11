@@ -111,26 +111,26 @@ int main() {
     liste.ajouterImage(Image("Lydia", "BriqueSolLoin_gris.pgm", 93, 105, 'L', "gris", 0, 93));
     liste.ajouterImage(Image("Tom", "ChaussureLydia_couleur.CR2", 94, 10000, 'L', "couleur", 0, 94));
     liste.ajouterImage(Image("Tom", "ChaussureLydia_gris.pgm", 95, 5000, 'L', "gris", 0, 95));
-    liste.ajouterImage(Image("Tom", "CotePont_couleur.CR2", 95, 153, 'L', "couleur", 0, 95));
-    liste.ajouterImage(Image("Tom", "CotePont_gris.pgm", 96, 120, 'L', "gris", 0, 96));
-    liste.ajouterImage(Image("Tom", "DessusPont_couleur.CR2", 97, 243, 'L', "couleur", 0, 97));
-    liste.ajouterImage(Image("Tom", "DessusPont_gris.pgm", 98, 203, 'L', "gris", 0, 98));
-    liste.ajouterImage(Image("Tom", "Dome_couleur.CR2", 99, 225, 'L', "couleur", 0, 99));
-    liste.ajouterImage(Image("Tom", "Dome_gris.pgm", 100, 193, 'L', "gris", 0, 100));
-    liste.ajouterImage(Image("Tom", "EauBord_couleur.CR2", 101, 546, 'L', "couleur", 0, 101));
-    liste.ajouterImage(Image("Tom", "EauBord_gris.pgm", 102, 348, 'L', "gris", 0, 102));
-    liste.ajouterImage(Image("Tom", "GruArbre_couleur.CR2", 103, 166, 'L', "couleur", 0, 103));
-    liste.ajouterImage(Image("Tom", "GruArbre_gris.pgm", 104, 124, 'L', "gris", 0, 104));
-    liste.ajouterImage(Image("Lydia", "MurArcEnCiel01_couleur.CR2", 105, 211, 'L', "couleur", 0, 105));
-    liste.ajouterImage(Image("Lydia", "MurArcEnCiel01_gris.pgm", 106, 158, 'L', "gris", 0, 106));
-    liste.ajouterImage(Image("Tom", "MurArcEnCiel02_couleur.CR2", 107, 213, 'L', "couleur", 0, 107));
-    liste.ajouterImage(Image("Tom", "MurArcEnCiel02_gris.pgm", 108, 155, 'L', "gris", 0, 108));
-    liste.ajouterImage(Image("Tom", "MurEauGens_couleur.CR2", 109, 321, 'L', "couleur", 0, 109));
-    liste.ajouterImage(Image("Tom", "MurEauGens_gris.pgm", 110, 298, 'L', "gris", 0, 110));
-    liste.ajouterImage(Image("Lydia", "PlantePont02_couleur.CR2", 111, 483, 'L', "couleur", 0, 111));
-    liste.ajouterImage(Image("Lydia", "PlantePont02_gris.pgm", 112, 249, 'L', "gris", 0, 112));
-    liste.ajouterImage(Image("Tom", "StatuPorte_couleur.CR2", 113, 647, 'L', "couleur", 0, 113));
-    liste.ajouterImage(Image("Tom", "StatuPorte_gris.pgm", 114, 573, 'L', "gris", 0, 114));
+    liste.ajouterImage(Image("Tom", "CotePont_couleur.CR2", 96, 153, 'L', "couleur", 0, 96));
+    liste.ajouterImage(Image("Tom", "CotePont_gris.pgm", 97, 120, 'L', "gris", 0, 97));
+    liste.ajouterImage(Image("Tom", "DessusPont_couleur.CR2", 98, 243, 'L', "couleur", 0, 98));
+    liste.ajouterImage(Image("Tom", "DessusPont_gris.pgm", 99, 203, 'L', "gris", 0, 99));
+    liste.ajouterImage(Image("Tom", "Dome_couleur.CR2", 100, 225, 'L', "couleur", 0, 100));
+    liste.ajouterImage(Image("Tom", "Dome_gris.pgm", 101, 193, 'L', "gris", 0, 101));
+    liste.ajouterImage(Image("Tom", "EauBord_couleur.CR2", 102, 546, 'L', "couleur", 0, 102));
+    liste.ajouterImage(Image("Tom", "EauBord_gris.pgm", 103, 348, 'L', "gris", 0, 103));
+    liste.ajouterImage(Image("Tom", "GruArbre_couleur.CR2", 104, 166, 'L', "couleur", 0, 104));
+    liste.ajouterImage(Image("Tom", "GruArbre_gris.pgm", 105, 124, 'L', "gris", 0, 105));
+    liste.ajouterImage(Image("Lydia", "MurArcEnCiel01_couleur.CR2", 106, 211, 'L', "couleur", 0, 106));
+    liste.ajouterImage(Image("Lydia", "MurArcEnCiel01_gris.pgm", 107, 158, 'L', "gris", 0, 107));
+    liste.ajouterImage(Image("Tom", "MurArcEnCiel02_couleur.CR2", 108, 213, 'L', "couleur", 0, 108));
+    liste.ajouterImage(Image("Tom", "MurArcEnCiel02_gris.pgm", 109, 155, 'L', "gris", 0, 109));
+    liste.ajouterImage(Image("Tom", "MurEauGens_couleur.CR2", 110, 321, 'L', "couleur", 0, 110));
+    liste.ajouterImage(Image("Tom", "MurEauGens_gris.pgm", 111, 298, 'L', "gris", 0, 111));
+    liste.ajouterImage(Image("Lydia", "PlantePont02_couleur.CR2", 112, 483, 'L', "couleur", 0, 112));
+    liste.ajouterImage(Image("Lydia", "PlantePont02_gris.pgm", 113, 249, 'L', "gris", 0, 113));
+    liste.ajouterImage(Image("Tom", "StatuPorte_couleur.CR2", 114, 647, 'L', "couleur", 0, 114));
+    liste.ajouterImage(Image("Tom", "StatuPorte_gris.pgm", 115, 573, 'L', "gris", 0, 115));
 
 
     // Recherche d'une image par numéro
