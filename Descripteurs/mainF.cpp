@@ -6,7 +6,7 @@
 #include <iostream>
 
 int main() {
-    ListeChainee liste;
+    Library liste;
 
     /// Gratuites :
     liste.ajouterDescripteurs(Image("Open Sources", "Baboon_couleur.png", 1, 0, 'O', "couleur"));
