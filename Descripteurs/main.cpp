@@ -1,11 +1,17 @@
 #include "ListeChainee.hpp"
 #include "ListeChainee.cpp"
+
 #include "Image.hpp"
 #include "Image.cpp"
+
+#include "GestionUtilisateur.cpp"
+#include "GestionUtilisateur.hpp"
+
 #include <iostream>
 
 int main() {
     ListeChainee liste;
+    GestionUtilisateur user;
 
     /// Gratuites :
     liste.ajouterImage(Image("Open Sources", "Baboon_couleur.png", 1, 0, 'O', "couleur", 0, 1));
@@ -133,13 +139,29 @@ int main() {
     liste.ajouterImage(Image("Tom", "StatuPorte_gris.pgm", 115, 573, 'L', "gris", 0, 115));
 
 
-    // Recherche d'une image par numéro
-    int numeroRecherche;
-    std::cout << "Entrez le numero de l'image a rechercher : ";
-    std::cin >> numeroRecherche;
+    // connextion de l'utilisateur
 
-    std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
-    std::cout << resultat << std::endl;
+    // si connexion echouer alors recommencer une connexion
+    while (user.getLogin() != "Admin" && user.getLogin() != "User") {
+        user.connexion();
+    }
+
+    // seulement l'utilisateur connecteur peut acceder a la recherche d'image
+    if (user.getLogin() != "Admin" && user.getLogin() != "User") {
+        std::cout << "Vous n'avez pas les droits pour acceder a la recherche d'image." << std::endl;
+        return 0;
+    }
+    else {
+        std::cout << "Vous avez les droits pour acceder a la recherche d'image." << std::endl;
+        // Recherche d'une image par numéro
+        int numeroRecherche;
+        std::cout << "Entrez le numero de l'image a rechercher : ";
+        std::cin >> numeroRecherche;
+
+        std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
+        std::cout << resultat << std::endl;
+    }
+
 
     return 0;
 }
