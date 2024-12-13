@@ -1,3 +1,4 @@
+
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
@@ -14,17 +15,32 @@
  */
 class Image {
     private:
-        std::string source;
-        std::string titre;
-        int numero;
-        double prix;
-        char acces;
-        std::string type;
-        int nbTraitementPossible;
-        int identite;
+        std::string source; ///< Source de l'image ou son Auteur
+        std::string titre; ///< Titre de l'image
+        int numero; ///< Numéro d'identification de l'image
+        double prix; ///< Prix de l'image
+        char acces; ///< Statut d'accès de l'image ('O' pour ouvert, 'L' pour limité)
+        std::string type; ///< Type ou catégorie de l'image couleur où gris pour niveaux de gris.
 
     public:
-        Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ, int nTp, int ide);
+        /**
+         * Constructeur de la classe Image.
+         * 
+         * Initialise un objet Image avec :
+         * 
+         *  src La source de l'image.
+         *  tit Le titre de l'image.
+         *  num Le numéro d'identification de l'image.
+         *  prx Le prix de l'image.
+         *  acc Le statut d'accès de l'image.
+         *  typ Le type  de l'image.
+         */
+        Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ);
+
+        /**
+         * Retourne une chaîne de caractères décrivant l'image.
+         * 
+         */
         std::string getDescripteur() const;
 
         /**
@@ -33,6 +49,8 @@ class Image {
          *  Le numéro de l'image.
          */
         int getNumero() const;
+
+        int getPrix() const;
 
         /**
          * Destructeur de la classe Image.
