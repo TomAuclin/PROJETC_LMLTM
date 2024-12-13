@@ -12,7 +12,7 @@
  * par son numéro, et de gérer la mémoire dynamiquement à l'aide de 
  * pointeurs intelligents.
  */
-class ListeChainee {
+class Library {
 private:
     /**
      * struct Node
@@ -36,7 +36,7 @@ private:
 
 public:
     
-    ListeChainee();
+    Library();
 
     /**
      * Ajoute une image à la liste chaînée.
@@ -45,7 +45,7 @@ public:
      */
     void ajouterDescripteurs(const Image& img);
 
-    void tricroissant(ListeChainee liste);
+    void tricroissant(Library liste);
 
     void afficher() const;
 
@@ -67,7 +67,7 @@ public:
      * pour libérer la mémoire 
      *
      */
-    ~ListeChainee();
+    ~Library();
 };
 
 #endif
