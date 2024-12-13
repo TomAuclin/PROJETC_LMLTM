@@ -12,7 +12,7 @@ ListeChainee::ListeChainee() : head(nullptr) {}
  * L'image est insérée au début de la liste en créant un nouveau nœud qui pointe
  * vers l'ancien premier nœud.
  */
-void ListeChainee::ajouterImage(const Image& img) {
+void ListeChainee::ajouterDescripteurs(const Image& img) {
     auto nouveau = std::make_shared<Node>(img); // Crée un nouveau nœud
     nouveau->next = head; // L'ancien premier nœud devient le suivant
     head = nouveau; // La tête pointe maintenant vers le nouveau nœud

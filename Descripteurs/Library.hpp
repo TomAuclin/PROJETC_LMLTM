@@ -43,7 +43,7 @@ public:
      * img L'image à ajouter au début de la liste.
      *
      */
-    void ajouterImage(const Image& img);
+    void ajouterDescripteurs(const Image& img);
 
     void tricroissant(ListeChainee liste);
 
