@@ -52,6 +52,8 @@ class Image {
 
         int getPrix() const;
 
+       
+
         /**
          * Destructeur de la classe Image.
          * 
