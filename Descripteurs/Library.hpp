@@ -1,5 +1,5 @@
-#ifndef LISTECHAINEE_HPP
-#define LISTECHAINEE_HPP
+#ifndef LIBRARY_HPP
+#define LIBRARY_HPP
 
 #include "Image.hpp"
 #include <memory>

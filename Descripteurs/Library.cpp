@@ -1,4 +1,4 @@
-#include "ListeChainee.hpp"
+#include "Library.hpp"
 #include <iostream>
 
 /**
@@ -27,7 +27,7 @@ void  ListeChainee::tricroissant(ListeChainee liste)
     for (int i = 0; i <liste.tailleListe()-1; i ++ )
     
     {current = head;
-    std::cout << current->data.getDescripteur() << std::endl;
+    //std::cout << current->data.getDescripteur() << std::endl;
         for (int j = 0; j <liste.tailleListe()-1; j ++ )
         
         
@@ -55,7 +55,7 @@ void  ListeChainee::tricroissant(ListeChainee liste)
 void ListeChainee::afficher() const {
     auto current = head;
     std::cout << "Liste des images : " << std::endl;
-    std::cout << current->data.getDescripteur() << std::endl;
+    //std::cout << current->data.getDescripteur() << std::endl;
     while (current ) {
         std::cout << current->data.getDescripteur() << std::endl;
         current = current->next;
