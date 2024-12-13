@@ -38,12 +38,12 @@ if exist(img, 'file')
 
     % 2. Filtrage par un filtre de convolution (matrice 3x3)
 
-    noisyImg = imnoise(imgGray, 'gaussian', 0, 0.01); % Bruit gaussien avec variance 0.01
+    noisyImg = imnoise(img, 'gaussian', 0, 0.01); % Bruit gaussien avec variance 0.01
     
     % Affichage de l'image originale et bruitée
     figure;
     subplot(1, 2, 1);
-    imshow(imgGray);
+    imshow(img);
     title('Image originale');
     
     subplot(1, 2, 2);
