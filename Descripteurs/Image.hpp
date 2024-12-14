@@ -53,7 +53,7 @@ class Image {
         int getNumero() const;
 
         int getPrix() const;
-
+        std::string getDescripteurSimple() const;
        
 
         /**

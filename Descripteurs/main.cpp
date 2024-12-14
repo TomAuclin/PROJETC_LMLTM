@@ -8,23 +8,23 @@ int main() {
     Library liste;
 
      /// Gratuites :
-    liste.ajouterDescripteurs(Image("Open Sources", "Baboon_couleur.png", 1, 0, 'O', "couleur", 5, 1));
-    liste.ajouterDescripteurs(Image("Open Sources", "Baboon_gris.pgm", 2, 0, 'O', "gris", 4, 2));
-    liste.ajouterDescripteurs(Image("Open Sources", "Barbara_couleur.png", 3, 0, 'O', "couleur", 4, 3));
-    liste.ajouterDescripteurs(Image("Open Sources", "Barbara_gris.pgm", 4, 0, 'O', "gris", 3, 4));
-    liste.ajouterDescripteurs(Image("Open Sources", "Bird_couleur.png", 5, 0, 'O', "couleur", 5, 5));
-    liste.ajouterDescripteurs(Image("Open Sources", "Bird_gris.pgm", 6, 0, 'O', "gris", 4, 6));
+    liste.ajouterDescripteurs(Image("OpenSources", "Baboon_couleur.png", 1, 0, 'O', "couleur", 5, 1));
+    liste.ajouterDescripteurs(Image("OpenSources", "Baboon_gris.pgm", 2, 0, 'O', "gris", 4, 2));
+    liste.ajouterDescripteurs(Image("OpenSources", "Barbara_couleur.png", 3, 0, 'O', "couleur", 4, 3));
+    liste.ajouterDescripteurs(Image("OpenSources", "Barbara_gris.pgm", 4, 0, 'O', "gris", 3, 4));
+    liste.ajouterDescripteurs(Image("OpenSources", "Bird_couleur.png", 5, 0, 'O', "couleur", 5, 5));
+    liste.ajouterDescripteurs(Image("OpenSources", "Bird_gris.pgm", 6, 0, 'O', "gris", 4, 6));
     liste.ajouterDescripteurs(Image("Tom", "EauToitPont_couleur.CR2", 7, 0, 'O', "couleur", 5, 7));
     liste.ajouterDescripteurs(Image("Tom", "EauToitPont_gris.pgm", 8, 0, 'O', "gris", 4, 8));
     liste.ajouterDescripteurs(Image("Tom", "Geek_couleur.CR2", 9, 0, 'O', "couleur", 4, 9));
     liste.ajouterDescripteurs(Image("Tom", "Geek_gris.pgm", 10, 0, 'O', "gris", 3, 10));
-    liste.ajouterDescripteurs(Image("Open Sources", "ImageAerienne_couleur.png", 11, 0, 'O', "couleur", 6, 11));
-    liste.ajouterDescripteurs(Image("Open Sources", "ImageAerienne_gris.pgm", 12, 0, 'O', "gris", 5, 12));
-    liste.ajouterDescripteurs(Image("Open Sources", "Lena_couleur.png", 13, 0, 'O', "couleur", 5, 13));
-    liste.ajouterDescripteurs(Image("Open Sources", "Lena_gris.pgm", 14, 0, 'O', "gris", 4, 14));
-    liste.ajouterDescripteurs(Image("Open Sources", "Micro1_gris.png", 15, 0, 'O', "gris", 5, 15));
-    liste.ajouterDescripteurs(Image("Open Sources", "Cameraman_gris.pgm", 16, 0, 'O', "gris", 5, 16));
-    liste.ajouterDescripteurs(Image("Open Sources", "Facade_gris.pgm", 17, 0, 'O', "gris", 5, 17));
+    liste.ajouterDescripteurs(Image("OpenSources", "ImageAerienne_couleur.png", 11, 0, 'O', "couleur", 6, 11));
+    liste.ajouterDescripteurs(Image("OpenSources", "ImageAerienne_gris.pgm", 12, 0, 'O', "gris", 5, 12));
+    liste.ajouterDescripteurs(Image("OpenSources", "Lena_couleur.png", 13, 0, 'O', "couleur", 5, 13));
+    liste.ajouterDescripteurs(Image("OpenSources", "Lena_gris.pgm", 14, 0, 'O', "gris", 4, 14));
+    liste.ajouterDescripteurs(Image("OpenSources", "Micro1_gris.png", 15, 0, 'O', "gris", 5, 15));
+    liste.ajouterDescripteurs(Image("OpenSources", "Cameraman_gris.pgm", 16, 0, 'O', "gris", 5, 16));
+    liste.ajouterDescripteurs(Image("OpenSources", "Facade_gris.pgm", 17, 0, 'O', "gris", 5, 17));
 
 
     // <9.99€ :
@@ -138,17 +138,23 @@ int main() {
 
 
     // Recherche d'une image par numéro
+    //liste.chargerDepuisFichier("Biblio_init.txt");
+    //liste.afficher();
+
     int numeroRecherche;
     std::cout << "Entrez le numero de l'image a rechercher : ";
     std::cin >> numeroRecherche;
 
-    liste.tricroissant(liste);
+     liste.tricroissant(liste);
     
-    liste.afficher();
+   // liste.afficher();
     std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
     std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
-    std::cout << resultat << std::endl;
+    std::cout << resultat << std::endl; 
     //liste.afficher();
+    liste.sauvegarderDansFichier("Biblio_init.txt");
+
+  
 
 
     return 0;
