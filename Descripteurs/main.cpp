@@ -6,8 +6,8 @@
 
 int main() {
     Library liste;
-
-     /// Gratuites :
+/* 
+    /// Gratuites :
     liste.ajouterDescripteurs(Image("Open Sources", "Baboon_couleur.png", 1, 0, 'O', "couleur", 0, 1));
     liste.ajouterDescripteurs(Image("Open Sources", "Baboon_gris.pgm", 2, 0, 'O', "gris", 0, 2));
     liste.ajouterDescripteurs(Image("Open Sources", "Barbara_couleur.png", 3, 0, 'O', "couleur", 0, 3));
@@ -131,25 +131,24 @@ int main() {
     liste.ajouterDescripteurs(Image("Lydia", "PlantePont02_gris.pgm", 113, 249, 'L', "gris", 0, 113));
     liste.ajouterDescripteurs(Image("Tom", "StatuPorte_couleur.CR2", 114, 647, 'L', "couleur", 0, 114));
     liste.ajouterDescripteurs(Image("Tom", "StatuPorte_gris.pgm", 115, 573, 'L', "gris", 0, 115));
-
-
-
-
-
+  */
 
     // Recherche d'une image par numéro
+    liste.chargerDepuisFichier("Biblio_init.txt");
+    //liste.afficher();
+
     int numeroRecherche;
     std::cout << "Entrez le numero de l'image a rechercher : ";
     std::cin >> numeroRecherche;
 
-    liste.tricroissant(liste);
-    
-    liste.afficher();
+/*     liste.tricroissant(liste);
+    */
+   // liste.afficher();
     std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
     std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
-    std::cout << resultat << std::endl;
+    std::cout << resultat << std::endl; 
     //liste.afficher();
-
+    //liste.sauvegarderDansFichier("Biblio_init.txt");
 
     return 0;
 }

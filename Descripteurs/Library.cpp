@@ -1,5 +1,9 @@
 #include "Library.hpp"
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <memory>
 
 /**
  *
@@ -96,6 +100,76 @@ std::string Library::rechercherImageParNumero(int numero) const {
     return "Image non trouvée."; // Retourne un message si aucune image ne correspond
 }
 
+void Library::sauvegarderDansFichier(const std::string& nomFichier) const {
+    std::ofstream fichier(nomFichier);
+
+    if (!fichier) {
+        std::cerr << "Erreur d'ouverture du fichier " << nomFichier << std::endl;
+        return;
+    }
+
+    auto current = head;
+    if (!current) {
+        std::cerr << "La liste est vide, rien à sauvegarder." << std::endl;
+        return;
+    }
+
+    while (current) {
+        std::string descripteur = current->data.getDescripteurSimple();
+        if (!descripteur.empty()) {
+            fichier << descripteur << "\n"; // Enregistrement ligne par ligne
+        }
+        current = current->next;
+    }
+
+    fichier.close();
+    std::cout << "Les descripteurs ont été sauvegardés dans " << nomFichier << std::endl;
+}
+
+
+void Library::chargerDepuisFichier(const std::string& nomFichier) {
+    std::ifstream fichier(nomFichier);
+
+    if (!fichier) {
+        std::cerr << "Erreur d'ouverture du fichier " << nomFichier << std::endl;
+        return;
+    }
+
+    std::string ligne;
+    while (std::getline(fichier, ligne)) {
+        std::istringstream iss(ligne);
+        std::string source, titre, type;
+        int numero, nbTraitementPossible, identite;
+        double prix;
+        char acces;
+
+        // Lire chaque champ séparé par une virgule
+        if (std::getline(iss, source, ',') &&
+            std::getline(iss, titre, ',') &&
+            iss >> numero &&
+            iss.ignore(1) && // Ignorer la virgule
+            iss >> prix &&
+            iss.ignore(1) &&
+            iss >> acces &&
+            iss.ignore(1) &&
+            std::getline(iss, type, ',') &&
+            iss >> nbTraitementPossible &&
+            iss.ignore(1) &&
+            iss >> identite) {
+
+            // Ajouter le descripteur sans modification des espaces
+            ajouterDescripteurs(Image(source, titre, numero, prix, acces, type, nbTraitementPossible, identite));
+        } else {
+            std::cerr << "Erreur lors du traitement de la ligne : " << ligne << std::endl;
+        }
+    }
+
+    fichier.close();
+    std::cout << "Les descripteurs ont été chargés depuis " << nomFichier << std::endl;
+}
+
+
+
 // Destructeur de la classe ListeChainee
 Library::~Library() {
     while (head) { // Tant qu'il y a des nœuds
@@ -104,4 +178,6 @@ Library::~Library() {
     }
 
 }
+
+
 
