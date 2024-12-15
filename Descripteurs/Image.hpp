@@ -52,6 +52,8 @@ class Image {
 
         int getPrix() const;
 
+        void setNumero(int numero);
+
         /**
          * Destructeur de la classe Image.
          * 

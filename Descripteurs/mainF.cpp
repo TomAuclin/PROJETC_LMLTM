@@ -6,7 +6,7 @@
 #include <iostream>
 
 int main() {
-    ListeChainee liste;
+    Library liste;
 
     /// Gratuites :
     liste.ajouterDescripteurs(Image("Open Sources", "Baboon_couleur.png", 1, 0, 'O', "couleur"));
@@ -131,7 +131,7 @@ int main() {
     liste.ajouterDescripteurs(Image("Lydia", "PlantePont02_couleur.CR2", 110, 483, 'L', "couleur"));
     liste.ajouterDescripteurs(Image("Lydia", "PlantePont02_gris.pgm", 111, 249, 'L', "gris"));
     liste.ajouterDescripteurs(Image("Tom", "StatuPorte_couleur.CR2", 112, 647, 'L', "couleur"));
-    liste.ajouterDescripteurs(Image("Tom", "StatuPorte_gris.pgm", 123, 573, 'L', "gris"));
+    liste.ajouterDescripteurs(Image("Tom", "StatuPorte_gris.pgm", 113, 573, 'L', "gris"));
 
 
     // Recherche d'une image par numéro
@@ -146,7 +146,8 @@ int main() {
     std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
     std::cout << resultat << std::endl;
     //liste.afficher();
-
+    liste.supprimerDescripteurs(113);
+    liste.afficher();
 
     return 0;
 }

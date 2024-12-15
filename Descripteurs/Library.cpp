@@ -18,6 +18,28 @@ void Library::ajouterDescripteurs(const Image& img) {
     head = nouveau; // La tête pointe maintenant vers le nouveau nœud
 }
 
+void Library::supprimerDescripteurs(int numero)
+{
+    //int cpt = 1;
+    auto current = head;
+    auto previous = head;
+    while (current) {
+        //current->data.setNumero(cpt);
+        if (current->data.getNumero() == numero) {
+            if (current == head) {
+                head = current->next;
+            }
+            else {
+                previous->next = current->next;
+            }
+            return;
+        }
+        //cpt++;
+        previous = current;
+        current = current->next;
+    }
+}
+
 void  Library::tricroissant(Library liste)
 
 {
@@ -88,6 +110,7 @@ int Library::tailleListe()
 std::string Library::rechercherImageParNumero(int numero) const {
     auto current = head; // Commence à la tête de la liste
     while (current) { // Parcourt la liste tant qu'il y a des nœuds
+        
         if (current->data.getNumero() == numero) {
             return current->data.getDescripteur(); // Retourne le descripteur si trouvé
         }

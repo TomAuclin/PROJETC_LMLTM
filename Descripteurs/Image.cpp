@@ -26,6 +26,12 @@ int Image::getPrix() const {
     return prix;
 }
 
+void Image::setNumero(int num)
+{
+    numero = num;
+    
+}
+
 Image::~Image() {
    
 }
