@@ -4,8 +4,12 @@
 #include "Image.cpp"
 #include <iostream>
 
+#include "GestionUtilisateur.hpp"
+#include "GestionUtilisateur.cpp"
+
 int main() {
     Library liste;
+    GestionUtilisateur user;
 
      /// Gratuites :
     liste.ajouterDescripteurs(Image("OpenSources", "Baboon_couleur.png", 1, 0, 'O', "couleur", 5, 1));
@@ -134,27 +138,36 @@ int main() {
 
 
 
+    // Connexion
 
+    // si connexion echouer alors recommencer une connexion
+    while (user.getLogin() != "Admin" && user.getLogin() != "User") {
+        user.connexion();
+    }
 
+    // seulement l'utilisateur connecteur peut acceder a la recherche d'image
+    if (user.getLogin() != "Admin" && user.getLogin() != "User") {
+        std::cout << "Vous n'avez pas les droits pour acceder a la recherche d'image." << std::endl;
+        return 0;
+    }
+    else {
+        std::cout << "Vous avez les droits pour acceder a la recherche d'image." << std::endl;
+        // Recherche d'une image par numéro
+        //liste.chargerDepuisFichier("Biblio_init.txt");
+        //liste.afficher();
 
-    // Recherche d'une image par numéro
-    //liste.chargerDepuisFichier("Biblio_init.txt");
-    //liste.afficher();
-
-    int numeroRecherche;
-    std::cout << "Entrez le numero de l'image a rechercher : ";
-    std::cin >> numeroRecherche;
-
+        int numeroRecherche;
+        std::cout << "Entrez le numero de l'image a rechercher : ";
+        std::cin >> numeroRecherche;
      liste.tricroissant(liste);
     
-   // liste.afficher();
-    std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
-    std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
-    std::cout << resultat << std::endl; 
-    //liste.afficher();
-    liste.sauvegarderDansFichier("Biblio_init.txt");
-
-  
+    // liste.afficher();
+      std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
+      std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
+      std::cout << resultat << std::endl; 
+      //liste.afficher();
+      liste.sauvegarderDansFichier("Biblio_init.txt");
+    }
 
 
     return 0;
