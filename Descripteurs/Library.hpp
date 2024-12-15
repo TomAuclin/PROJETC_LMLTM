@@ -53,6 +53,12 @@ public:
 
     int tailleListe();
 
+
+    
+    void sauvegarderDansFichier(const std::string& nomFichier) const;
+    void chargerDepuisFichier(const std::string& nomFichier);
+
+
    
 
     /**
