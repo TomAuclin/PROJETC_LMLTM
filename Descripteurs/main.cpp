@@ -169,6 +169,7 @@ int main() {
       liste.sauvegarderDansFichier("Biblio_init.txt");
     }
 
-
+    liste.supprimerDescripteurs(113);
+    liste.afficher();
     return 0;
 }

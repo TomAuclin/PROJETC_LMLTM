@@ -14,9 +14,9 @@ void GestionUtilisateur::connexion() {
         std::cout << "Entrez votre login : ";
         std::cin >> login;
         if (login == "Admin" || login == "User") {
-            std::cout << "Connexion réussie." << std::endl;
+            std::cout << "Connexion reussie." << std::endl;
         } else {
-            std::cout << "Connexion échouée." << std::endl;
+            std::cout << "Connexion echouee." << std::endl;
         }
     }
 

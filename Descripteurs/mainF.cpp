@@ -9,7 +9,7 @@ int main() {
     Library liste;
 
     /// Gratuites :
-    liste.ajouterDescripteurs(Image("Open Sources", "Baboon_couleur.png", 1, 0, 'O', "couleur"));
+    liste.ajouterDescripteurs(Image("Open Sources", "Baboon_couleur.png", 1, 0, 'O', "couleur", 0, 0));
     liste.ajouterDescripteurs(Image("Open Sources", "Baboon_gris.pgm", 2, 0, 'O', "gris"));
     liste.ajouterDescripteurs(Image("Open Sources", "Barbara_couleur.png", 3, 0, 'O', "couleur"));
     liste.ajouterDescripteurs(Image("Open Sources", "Barbara_gris.pgm", 4, 0, 'O', "gris"));
