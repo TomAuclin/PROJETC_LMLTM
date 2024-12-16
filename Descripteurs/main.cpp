@@ -23,7 +23,7 @@ int main() {
 
     // Connexion
 
-    // si connexion echouer alors recommencer une connexion
+    // si connexion echouer alors recommencer une connexion (Admin/User)
     while (user.getLogin() != "ad-01-ao" && user.getLogin() != "us-02-al") {
         user.connexion();
     }
@@ -31,7 +31,7 @@ int main() {
     // boucle seulement pour si us-02-al le user est connecté
     if (user.getLogin() == "us-02-al") {
         std::cout << "Vous êtes connecter en tant que simple user (acces restreint)." << std::endl;
-        liste.afficherGratuites();
+        liste.afficherImagesAvecAccesO("Biblio_init.txt");
     }
 
     // boucle seulement pour si ad-01-ao l'admin est connecté
@@ -63,7 +63,7 @@ int main() {
         std::cin >> numeroModification;
 
         // Appel de la méthode pour modifier l'accès dans la liste
-        liste.modifierAcces(numeroModification);
+        liste.modifierAcces(numeroModification,"Biblio_test.txt");
         // Afficher l'image numéro 30
         std::cout << liste.rechercherImageParNumero(30) << std::endl;
 
@@ -86,6 +86,7 @@ int main() {
 
    // liste.supprimerDescripteurs(113);
     liste.afficher();
+    //liste.modifierAccesDansFichier("Biblio_init.txt", 113);
     liste.afficherImagesAvecAccesO("Biblio_init.txt");
     return 0;
 }

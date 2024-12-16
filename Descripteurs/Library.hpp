@@ -54,7 +54,11 @@ public:
 
     void afficherGratuites() const;
 
-    void modifierAcces(int numero);
+    void modifierAcces(int numero, const std::string &nomFichier);
+
+    //void modifierAcces(int numero);
+
+    void modifierAccesDansFichier(const std::string &nomFichier, int numero);
 
     int tailleListe();
 
