@@ -50,6 +50,11 @@ public:
     void trinbtraitement(Library liste);
 
     void afficher() const;
+
+    void afficherGratuites() const;
+
+    void modifierAcces(int numero);
+
     int tailleListe();
 
     void sousListe(Library liste);

@@ -146,44 +146,52 @@ int main() {
     // Connexion
 
     // si connexion echouer alors recommencer une connexion
-    while (user.getLogin() != "Admin" && user.getLogin() != "User") {
+    while (user.getLogin() != "ad-01-ao" && user.getLogin() != "us-02-al") {
         user.connexion();
     }
 
-    // seulement l'utilisateur connecteur peut acceder a la recherche d'image
-    if (user.getLogin() != "Admin" && user.getLogin() != "User") {
-        std::cout << "Vous n'avez pas les droits pour acceder a la recherche d'image." << std::endl;
-        return 0;
+    // boucle seulement pour si us-02-al le user est connecté
+    if (user.getLogin() == "us-02-al") {
+        std::cout << "Vous êtes connecter en tant que simple user (acces restreint)." << std::endl;
+        liste.afficherGratuites();
     }
-    else {
-        std::cout << "Vous avez les droits pour acceder a la recherche d'image." << std::endl;
+
+    // boucle seulement pour si ad-01-ao l'admin est connecté
+    if (user.getLogin() == "ad-01-ao") {
+        std::cout << "Vous êtes connecter en tant qu'Administrateur (tout les acces)." << std::endl;
+        //liste.afficher();
+
         // Recherche d'une image par numéro
         //liste.chargerDepuisFichier("Biblio_init.txt");
         //liste.afficher();
 
+        // la recherche n'est pas dans le txt ????
+        //liste.tricroissant(liste);    
+        //std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
+
+
         int numeroRecherche;
         std::cout << "Entrez le numero de l'image a rechercher : ";
         std::cin >> numeroRecherche;
-     liste.tricroissant(liste);
-    
-    // liste.afficher();
-      std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
-      std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
-      std::cout << resultat << std::endl; 
-      //liste.afficher();
-      liste.sauvegarderDansFichier("Biblio_init.txt");
+        std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
+        std::cout << resultat << std::endl; 
+
+        //liste.afficher(); A quoi ça sert de sauvegarder si tout les changements sont fais sur la liste ????
+        liste.sauvegarderDansFichier("Biblio_init.txt");
+
+        // modification de l'acces d'une image
+        int numeroModification;
+        std::cout << "Entrez le numéro de l'image à modifier l'accès : ";
+        std::cin >> numeroModification;
+
+        // Appel de la méthode pour modifier l'accès dans la liste
+        liste.modifierAcces(numeroModification);
+        // Afficher l'image numéro 30
+        std::cout << liste.rechercherImageParNumero(30) << std::endl;
     }
 
-    liste.supprimerDescripteurs(113);
-    //liste.afficher();
-    liste.modifdescripteurs(94);
-    //liste.afficher();
 
-    //liste.sousListe(liste);
 
-    listetest.afficher();
-    listetest.fusion(liste);
 
-    listetest.afficher();
     return 0;
 }

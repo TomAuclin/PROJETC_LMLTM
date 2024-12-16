@@ -1,4 +1,8 @@
 #include "Library.hpp"
+
+
+#include "GestionUtilisateur.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -21,28 +25,6 @@ void Library::ajouterDescripteurs(const Image& img) {
     auto nouveau = std::make_shared<Node>(img); // Crée un nouveau nœud
     nouveau->next = head; // L'ancien premier nœud devient le suivant
     head = nouveau; // La tête pointe maintenant vers le nouveau nœud
-}
-
-void Library::supprimerDescripteurs(int numero)
-{
-    //int cpt = 1;
-    auto current = head;
-    auto previous = head;
-    while (current) {
-        //current->data.setNumero(cpt);
-        if (current->data.getNumero() == numero) {
-            if (current == head) {
-                head = current->next;
-            }
-            else {
-                previous->next = current->next;
-            }
-            return;
-        }
-        //cpt++;
-        previous = current;
-        current = current->next;
-    }
 }
 
 void  Library::tricroissant(Library liste)
@@ -98,6 +80,57 @@ void Library::afficher() const {
     }
 
 }
+
+// fonction qui affiche seuleument les descripteur des images gratuites/ouverte pour le simple user
+void Library::afficherGratuites() const {
+    auto current = head;
+    std::cout << "Liste des images gratuites/autorise : " << std::endl;
+    while (current) {
+        if (current->data.getAcces() == 'O') {
+            std::cout << current->data.getDescripteur() << std::endl;
+        }
+        current = current->next;
+    }
+}
+
+// permet de modifier l'acces de L a O et inversement d'une image choisi grace à son numéro
+//void Library::modifierAcces(int numero, const std::string& nomFichier) {
+//    auto current = head;
+//    while (current) {
+//        if (current->data.getNumero() == numero) {
+//            if (current->data.getAcces() == 'O') {
+//                current->data.setAcces('L');
+//            } else {
+//                current->data.setAcces('O');
+//            }
+//            sauvegarderDansFichier(nomFichier); // Sauvegarde après modification
+//            std::cout << "Modification sauvegardée dans " << nomFichier << std::endl;
+//            return;
+//        }
+//        current = current->next;
+//    }
+//    std::cerr << "Image non trouvée." << std::endl;
+//}
+
+void Library::modifierAcces(int numero) {
+    auto current = head; // Commence à la tête de la liste
+    while (current) { // Parcourt la liste chaînée
+        if (current->data.getNumero() == numero) { // Vérifie si le numéro correspond
+            // Bascule entre 'O' et 'L' pour l'accès
+            if (current->data.getAcces() == 'O') {
+                current->data.setAcces('L');
+            } else {
+                current->data.setAcces('O');
+            }
+            std::cout << "L'accès de l'image numéro " << numero << " a été modifié." << std::endl;
+            return; // Arrête la recherche après la modification
+        }
+        current = current->next; // Passe au nœud suivant
+    }
+    std::cerr << "Image avec le numéro " << numero << " non trouvée dans la liste." << std::endl;
+}
+
+
 
 int Library::tailleListe()
 {
@@ -167,7 +200,6 @@ void Library::sousListe(int numero)
 std::string Library::rechercherImageParNumero(int numero) const {
     auto current = head; // Commence à la tête de la liste
     while (current) { // Parcourt la liste tant qu'il y a des nœuds
-        
         if (current->data.getNumero() == numero) {
             return current->data.getDescripteur(); // Retourne le descripteur si trouvé
         }
