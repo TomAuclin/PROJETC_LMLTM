@@ -49,10 +49,12 @@ public:
 
     void afficher() const;
 
+    void afficherGratuites() const;
+
+    void modifierAcces(int numero);
+
     int tailleListe();
 
-
-    
     void sauvegarderDansFichier(const std::string& nomFichier) const;
     void chargerDepuisFichier(const std::string& nomFichier);
 
