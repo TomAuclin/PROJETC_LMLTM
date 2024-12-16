@@ -45,8 +45,6 @@ public:
      */
     void ajouterDescripteurs(const Image& img);
 
-    void supprimerDescripteurs(int numero);
-
     void tricroissant(Library liste);
 
     void afficher() const;
