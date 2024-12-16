@@ -47,6 +47,8 @@ void Library::supprimerDescripteurs(int numero)
         current = current->next;
     }
 }
+
+
 void  Library::tricroissant(Library liste)
 
 {

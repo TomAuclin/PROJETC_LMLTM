@@ -45,6 +45,7 @@ public:
      */
     void ajouterDescripteurs(const Image& img);
     void supprimerDescripteurs(int numero);
+    void modifdescripteurs( int numero);
 
     void tricroissant(Library liste);
     void trinbtraitement(Library liste);
@@ -68,8 +69,6 @@ public:
 
     void fusion(Library liste2);
 
-   
-
     /**
      * Recherche une image dans la liste par son numéro.
      *  numero Le numéro de l'image à rechercher.
@@ -78,7 +77,7 @@ public:
      */
     std::string rechercherImageParNumero(int numero) const;
 
-    void modifdescripteurs( int numero);
+    
     
 
 
