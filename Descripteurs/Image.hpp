@@ -45,19 +45,36 @@ class Image {
          */
         std::string getDescripteur() const;
 
+        int nbrcarac();
+        
         /**
          * Retourne le numéro d'identification de l'image.
          * 
          *  Le numéro de l'image.
          */
         int getNumero() const;
-
         int getPrix() const;
+        std::string getSource() const;
+        std::string getTitre() const;
+        char getAccess() const;
+        std::string gettype() const;
+        int getnbTraitementPossible() const;
         std::string getDescripteurSimple() const;
-       
+        std::string getDescripteurGratuit() const;
+        std::string getDescripteursmoins10() const;
+        std::string getDescripteursplus10() const;
 
-        void setNumero(int numero);
+        void setNumero(int _numero);
+        void setPrix (int _prix);
+        void setTitre(std::string _Titre);
+        void setAccess(char _Access);
+        void setType(std::string _Type);
+        void setnbTraitementPossible(int _nbTraitementPossible);
 
+        
+        
+
+      
         /**
          * Destructeur de la classe Image.
          * 
@@ -68,3 +85,5 @@ class Image {
 };
 
 #endif
+
+

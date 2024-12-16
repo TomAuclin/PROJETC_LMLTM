@@ -11,6 +11,11 @@ int main() {
     Library liste;
     GestionUtilisateur user;
 
+    Library listetest;
+
+    listetest.ajouterDescripteurs(Image("Lucas", "Bruno.png", 130, 20000000000, 'O', "gris", 4, 130));
+    
+
      /// Gratuites :
     liste.ajouterDescripteurs(Image("OpenSources", "Baboon_couleur.png", 1, 0, 'O', "couleur", 5, 1));
     liste.ajouterDescripteurs(Image("OpenSources", "Baboon_gris.pgm", 2, 0, 'O', "gris", 4, 2));
@@ -170,6 +175,15 @@ int main() {
     }
 
     liste.supprimerDescripteurs(113);
-    liste.afficher();
+    //liste.afficher();
+    liste.modifdescripteurs(94);
+    //liste.afficher();
+
+    //liste.sousListe(liste);
+
+    listetest.afficher();
+    listetest.fusion(liste);
+
+    listetest.afficher();
     return 0;
 }

@@ -44,20 +44,21 @@ public:
      *
      */
     void ajouterDescripteurs(const Image& img);
-
     void supprimerDescripteurs(int numero);
 
     void tricroissant(Library liste);
+    void trinbtraitement(Library liste);
 
     void afficher() const;
-
     int tailleListe();
 
-
+    void sousListe(Library liste);
+    void sousListe(int numero);
     
     void sauvegarderDansFichier(const std::string& nomFichier) const;
     void chargerDepuisFichier(const std::string& nomFichier);
 
+    void fusion(Library liste2);
 
    
 
@@ -68,6 +69,11 @@ public:
      * ou un message indiquant que l'image n'existe pas.
      */
     std::string rechercherImageParNumero(int numero) const;
+
+    void modifdescripteurs( int numero);
+    
+
+
 
     /**
      *Destructeur de la classe ListeChainee.

@@ -4,7 +4,8 @@
 #include <sstream>
 #include <iomanip>
 #include <memory>
-
+#include <string>
+#include <vector>
 /**
  *
  * Initialise une liste chaînée vide en définissant la tête de la liste à nullptr.
@@ -47,35 +48,44 @@ void Library::supprimerDescripteurs(int numero)
 void  Library::tricroissant(Library liste)
 
 {
-
     auto current = head;
     
     for (int i = 0; i <liste.tailleListe()-1; i ++ )
-    
     {current = head;
     //std::cout << current->data.getDescripteur() << std::endl;
-        for (int j = 0; j <liste.tailleListe()-1; j ++ )
-        
-        
-        {
-            
+        for (int j = 0; j <liste.tailleListe()-1; j ++ )   
+        {          
             if (current->data.getPrix() > current->next->data.getPrix())
             {
-                std::cout << "Prix 1 : " << current->data.getPrix() << std::endl;
-                std::cout << "Prix 2 : " << current->next->data.getPrix() << std::endl;
+                //std::cout << "Prix 1 : " << current->data.getPrix() << std::endl;
+                //std::cout << "Prix 2 : " << current->next->data.getPrix() << std::endl;
                 auto temp = current->data;
                 current->data = current->next->data;
                 current->next->data = temp;
                 
             }
-            current = current->next;
-            
-        }
-        
-       
+            current = current->next;        
+        }      
+    }   
+}
+
+void Library::trinbtraitement(Library liste)
+{
+    auto current = head;
+    
+    for (int i = 0; i <liste.tailleListe()-1; i ++ )
+    {current = head;
+        for (int j = 0; j <liste.tailleListe()-1; j ++ )   
+        {          
+            if (current->data.getnbTraitementPossible() > current->next->data.getnbTraitementPossible())
+            {
+                auto temp = current->data;
+                current->data = current->next->data;
+                current->next->data = temp;   
+            }
+            current = current->next;        
+        }      
     }
-   
-  
 }
 
 void Library::afficher() const {
@@ -101,6 +111,49 @@ int Library::tailleListe()
     return taille;
 }
 
+void Library::sousListe(Library liste)
+{
+    auto current = head;
+    while (current) {
+        if (current->data.getPrix() < 10 && current->data.getPrix() != 0)
+        {
+            std::cout << current->data.getDescripteursmoins10() << std::endl;
+        }
+        if (current->data.getPrix() > 10)
+        {
+            std::cout << current->data.getDescripteursplus10() << std::endl;
+        }
+        if (current->data.getPrix() == 0)
+        {
+            std::cout << current->data.getDescripteurGratuit() << std::endl;
+        }
+        current = current->next;
+    }
+}
+
+void Library::sousListe(int numero)
+{
+    auto current = head;
+    while (current) {
+        if (current->data.getNumero() == numero)
+        {
+            if (current->data.getPrix() < 10 && current->data.getPrix() != 0)
+            {
+                std::cout << current->data.getDescripteursmoins10() << std::endl;
+            }
+            if (current->data.getPrix() > 10)
+            {
+                std::cout << current->data.getDescripteursplus10() << std::endl;
+            }
+            if (current->data.getPrix() == 0)
+            {
+                std::cout << current->data.getDescripteurGratuit() << std::endl;
+            }
+        }
+        current = current->next;
+    }
+}
+
 /**
  * Recherche une image dans la liste en fonction de son numéro.
  * 
@@ -123,7 +176,105 @@ std::string Library::rechercherImageParNumero(int numero) const {
     return "Image non trouvée."; // Retourne un message si aucune image ne correspond
 }
 
+void Library::modifdescripteurs(int numero)
+{
+    
+    auto current = head;
+    auto numcheck = head;
+    while (current) { // Parcourt la liste tant qu'il y a des nœuds
+        if (current->data.getNumero() == numero) {
+            std::cout << current->data.nbrcarac() << std::endl;
+            for (int i = 0; i < current->data.nbrcarac(); i++)
+            {
+                if (i == 0)
+                {   std::cout << i<< std::endl;
+                    std::cout << "Si vous voulez changer le Titre de l'image tapez Y sinon tapez N" << std::endl;
+                    std::string titre;
+                    std::string check;
+                    std::cin >> check;
+                    if (check == "Y")
+                    {
+                        std::cout << "Entrez le titre de l'image : ";
+                        std::cin >> titre;
+                        current->data.setTitre(titre);
+                        
+                    }
+                }
+                if (i == 1)
+                {   std::cout << i<< std::endl;
+                    std::cout << "Si vous voulez changer le numero de l'image tapez Y sinon tapez N" << std::endl;                    std::string titre;
+                    int num;
+                    std::string check;
+                    std::cin >> check;
+                    if (check == "Y")   
+                    // mettre numcheck
+                    {
+                        std::cout << "Entrez le numero de l'image : ";
+                        std::cin >> num;
+                        current->data.setNumero(num);
+                    }
+                }
+                if (i == 2)
+                {   std::cout << i<< std::endl;
+                    std::cout << "Si vous voulez changer le prix de l'image tapez Y sinon tapez N" << std::endl;
+                    std::string check;
+                    std::cin >> check;
+                    if (check == "Y")   
+                    {
+                        std::cout << "Entrez le prix de l'image : ";
+                        int prix;
+                        std::cin >> prix;
+                        current->data.setPrix(prix);
+                    }
+                }
+                if (i == 3)
+                {   std::cout << i<< std::endl;
+                    std::cout << "Si vous voulez changer l'acces de l'image tapez Y sinon tapez N" << std::endl;
+                    std::string check;
+                    std::cin >> check;
+                    if (check == "Y")   
+                    {
+                        std::cout << "Entrez l'acces de l'image : ";
+                        char acces;
+                        std::cin >> acces;
+                        current->data.setAccess(acces);
+                    }
+                }
+                if (i == 4)
+                {
+                    std::cout << "Si vous voulez changer le type de l'image tapez Y sinon tapez N" << std::endl;
+                    std::string check;
+                    std::cin >> check;
+                    if (check == "Y")   
+                    {
+                        std::cout << "Entrez le type de l'image : ";
+                        std::string type;
+                        std::cin >> type;
+                        current->data.setType(type);
+                    }
+                }
+                if (i == 5)
+                {
+                    std::cout << "Si vous voulez changer le nombre de traitement possible de l'image tapez Y sinon tapez N" << std::endl;
+                    std::string check;
+                    std::cin >> check;
+                    if (check == "Y")   
+                    {
+                        std::cout << "Entrez le nombre de traitement possible de l'image : ";
+                        int nbTraitementPossible;
+                        std::cin >> nbTraitementPossible;
+                        current->data.setnbTraitementPossible(nbTraitementPossible);
+                    }
+                }
 
+            }
+                
+        }
+        current = current->next; // Passe au nœud suivant
+    }
+    
+
+}
 
 void Library::sauvegarderDansFichier(const std::string& nomFichier) const {
     std::ofstream fichier(nomFichier);
@@ -193,7 +344,15 @@ void Library::chargerDepuisFichier(const std::string& nomFichier) {
     std::cout << "Les descripteurs ont été chargés depuis " << nomFichier << std::endl;
 }
 
-
+void Library::fusion(Library liste2)
+{
+    
+    auto current = liste2.head;
+    while (current) {
+        ajouterDescripteurs(current->data);
+        current = current->next;
+    }
+}
 
 // Destructeur de la classe ListeChainee
 Library::~Library() {

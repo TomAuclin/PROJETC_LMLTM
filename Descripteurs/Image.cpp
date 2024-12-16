@@ -17,6 +17,22 @@ std::string Image::getDescripteur() const {
     return descripteur.str();
 }
 
+int Image::nbrcarac()
+{
+    int cpt = 0;
+    Image image("Tom", "EauToitPont_couleur.CR2", 7, 0, 'O', "couleur", 5, 7);
+    std::string nbrc;
+    nbrc = image.getDescripteur();
+    for (int i = 0; i < nbrc.size();i++){
+        if (nbrc[i] == '\n'){
+            cpt++;
+        }
+
+    }
+    return cpt;
+
+}
+
 std::string Image::getDescripteurSimple() const {
     std::ostringstream descripteur;
     descripteur << source << ", "
@@ -30,8 +46,35 @@ std::string Image::getDescripteurSimple() const {
     return descripteur.str();
 }
 
+std::string Image::getDescripteursmoins10() const
+{
+    std::ostringstream descripteur;
+    descripteur << source << ", "
+                << titre << ", "
+                << type;
+               
+    return descripteur.str();
+}
 
+std::string Image::getDescripteursplus10() const
+{
+    std::ostringstream descripteur;
+    descripteur << source << ", "
+                << titre << ", "
+                << type << " , "
+                << nbTraitementPossible;
+               
+    return descripteur.str();
+}
 
+std::string Image::getDescripteurGratuit() const
+{
+    std::ostringstream descripteur;
+    descripteur << source << ", "
+                << titre ;
+               
+    return descripteur.str();
+}
 
 int Image::getNumero() const {
     return numero;
@@ -41,10 +84,60 @@ int Image::getPrix() const {
     return prix;
 }
 
+std::string Image::getSource() const
+{
+    return std::string();
+}
+
+std::string Image::getTitre() const
+{
+    return std::string();
+}
+
+char Image::getAccess() const
+{
+    return acces;
+}
+
+std::string Image::gettype() const
+{
+    return type;
+}
+
+int Image::getnbTraitementPossible() const
+{
+    return nbTraitementPossible;
+}
+
 void Image::setNumero(int num)
 {
     numero = num;
     
+}
+
+void Image::setPrix(int _prix)
+{
+    prix = _prix;
+}
+
+void Image::setTitre(std::string _Titre)
+{
+    titre = _Titre;
+}
+
+void Image::setAccess(char _Access)
+{
+    acces = _Access;
+}
+
+void Image::setType(std::string _Type)
+{
+    type = _Type;
+}
+
+void Image::setnbTraitementPossible(int _nbTraitementPossible)
+{
+    nbTraitementPossible = _nbTraitementPossible;
 }
 
 Image::~Image() {
