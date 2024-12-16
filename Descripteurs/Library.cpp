@@ -26,7 +26,27 @@ void Library::ajouterDescripteurs(const Image& img) {
     nouveau->next = head; // L'ancien premier nœud devient le suivant
     head = nouveau; // La tête pointe maintenant vers le nouveau nœud
 }
-
+void Library::supprimerDescripteurs(int numero)
+{
+    //int cpt = 1;
+    auto current = head;
+    auto previous = head;
+    while (current) {
+        //current->data.setNumero(cpt);
+        if (current->data.getNumero() == numero) {
+            if (current == head) {
+                head = current->next;
+            }
+            else {
+                previous->next = current->next;
+            }
+            return;
+        }
+        //cpt++;
+        previous = current;
+        current = current->next;
+    }
+}
 void  Library::tricroissant(Library liste)
 
 {
