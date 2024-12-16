@@ -45,18 +45,21 @@ class Image {
          */
         std::string getDescripteur() const;
 
+        char setAcces(char acc);
+
         /**
          * Retourne le numéro d'identification de l'image.
-         * 
+         *
          *  Le numéro de l'image.
          */
         int getNumero() const;
 
         int getPrix() const;
         std::string getDescripteurSimple() const;
-       
 
-        void setNumero(int numero);
+        // getacces
+        char getAcces();
+       
 
         /**
          * Destructeur de la classe Image.

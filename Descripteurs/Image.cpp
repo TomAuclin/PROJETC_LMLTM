@@ -30,8 +30,17 @@ std::string Image::getDescripteurSimple() const {
     return descripteur.str();
 }
 
+char Image::getAcces()
+{
+    return acces;
+}
 
-
+// set acces
+char Image::setAcces(char acc)
+{
+    acces = acc;
+    return acces;
+}
 
 int Image::getNumero() const {
     return numero;
@@ -41,11 +50,7 @@ int Image::getPrix() const {
     return prix;
 }
 
-void Image::setNumero(int num)
-{
-    numero = num;
-    
-}
+
 
 Image::~Image() {
    

@@ -45,13 +45,16 @@ public:
      */
     void ajouterDescripteurs(const Image& img);
 
-    void supprimerDescripteurs(int numero);
-
     void tricroissant(Library liste);
 
     void afficher() const;
 
+    void afficherGratuites() const;
+
+    void modifierAcces(int numero);
+
     int tailleListe();
+
 
     void afficherImagesAvecAccesO(const std::string& nomFichier) const;
     
