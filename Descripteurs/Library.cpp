@@ -132,6 +132,46 @@ void Library::modifierAcces(int numero) {
 
 
 
+void Library::afficherImagesAvecAccesO(const std::string& nomFichier) const {
+    std::ifstream fichier(nomFichier);
+
+    if (!fichier) {
+        std::cerr << "Erreur d'ouverture du fichier " << nomFichier << std::endl;
+        return;
+    }
+
+    std::string ligne;
+    while (std::getline(fichier, ligne)) {
+        std::istringstream iss(ligne);
+        std::string source, titre, type;
+        int numero, nbTraitementPossible, identite;
+        double prix;
+        char acces;
+
+        if (std::getline(iss, source, ',') &&
+            std::getline(iss, titre, ',') &&
+            iss >> numero &&
+            iss.ignore(1) &&
+            iss >> prix &&
+            iss.ignore(1) &&
+            iss >> acces &&
+            iss.ignore(1) &&
+            std::getline(iss, type, ',') &&
+            iss >> nbTraitementPossible &&
+            iss.ignore(1) &&
+            iss >> identite) {
+
+            if (acces == 'O') {
+                std::cout << ligne << std::endl;
+            }
+        } else {
+            std::cerr << "Erreur lors du traitement de la ligne : " << ligne << std::endl;
+        }
+    }
+
+    fichier.close();
+}
+
 int Library::tailleListe()
 {
     int taille = 0;

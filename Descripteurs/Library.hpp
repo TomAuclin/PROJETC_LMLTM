@@ -60,6 +60,9 @@ public:
     void sousListe(Library liste);
     void sousListe(int numero);
     
+
+    void afficherImagesAvecAccesO(const std::string& nomFichier) const;
+    
     void sauvegarderDansFichier(const std::string& nomFichier) const;
     void chargerDepuisFichier(const std::string& nomFichier);
 
