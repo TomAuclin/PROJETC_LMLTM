@@ -61,6 +61,8 @@ class Image {
         char getAcces();
        
 
+        void setNumero(int numero);
+
         /**
          * Destructeur de la classe Image.
          * 
