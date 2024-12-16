@@ -1,3 +1,4 @@
+
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
@@ -20,6 +21,8 @@ class Image {
         double prix; ///< Prix de l'image
         char acces; ///< Statut d'accès de l'image ('O' pour ouvert, 'L' pour limité)
         std::string type; ///< Type ou catégorie de l'image couleur où gris pour niveaux de gris.
+        int nbTraitementPossible; ///< Nombre de traitement possible sur l'image.
+        int identite; ///< Identifiant unique de l'image.
 
     public:
         /**
@@ -34,7 +37,7 @@ class Image {
          *  acc Le statut d'accès de l'image.
          *  typ Le type  de l'image.
          */
-        Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ);
+        Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ, int nTp, int ide);
 
         /**
          * Retourne une chaîne de caractères décrivant l'image.
@@ -48,6 +51,10 @@ class Image {
          *  Le numéro de l'image.
          */
         int getNumero() const;
+
+        int getPrix() const;
+        std::string getDescripteurSimple() const;
+       
 
         /**
          * Destructeur de la classe Image.
