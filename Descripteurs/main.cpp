@@ -199,10 +199,10 @@ int main() {
      // std::cout << resultat << std::endl; 
       //liste.afficher();
       liste.sauvegarderDansFichier("Biblio_init.txt");
-    }
+    
 
 
-    liste.supprimerDescripteurs(113);
+   // liste.supprimerDescripteurs(113);
     liste.afficher();
     liste.afficherImagesAvecAccesO("Biblio_init.txt");
     return 0;
