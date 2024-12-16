@@ -53,7 +53,7 @@ public:
 
     int tailleListe();
 
-
+    void afficherImagesAvecAccesO(const std::string& nomFichier) const;
     
     void sauvegarderDansFichier(const std::string& nomFichier) const;
     void chargerDepuisFichier(const std::string& nomFichier);

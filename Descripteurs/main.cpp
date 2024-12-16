@@ -7,6 +7,9 @@
 #include "GestionUtilisateur.hpp"
 #include "GestionUtilisateur.cpp"
 
+// Function declaration
+void afficherImagesAvecAccesO(const std::string& filename);
+
 int main() {
     Library liste;
     GestionUtilisateur user;
@@ -159,17 +162,19 @@ int main() {
         int numeroRecherche;
         std::cout << "Entrez le numero de l'image a rechercher : ";
         std::cin >> numeroRecherche;
-     liste.tricroissant(liste);
+     //liste.tricroissant(liste);
     
     // liste.afficher();
-      std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
-      std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
-      std::cout << resultat << std::endl; 
+     // std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
+     // std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
+     // std::cout << resultat << std::endl; 
       //liste.afficher();
       liste.sauvegarderDansFichier("Biblio_init.txt");
     }
 
+
     liste.supprimerDescripteurs(113);
     liste.afficher();
+    liste.afficherImagesAvecAccesO("Biblio_init.txt");
     return 0;
 }
