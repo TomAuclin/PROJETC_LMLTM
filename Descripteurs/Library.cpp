@@ -86,7 +86,7 @@ void Library::afficherGratuites() const {
     auto current = head;
     std::cout << "Liste des images gratuites/autorise : " << std::endl;
     while (current) {
-        if (current->data.getAcces() == 'O') {
+        if (current->data.getAccess() == 'O') {
             std::cout << current->data.getDescripteur() << std::endl;
         }
         current = current->next;
@@ -117,10 +117,10 @@ void Library::modifierAcces(int numero) {
     while (current) { // Parcourt la liste chaînée
         if (current->data.getNumero() == numero) { // Vérifie si le numéro correspond
             // Bascule entre 'O' et 'L' pour l'accès
-            if (current->data.getAcces() == 'O') {
-                current->data.setAcces('L');
+            if (current->data.getAccess() == 'O') {
+                current->data.setAccess('L');
             } else {
-                current->data.setAcces('O');
+                current->data.setAccess('O');
             }
             std::cout << "L'accès de l'image numéro " << numero << " a été modifié." << std::endl;
             return; // Arrête la recherche après la modification

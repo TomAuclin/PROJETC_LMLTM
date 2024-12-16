@@ -188,6 +188,8 @@ int main() {
         liste.modifierAcces(numeroModification);
         // Afficher l'image numéro 30
         std::cout << liste.rechercherImageParNumero(30) << std::endl;
+
+        liste.sousListe(liste);
     }
 
 
