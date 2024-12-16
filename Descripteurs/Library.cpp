@@ -454,6 +454,5 @@ Library::~Library() {
         auto temp = head; // Sauvegarde le nœud courant
         head = head->next; // Passe au nœud suivant
     }
-
 }
 
