@@ -28,6 +28,8 @@ void Library::ajouterDescripteurs(const Image& img) {
 }
 void Library::supprimerDescripteurs(int numero)
 {
+    // Si la liste est vide, il n'y a rien à supprimer
+    // A voir
     //int cpt = 1;
     auto current = head;
     auto previous = head;
@@ -154,7 +156,8 @@ void Library::modifierAcces(int numero) {
 
 
 
-void Library::afficherImagesAvecAccesO(const std::string& nomFichier) const {
+void Library::afficherImagesAvecAccesO(const std::string &nomFichier) const
+{
     std::ifstream fichier(nomFichier);
 
     if (!fichier) {
@@ -206,7 +209,7 @@ int Library::tailleListe()
     return taille;
 }
 
-void Library::sousListe(Library liste)
+void Library::sousListePrix(Library liste)
 {
     auto current = head;
     while (current) {
@@ -226,7 +229,7 @@ void Library::sousListe(Library liste)
     }
 }
 
-void Library::sousListe(int numero)
+void Library::sousListePrix(int numero)
 {
     auto current = head;
     while (current) {
@@ -249,6 +252,49 @@ void Library::sousListe(int numero)
     }
 }
 
+void Library::sousListetype(Library Liste)
+{
+
+    auto current = head;
+    while (current) {
+    
+            if (current->data.getType() == "gris")
+            {
+                std::cout << current->data.getDescripteursmoins10() << std::endl;
+            }
+            else
+            {
+                std::cout << current->data.getDescripteursplus10() << std::endl;
+            }
+        
+        current = current->next;
+    }
+}
+
+
+
+void Library::sousListetype(int numero)
+{
+    auto current = head;
+    while (current) {
+        if (current->data.getNumero() == numero)
+        {
+               if (current->data.getType() == "gris")
+            {
+                std::cout << current->data.getDescripteursmoins10() << std::endl;
+            }
+            else
+            {
+                std::cout << current->data.getDescripteursplus10() << std::endl;
+            }
+        
+        current = current->next;
+        }
+}
+}
+
+// !!!!!!!!!!!!!!!!!!!! Sousliste couleur et gris 
+
 /**
  * Recherche une image dans la liste en fonction de son numéro.
  * 
@@ -270,19 +316,23 @@ std::string Library::rechercherImageParNumero(int numero) const {
     return "Image non trouvée."; // Retourne un message si aucune image ne correspond
 }
 
-void Library::modifdescripteurs(int numero)
+void Library::modifdescripteurs(int numero, Library bibli)
 {
     
     auto current = head;
     auto numcheck = head;
+    int checkG = 3;
+    int nbimages = 0;
     while (current) { // Parcourt la liste tant qu'il y a des nœuds
         if (current->data.getNumero() == numero) {
-            std::cout << current->data.nbrcarac() << std::endl;
+            
             for (int i = 0; i < current->data.nbrcarac(); i++)
             {
                 if (i == 0)
-                {   std::cout << i<< std::endl;
+                {   
                     std::cout << "Si vous voulez changer le Titre de l'image tapez Y sinon tapez N" << std::endl;
+                    //current.titrecheck(current->data.getTitre());
+                    
                     std::string titre;
                     std::string check;
                     std::cin >> check;
@@ -290,26 +340,39 @@ void Library::modifdescripteurs(int numero)
                     {
                         std::cout << "Entrez le titre de l'image : ";
                         std::cin >> titre;
-                        current->data.setTitre(titre);
-                        
+                        checkG = bibli.titrecheck(titre);
+                        while (checkG != 0) {
+                            std::cout << "Le titre existe deja dans la biblio, veuillez en rentrer un nouveau :" << std::endl;
+                            std::cin >> titre;
+                            checkG = bibli.titrecheck(titre);
+                        }
+                        current->data.setTitre(titre);                     
                     }
                 }
                 if (i == 1)
-                {   std::cout << i<< std::endl;
-                    std::cout << "Si vous voulez changer le numero de l'image tapez Y sinon tapez N" << std::endl;                    std::string titre;
+                {  
+                    std::cout << "Si vous voulez changer le numero de l'image tapez Y sinon tapez N" << std::endl;                    
                     int num;
                     std::string check;
                     std::cin >> check;
                     if (check == "Y")   
-                    // mettre numcheck
+                    
                     {
                         std::cout << "Entrez le numero de l'image : ";
                         std::cin >> num;
+                        checkG = bibli.numerocheck(num);
+                        while (checkG != 0) {
+                            std::cout << "Le numero existe deja dans la biblio, veuillez en rentrer un nouveau :" << std::endl;
+                            std::cout << " nous recommandons de choisir un numero superieur a " << bibli.tailleListe()<< std::endl;
+                            std::cin >> num;
+                            checkG = bibli.numerocheck(num);
+                        }
+
                         current->data.setNumero(num);
                     }
                 }
                 if (i == 2)
-                {   std::cout << i<< std::endl;
+                {   
                     std::cout << "Si vous voulez changer le prix de l'image tapez Y sinon tapez N" << std::endl;
                     std::string check;
                     std::cin >> check;
@@ -322,7 +385,7 @@ void Library::modifdescripteurs(int numero)
                     }
                 }
                 if (i == 3)
-                {   std::cout << i<< std::endl;
+                {   
                     std::cout << "Si vous voulez changer l'acces de l'image tapez Y sinon tapez N" << std::endl;
                     std::string check;
                     std::cin >> check;
@@ -439,13 +502,43 @@ void Library::chargerDepuisFichier(const std::string& nomFichier) {
 }
 
 void Library::fusion(Library liste2)
-{
-    
+{  
     auto current = liste2.head;
     while (current) {
         ajouterDescripteurs(current->data);
         current = current->next;
     }
+}
+
+int Library::titrecheck(std::string _titre) const
+{
+    int check = 0;
+    auto _titrecheck = head;
+    while (_titrecheck)
+
+        {   
+            if (_titrecheck->data.getTitre() == _titre){
+                
+                check = 1;
+            }
+            _titrecheck = _titrecheck->next;
+        }
+    return check;
+}
+
+
+int Library::numerocheck(int num) const {
+    auto numcheck = head;
+    int check = 0;
+    while (numcheck){
+
+        if (numcheck->data.getNumero()== num){
+            check = 1;
+            
+        }
+        numcheck = numcheck->next;
+    }
+    return check;
 }
 
 // Destructeur de la classe ListeChainee

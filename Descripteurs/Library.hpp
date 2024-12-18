@@ -45,7 +45,7 @@ public:
      */
     void ajouterDescripteurs(const Image& img);
     void supprimerDescripteurs(int numero);
-    void modifdescripteurs( int numero);
+    void modifdescripteurs( int numero, Library bibli);
 
     void tricroissant(Library liste);
     void trinbtraitement(Library liste);
@@ -58,10 +58,12 @@ public:
 
     int tailleListe();
 
-    void sousListe(Library liste);
-    void sousListe(int numero);
-    
+    void sousListePrix(Library liste);
+    void sousListePrix(int numero);
+    void sousListetype(Library Liste);
+    void sousListetype(int numero);
 
+    
     void afficherImagesAvecAccesO(const std::string& nomFichier) const;
     
     void sauvegarderDansFichier(const std::string& nomFichier) const;
@@ -69,6 +71,7 @@ public:
 
     void fusion(Library liste2);
 
+    int titrecheck(std::string _titre) const; 
     /**
      * Recherche une image dans la liste par son numéro.
      *  numero Le numéro de l'image à rechercher.
@@ -77,15 +80,12 @@ public:
      */
     std::string rechercherImageParNumero(int numero) const;
 
-    
-    
-
-
+    int numerocheck(int num) const;
 
     /**
      *Destructeur de la classe ListeChainee.
      *
-     * pour libérer la mémoire 
+     * pour libérer la mémoire
      *
      */
     ~Library();

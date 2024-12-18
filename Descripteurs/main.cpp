@@ -19,7 +19,7 @@ int main() {
     listetest.ajouterDescripteurs(Image("Lucas", "Bruno.png", 130, 20000000000, 'O', "gris", 4, 130));
     
 
-     /// Gratuites :
+    /// Gratuites :
     liste.ajouterDescripteurs(Image("OpenSources", "Baboon_couleur.png", 1, 0, 'O', "couleur", 5, 1));
     liste.ajouterDescripteurs(Image("OpenSources", "Baboon_gris.pgm", 2, 0, 'O', "gris", 4, 2));
     liste.ajouterDescripteurs(Image("OpenSources", "Barbara_couleur.png", 3, 0, 'O', "couleur", 4, 3));
@@ -173,26 +173,27 @@ int main() {
         //std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
 
 
-        int numeroRecherche;
-        std::cout << "Entrez le numero de l'image a rechercher : ";
-        std::cin >> numeroRecherche;
-        std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
-        std::cout << resultat << std::endl; 
+       // int numeroRecherche;
+       // std::cout << "Entrez le numero de l'image a rechercher : ";
+       // std::cin >> numeroRecherche;
+       // std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
+       // std::cout << resultat << std::endl; 
 
         //liste.afficher(); A quoi ça sert de sauvegarder si tout les changements sont fais sur la liste ????
-        liste.sauvegarderDansFichier("Biblio_init.txt");
+       // liste.sauvegarderDansFichier("Biblio_init.txt");
 
         // modification de l'acces d'une image
-        int numeroModification;
-        std::cout << "Entrez le numéro de l'image à modifier l'accès : ";
-        std::cin >> numeroModification;
+       // int numeroModification;
+       // std::cout << "Entrez le numéro de l'image à modifier l'accès : ";
+       // std::cin >> numeroModification;
 
         // Appel de la méthode pour modifier l'accès dans la liste
-        liste.modifierAcces(numeroModification);
+        //liste.modifierAcces(numeroModification);
         // Afficher l'image numéro 30
-        std::cout << liste.rechercherImageParNumero(30) << std::endl;
+        //std::cout << liste.rechercherImageParNumero(30) << std::endl;
 
-        liste.sousListe(liste);
+        liste.sousListePrix(liste);
+        liste.sousListetype(liste);
     }
 
 
@@ -205,12 +206,19 @@ int main() {
      // std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
      // std::cout << resultat << std::endl; 
       //liste.afficher();
-      liste.sauvegarderDansFichier("Biblio_init.txt");
+    //liste.sauvegarderDansFichier("Biblio_init.txt");
     
 
 
    // liste.supprimerDescripteurs(113);
-    liste.afficher();
-    liste.afficherImagesAvecAccesO("Biblio_init.txt");
+    // std::cin >> numeroRecherche;
+    std::string resultat = liste.rechercherImageParNumero(1);
+    std::cout << resultat << std::endl; 
+
+    liste.modifdescripteurs(1,liste);
+
+    resultat = liste.rechercherImageParNumero(116);
+    std::cout << resultat << std::endl; 
+    //liste.afficherImagesAvecAccesO("Biblio_init.txt");
     return 0;
 }
