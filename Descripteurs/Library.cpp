@@ -542,6 +542,7 @@ int Library::numerocheck(int num) const {
     return check;
 }
 
+
 // Destructeur de la classe ListeChainee
 Library::~Library() {
     while (head) { // Tant qu'il y a des nœuds
