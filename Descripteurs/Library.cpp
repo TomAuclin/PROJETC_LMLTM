@@ -225,6 +225,42 @@ void copyFile(const std::string& sourcePath, const std::string& destinationFolde
 
 
 //////////////////////////////
+/**
+ * Permet de permuter deux images dans la bibliothèque en se basant sur leurs numéros (ils sont uniques)
+ */
+void Library::permuterImages(int numero1, int numero2) {
+    if (numero1 == numero2) {
+        std::cout << "Les deux numéros sont identiques, aucune permutation nécessaire" << std::endl;
+        return;
+    }
+
+    // Pointeurs pour les nœuds contenant les images à permuter
+    std::shared_ptr<Node> node1 = nullptr, node2 = nullptr;
+    auto current = head;
+
+    // Parcours de la liste pour trouver les nœuds correspondants
+    while (current) {
+        if (current->data.getNumero() == numero1) {
+            node1 = current;
+        } else if (current->data.getNumero() == numero2) {
+            node2 = current;
+        }
+        current = current->next;
+    }
+
+    // Vérification si les deux images existent
+    if (!node1 || !node2) {
+        std::cerr << "Erreur : Une ou les deux images n'existent pas dans la bibliothèque." << std::endl;
+        return;
+    }
+
+    // Permutation des données des deux nœuds
+    Image temp = node1->data;
+    node1->data = node2->data;
+    node2->data = temp;
+
+    std::cout << "Les images avec les numéros " << numero1 << " et " << numero2 << " ont été permutées." << std::endl;
+}
 
 
 
@@ -274,11 +310,34 @@ void Library::save() {
     std::cin >> identite;
 
 
-    //Copier l'image dans un répertoire dédié
-    std::string destinationDir = "bibliotheque";
-    fs::create_directories(destinationDir); // Crée le répertoire si nécessaire
+    //determine la biblio cible en fonction du prix
+    // Déterminer la bibliothèque cible en fonction du prix
+    std::string basePath = "C:/Users/leona_u6zzw0q/M2SIA2/PROJET/PROJETC_LMLTM/Bibliotheque/";
+
+
+    std::string destinationDir;
+    if (prix == 0) {
+        destinationDir = basePath + "Gratuites";
+    } else if (prix < 9.99) {
+        destinationDir = basePath + "_9.99";
+    } else if (prix < 99.99) {
+        destinationDir = basePath + "_99.99";
+    } else {
+        destinationDir = basePath + "_100";
+    }
+
+    // Créer le répertoire cible si nécessaire
+    fs::create_directories(destinationDir);
+
+    // Copier l'image dans la bibliothèque dediée
     std::string destination = destinationDir + "/" + titre;
-    fs::copy_file(cheminImage, destination, fs::copy_options::overwrite_existing);
+    try {
+        fs::copy_file(cheminImage, destination, fs::copy_options::overwrite_existing);
+        std::cout << "Image copiée dans : " << destination << std::endl;
+    } catch (const fs::filesystem_error& e) {
+        std::cerr << "Erreur lors de la copie de l'image : " << e.what() << std::endl;
+        return;
+    }
 
     //Ajouter à la bibliothèque
     Image nouvelleImage(source, titre, numero, prix, acces, type, nbTraitementPossible, identite);

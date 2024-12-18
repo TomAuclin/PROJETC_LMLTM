@@ -62,8 +62,9 @@ public:
 
     void save();
 
+    void permuterImages(int numero1, int numero2);
+
     //////////////////////
-    std::string openFileDialog(); // Fonction pour ouvrir une boîte de dialogue de sélection de fichier
     void copyFile(const std::string& sourcePath, const std::string& destinationFolder); 
     //////////////////////
 

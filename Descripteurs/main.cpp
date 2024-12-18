@@ -139,14 +139,13 @@ int main() {
 
 
     // Connexion
-
     // si connexion echouer alors recommencer une connexion
-    while (user.getLogin() != "Admin" && user.getLogin() != "User") {
+    while (user.getLogin() != "ad-01-ao" && user.getLogin() != "us-02-al") {
         user.connexion();
     }
 
     // seulement l'utilisateur connecteur peut acceder a la recherche d'image
-    if (user.getLogin() != "Admin" && user.getLogin() != "User") {
+    if (user.getLogin() != "ad-01-ao" && user.getLogin() != "us-02-al") {
         std::cout << "Vous n'avez pas les droits pour acceder a la recherche d'image." << std::endl;
         return 0;
     }
@@ -168,12 +167,23 @@ int main() {
       //liste.afficher();
       liste.sauvegarderDansFichier("Biblio_init.txt");
     }
-
+    
     // **Ajout du test de la fonction save**
     std::cout << "\nTest de la fonction save :\n";
     liste.save();  // Appel de la fonction save pour ajouter une image
     liste.afficher();  // Affichage de la bibliothèque après ajout
     liste.sauvegarderDansFichier("Biblio_apres_save.txt");  // Sauvegarde sous un nouveau nom
+
+    /*
+    // **Ajout test pour lz fonction permuterimages**
+    std::cout << "Avant la permutation :" << std::endl;
+    liste.afficher();
+
+    // Permutation des images avec les numéros 1 et 3
+    liste.permuterImages(1, 3);
+
+    std::cout << "\nAprès la permutation :" << std::endl;
+    liste.afficher();*/
 
     return 0;
 }
