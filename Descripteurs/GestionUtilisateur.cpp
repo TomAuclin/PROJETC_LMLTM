@@ -10,16 +10,15 @@ GestionUtilisateur::GestionUtilisateur() : login("") {}
 void GestionUtilisateur::connexion() {
     // si login "Admin" ou "User" alors connection réussi sinon non
     // si connection echouer alros refaire une connexion
-    while (login != "Admin" && login != "User") {
+    while (login != "ad-01-ao" && login != "us-02-al") {
         std::cout << "Entrez votre login : ";
         std::cin >> login;
-        if (login == "Admin" || login == "User") {
+        if (login == "ad-01-ao" || login == "us-02-al") {
             std::cout << "Connexion réussie." << std::endl;
         } else {
             std::cout << "Connexion échouée." << std::endl;
         }
     }
-
 }
 
 void GestionUtilisateur::deconnexion() {
