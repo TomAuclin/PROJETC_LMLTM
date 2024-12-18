@@ -86,12 +86,12 @@ int Image::getPrix() const {
 
 std::string Image::getSource() const
 {
-    return std::string();
+    return source;
 }
 
 std::string Image::getTitre() const
 {
-    return std::string();
+    return titre;
 }
 
 char Image::getAccess() const
@@ -99,7 +99,7 @@ char Image::getAccess() const
     return acces;
 }
 
-std::string Image::gettype() const
+std::string Image::getType() const
 {
     return type;
 }
@@ -139,6 +139,8 @@ void Image::setnbTraitementPossible(int _nbTraitementPossible)
 {
     nbTraitementPossible = _nbTraitementPossible;
 }
+
+
 
 Image::~Image() {
    

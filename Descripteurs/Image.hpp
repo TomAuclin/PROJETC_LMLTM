@@ -56,7 +56,7 @@ class Image {
         std::string getSource() const;
         std::string getTitre() const;
         char getAccess() const;
-        std::string gettype() const;
+        std::string getType() const;
         int getnbTraitementPossible() const;
         std::string getDescripteurSimple() const;
         std::string getDescripteurGratuit() const;

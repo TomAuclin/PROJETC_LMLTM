@@ -48,26 +48,27 @@ int main() {
         //std::cout << "La taille de la liste est de : " << liste.tailleListe() << std::endl;
 
 
-        int numeroRecherche;
-        std::cout << "Entrez le numero de l'image a rechercher : ";
-        std::cin >> numeroRecherche;
-        std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
-        std::cout << resultat << std::endl; 
+       // int numeroRecherche;
+       // std::cout << "Entrez le numero de l'image a rechercher : ";
+       // std::cin >> numeroRecherche;
+       // std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
+       // std::cout << resultat << std::endl; 
 
         //liste.afficher(); 
         //liste.sauvegarderDansFichier("Biblio_init.txt");
 
         // modification de l'acces d'une image
-        int numeroModification;
-        std::cout << "Entrez le numéro de l'image à modifier l'accès : ";
-        std::cin >> numeroModification;
+       // int numeroModification;
+       // std::cout << "Entrez le numéro de l'image à modifier l'accès : ";
+       // std::cin >> numeroModification;
 
         // Appel de la méthode pour modifier l'accès dans la liste
         liste.modifierAcces(numeroModification,"Biblio_test.txt");
         // Afficher l'image numéro 30
-        std::cout << liste.rechercherImageParNumero(30) << std::endl;
+        //std::cout << liste.rechercherImageParNumero(30) << std::endl;
 
-        liste.sousListe(liste);
+        liste.sousListePrix(liste);
+        liste.sousListetype(liste);
     }
 
 
@@ -80,7 +81,7 @@ int main() {
      // std::string resultat = liste.rechercherImageParNumero(numeroRecherche);
      // std::cout << resultat << std::endl; 
       //liste.afficher();
-      liste.sauvegarderDansFichier("Biblio_init.txt");
+    //liste.sauvegarderDansFichier("Biblio_init.txt");
     
 
 
