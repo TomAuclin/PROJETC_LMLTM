@@ -2,7 +2,11 @@
 #define LIBRARY_HPP
 
 #include "Image.hpp"
+#include <string>
+#include <filesystem>
 #include <memory>
+
+std::string openFileDialog();
 
 /**
  * @class ListeChainee
@@ -55,6 +59,13 @@ public:
     
     void sauvegarderDansFichier(const std::string& nomFichier) const;
     void chargerDepuisFichier(const std::string& nomFichier);
+
+    //////////////////////
+    void save();
+    void permuterImages(int numero1, int numero2);
+
+    void copyFile(const std::string& sourcePath, const std::string& destinationFolder); 
+    //////////////////////
 
 
    
