@@ -118,41 +118,42 @@ void Library::afficherGratuites() const {
 }
 
 // permet de modifier l'acces de L a O et inversement d'une image choisi grace à son numéro
-//void Library::modifierAcces(int numero, const std::string& nomFichier) {
-//    auto current = head;
-//    while (current) {
-//        if (current->data.getNumero() == numero) {
-//            if (current->data.getAcces() == 'O') {
-//                current->data.setAcces('L');
-//            } else {
-//                current->data.setAcces('O');
-//            }
-//            sauvegarderDansFichier(nomFichier); // Sauvegarde après modification
-//            std::cout << "Modification sauvegardée dans " << nomFichier << std::endl;
-//            return;
-//        }
-//        current = current->next;
-//    }
-//    std::cerr << "Image non trouvée." << std::endl;
-//}
-
-void Library::modifierAcces(int numero) {
-    auto current = head; // Commence à la tête de la liste
-    while (current) { // Parcourt la liste chaînée
-        if (current->data.getNumero() == numero) { // Vérifie si le numéro correspond
-            // Bascule entre 'O' et 'L' pour l'accès
+void Library::modifierAcces(int numero, const std::string& nomFichier) {
+    auto current = head;
+    while (current) {
+        if (current->data.getNumero() == numero) {
             if (current->data.getAccess() == 'O') {
                 current->data.setAccess('L');
             } else {
                 current->data.setAccess('O');
             }
-            std::cout << "L'accès de l'image numéro " << numero << " a été modifié." << std::endl;
-            return; // Arrête la recherche après la modification
+            sauvegarderDansFichier(nomFichier); // Sauvegarde après modification
+            std::cout << "Modification sauvegardée dans " << nomFichier << std::endl;
+            return;
         }
-        current = current->next; // Passe au nœud suivant
+        current = current->next;
     }
-    std::cerr << "Image avec le numéro " << numero << " non trouvée dans la liste." << std::endl;
+    std::cerr << "Image non trouvée." << std::endl;
 }
+
+//void Library::modifierAcces(int numero) {
+//    auto current = head; // Commence à la tête de la liste
+//    while (current) { // Parcourt la liste chaînée
+//        if (current->data.getNumero() == numero) { // Vérifie si le numéro correspond
+//            // Bascule entre 'O' et 'L' pour l'accès
+//            if (current->data.getAccess() == 'O') {
+//                current->data.setAccess('L');
+//            } else {
+//                current->data.setAccess('O');
+//            }
+//            std::cout << "L'accès de l'image numéro " << numero << " a été modifié." << std::endl;
+//            return; // Arrête la recherche après la modification
+//        }
+//        current = current->next; // Passe au nœud suivant
+//    }
+//    std::cerr << "Image avec le numéro " << numero << " non trouvée dans la liste." << std::endl;
+//}
+
 
 
 
