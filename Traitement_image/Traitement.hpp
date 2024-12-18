@@ -36,9 +36,9 @@ public:
     void segmentationCouleurs();
 
     
-    void restaurerImageOriginale(); 
-    void sauvegarderImage(); 
-    void afficherImage(); 
+    void restaurerImageOriginale(); // Morgane
+    void sauvegarderImage(); // Lydia
+    void afficherImage(); // Lydia 
 
 
     ~Traitement();
