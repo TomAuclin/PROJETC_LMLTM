@@ -1,6 +1,6 @@
 #ifndef TRAITEMENT_H
 #define TRAITEMENT_H
-
+#include <opencv2/opencv.hpp>
 
 class Traitement {
 private:
@@ -11,7 +11,7 @@ public:
     
     Traitement();
 
-    // 1. Calcul de l'histogramme d'une image
+    // 1. Calcul de l'histogramme 
 
     void calculerHistogramme();
 
@@ -36,9 +36,9 @@ public:
     void segmentationCouleurs();
 
     
-    void restaurerImageOriginale(); // Morgane
-    void sauvegarderImage(); // Lydia
-    void afficherImage(); // Lydia 
+    void restaurerImageOriginale(); //Morgane
+    // void sauvegarderImage();  a voir si fonction existe Lydia
+    void afficherImage(); // a voir si fonction existe  Lydia
 
 
     ~Traitement();
