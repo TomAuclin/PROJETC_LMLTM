@@ -25,25 +25,25 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_ChargerImage_clicked() {
-    // Ouvre un QFileDialog pour sélectionner une image
+    // Ouvrir un QFileDialog pour sélectionner une image
     QString fileName = QFileDialog::getOpenFileName(this, tr("Charger une image"), "", tr("Images (*.png *.pgm *.CR2 *.jpeg)"));
 
     if (!fileName.isEmpty()) {
-        // Charge l'image avec OpenCV
+        // Charger l'image avec OpenCV
         image_Courante = cv::imread(fileName.toStdString());
 
         if (!image_Courante.empty()) {
-            // Converti l'image pour l'afficher dans QGraphicsView
+            // Convertir l'image pour l'afficher dans QGraphicsView
             cv::Mat imageRGB;
             cv::cvtColor(image_Courante, imageRGB, cv::COLOR_BGR2RGB);
             QImage imgQt(imageRGB.data, imageRGB.cols, imageRGB.rows, imageRGB.step, QImage::Format_RGB888);
 
-            // Ajoute l'image originale à la scène
+            // Ajouter l'image originale à la scène
             sceneOriginal->clear();
             QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap::fromImage(imgQt));
             sceneOriginal->addItem(item);
 
-            // Mets à jour l'affichage
+            // Mettre à jour l'affichage
             ui->AfficherImageOriginale->fitInView(item, Qt::KeepAspectRatio);
             ui->statusbar->showMessage("Image chargée avec succès.");
         } else {
@@ -83,7 +83,7 @@ void MainWindow::on_DetecterContours_clicked() {
         return;
     }
 
-    // Applique la détection des contours sur l'image chargée
+    // Appliquer la détection des contours sur l'image chargée
     Traitement traitement;
     cv::Mat imgContours = traitement.detectionContours(image_Courante);
     if (imgContours.empty()) {
@@ -92,22 +92,14 @@ void MainWindow::on_DetecterContours_clicked() {
         return;
     }
 
-    // Converti l'image des contours pour Qt
+    // Convertir et afficher l'image des contours
     QImage img(imgContours.data, imgContours.cols, imgContours.rows, imgContours.step, QImage::Format_Grayscale8);
-
-    // Efface la scène avant d'ajouter une nouvelle image
-    sceneResult->clear();
+    sceneResult->clear();  // Effacer la scène avant d'ajouter une nouvelle image
     sceneResult->addPixmap(QPixmap::fromImage(img));
 
-    ui->AfficherImageResultat->setScene(sceneResult);
-
-    // Ajuste le rect de la scène pour que l'image de contour soit bien cadrée
-    ui->AfficherImageResultat->setSceneRect(0, 0, imgContours.cols, imgContours.rows);
-
-    ui->AfficherImageResultat->fitInView(sceneResult->sceneRect(), Qt::KeepAspectRatio);
-
-    // Redimensionne la fenêtre en fonction de l'image
-    this->resize(imgContours.cols + 50, imgContours.rows + 100);
+    // Ajuster la taille de la fenêtre principale pour correspondre à l'image
+    this->resize(imgContours.cols + 50, imgContours.rows + 100); // Marges ajustées
 
     ui->statusbar->showMessage("Contours détectés et affichés.");
 }
+

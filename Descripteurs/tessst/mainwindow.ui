@@ -45,18 +45,18 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>256</width>
-      <height>192</height>
+      <width>291</width>
+      <height>241</height>
      </rect>
     </property>
    </widget>
    <widget class="QGraphicsView" name="AfficherImageResultat">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>315</x>
       <y>30</y>
-      <width>256</width>
-      <height>192</height>
+      <width>341</width>
+      <height>251</height>
      </rect>
     </property>
    </widget>
