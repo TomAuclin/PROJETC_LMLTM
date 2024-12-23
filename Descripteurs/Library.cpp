@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <windows.h>
+
 #include <iomanip>
 #include <memory>
 #include <filesystem>

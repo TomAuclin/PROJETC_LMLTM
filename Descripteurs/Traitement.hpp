@@ -1,29 +1,21 @@
-#ifndef TRAITEMENT_H
-#define TRAITEMENT_H
+#ifndef TRAITEMENT_HPP
+#define TRAITEMENT_HPP
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <iostream>
 
 class Traitement {
 private:
-    cv::Mat image_Originale; // Image d'origine 
-    cv::Mat image_Courante;  // Image modifiée par des traitements
+    cv::Mat image_Originale; // Image d'origine
+    cv::Mat image_Courante;  // Image modifiée
 
 public:
-    
     Traitement();
-
-
-
-
-
-    void detectionContours();
-
-
-
-
-
+    cv::Mat detectionContours(const cv::Mat &image);
+    void setImageOriginale(const cv::Mat &image);
     ~Traitement();
 };
 
-#endif 
+#endif // TRAITEMENT_HPP
+
