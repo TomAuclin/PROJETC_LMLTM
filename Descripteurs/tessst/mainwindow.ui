@@ -17,10 +17,10 @@
    <widget class="QPushButton" name="ChargerImage">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>131</width>
-      <height>25</height>
+      <x>70</x>
+      <y>11</y>
+      <width>111</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -30,10 +30,10 @@
    <widget class="QPushButton" name="DetecterContours">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>0</y>
-      <width>141</width>
-      <height>31</height>
+      <x>430</x>
+      <y>10</y>
+      <width>131</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -44,7 +44,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>40</y>
       <width>291</width>
       <height>241</height>
      </rect>
@@ -53,10 +53,10 @@
    <widget class="QGraphicsView" name="AfficherImageResultat">
     <property name="geometry">
      <rect>
-      <x>315</x>
-      <y>30</y>
-      <width>341</width>
-      <height>251</height>
+      <x>350</x>
+      <y>40</y>
+      <width>291</width>
+      <height>241</height>
      </rect>
     </property>
    </widget>

@@ -107,7 +107,7 @@ void MainWindow::on_DetecterContours_clicked() {
     ui->AfficherImageResultat->fitInView(sceneResult->sceneRect(), Qt::KeepAspectRatio);
 
     // Redimensionne la fenêtre en fonction de l'image
-    this->resize(imgContours.cols + 50, imgContours.rows + 100);
+   // this->resize(imgContours.cols + 50, imgContours.rows + 100);
 
     ui->statusbar->showMessage("Contours détectés et affichés.");
 }
