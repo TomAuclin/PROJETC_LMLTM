@@ -54,7 +54,6 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     // Détection des contours
     cv::Mat contours = detectionContours(image);
-    
 
     // Dimensions et paramètres
     int largeur = contours.cols;
@@ -82,7 +81,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     }
 
     // Détection des pics dans l'accumulateur
-    int seuil = 150;
+    int seuil = 150;  // Vous pouvez ajuster ce seuil en fonction des résultats
     std::vector<std::pair<int, int>> lignes;
     for (int rho = 0; rho < 2 * maxRho; rho++) {
         for (int theta = 0; theta < angleResolution; theta++) {
@@ -92,27 +91,23 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         }
     }
 
-    // Dessin des droites
-    cv::Mat imgDroites = cv::Mat::zeros(image.size(), CV_8UC3);
+    // Dessin des droites sur l'image d'origine
+    cv::Mat imgDroites = image.clone();  // Utilisation de l'image originale pour dessiner les lignes
     for (const auto &ligne : lignes) {
         int rho = ligne.first;
         int theta = ligne.second;
         double angle = CV_PI * theta / angleResolution;
         double a = cos(angle), b = sin(angle);
         double x0 = a * rho, y0 = b * rho;
+
+        // Points sur les bords de l'image pour dessiner la droite
         cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
         cv::Point pt2(cvRound(x0 - 1000 * (-b)), cvRound(y0 - 1000 * a));
+
+        // Dessiner la ligne sur l'image
         cv::line(imgDroites, pt1, pt2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
     }
 
-    // Affichage de l'accumulateur
-    double minVal, maxVal;
-    cv::minMaxLoc(accumulateur, &minVal, &maxVal);
-    cv::Mat heatmap;
-    accumulateur.convertTo(heatmap, CV_8U, 255.0 / maxVal);
-    cv::applyColorMap(heatmap, heatmap, cv::COLORMAP_JET);
-    //cv::imshow("Accumulateur de Hough", heatmap);
-   // cv::waitKey(0);
-
-    return imgDroites;
+    return imgDroites;  // Retourner l'image avec les droites dessinées
 }
+
