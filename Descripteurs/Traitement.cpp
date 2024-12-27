@@ -43,3 +43,74 @@ cv::Mat Traitement::detectionContours(const cv::Mat &image) {
 
     return contourImage; // Retourne l'image des contours
 }
+
+cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
+    if (image.empty()) {
+        std::cerr << "Erreur : L'image fournie est vide." << std::endl;
+        return cv::Mat();
+    }
+
+    // Détection des contours
+    cv::Mat contours = detectionContours(image);
+    
+
+    // Dimensions et paramètres
+    int largeur = contours.cols;
+    int hauteur = contours.rows;
+    int maxRho = static_cast<int>(sqrt(largeur * largeur + hauteur * hauteur));
+    int angleResolution = 180;
+    int rhoResolution = 1;
+
+    // Création de l'accumulateur
+    cv::Mat accumulateur = cv::Mat::zeros(2 * maxRho, angleResolution, CV_32SC1);
+
+    // Parcours des pixels de contour
+    for (int y = 0; y < hauteur; y++) {
+        for (int x = 0; x < largeur; x++) {
+            if (contours.at<uchar>(y, x) > 0) {
+                for (int theta = 0; theta < angleResolution; theta++) {
+                    double angle = CV_PI * theta / angleResolution;
+                    int rho = static_cast<int>(x * cos(angle) + y * sin(angle));
+                    if (rho >= -maxRho && rho < maxRho) {
+                        accumulateur.at<int>(rho + maxRho, theta)++;
+                    }
+                }
+            }
+        }
+    }
+
+    // Détection des pics dans l'accumulateur
+    int seuil = 150;
+    std::vector<std::pair<int, int>> lignes;
+    for (int rho = 0; rho < 2 * maxRho; rho++) {
+        for (int theta = 0; theta < angleResolution; theta++) {
+            if (accumulateur.at<int>(rho, theta) > seuil) {
+                lignes.emplace_back(rho - maxRho, theta);
+            }
+        }
+    }
+
+    // Dessin des droites
+    cv::Mat imgDroites = cv::Mat::zeros(image.size(), CV_8UC3);
+    for (const auto &ligne : lignes) {
+        int rho = ligne.first;
+        int theta = ligne.second;
+        double angle = CV_PI * theta / angleResolution;
+        double a = cos(angle), b = sin(angle);
+        double x0 = a * rho, y0 = b * rho;
+        cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
+        cv::Point pt2(cvRound(x0 - 1000 * (-b)), cvRound(y0 - 1000 * a));
+        cv::line(imgDroites, pt1, pt2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
+    }
+
+    // Affichage de l'accumulateur
+    double minVal, maxVal;
+    cv::minMaxLoc(accumulateur, &minVal, &maxVal);
+    cv::Mat heatmap;
+    accumulateur.convertTo(heatmap, CV_8U, 255.0 / maxVal);
+    cv::applyColorMap(heatmap, heatmap, cv::COLORMAP_JET);
+    cv::imshow("Accumulateur de Hough", heatmap);
+    cv::waitKey(0);
+
+    return imgDroites;
+}
