@@ -14,7 +14,8 @@ public:
     Traitement();
     cv::Mat detectionContours(const cv::Mat &image);
     void setImageOriginale(const cv::Mat &image);
-   // ~Traitement();
+    cv::Mat HoughDroite(const cv::Mat &image);
+
 };
 
 #endif // TRAITEMENT_HPP

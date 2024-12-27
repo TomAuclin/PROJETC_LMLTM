@@ -111,3 +111,40 @@ void MainWindow::on_DetecterContours_clicked() {
 
     ui->statusbar->showMessage("Contours détectés et affichés.");
 }
+void MainWindow::on_HoughDroite_clicked() {
+    // Vérifie si une image a été chargée
+    if (image_Courante.empty()) {
+        std::cerr << "Aucune image chargée !" << std::endl;
+        ui->statusbar->showMessage("Veuillez charger une image avant d'appliquer la transformation de Hough.");
+        return;
+    }
+
+    // Applique la transformation de Hough pour détecter les droites
+    Traitement traitement;
+    cv::Mat imgHough = traitement.HoughDroite(image_Courante);
+
+    if (imgHough.empty()) {
+        std::cerr << "Erreur lors de l'application de la transformation de Hough." << std::endl;
+        ui->statusbar->showMessage("Erreur lors de l'application de la transformation de Hough.");
+        return;
+    }
+
+    // Convertit l'image contenant les droites détectées pour Qt
+    QImage img(imgHough.data, imgHough.cols, imgHough.rows, imgHough.step, QImage::Format_RGB888);
+
+    // Efface la scène avant d'ajouter une nouvelle image
+    sceneResult->clear();
+    sceneResult->addPixmap(QPixmap::fromImage(img));
+
+    ui->AfficherImageResultat->setScene(sceneResult);
+
+    // Ajuste le rect de la scène pour que l'image des droites soit bien cadrée
+    ui->AfficherImageResultat->setSceneRect(0, 0, imgHough.cols, imgHough.rows);
+
+    ui->AfficherImageResultat->fitInView(sceneResult->sceneRect(), Qt::KeepAspectRatio);
+
+    // Redimensionne la fenêtre en fonction de l'image
+    // this->resize(imgHough.cols + 50, imgHough.rows + 100);
+
+    ui->statusbar->showMessage("Transformation de Hough appliquée et résultat affiché.");
+}

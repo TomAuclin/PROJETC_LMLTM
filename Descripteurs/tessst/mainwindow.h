@@ -24,6 +24,7 @@ private slots:
 
     // Slot pour détecter les contours
     void on_DetecterContours_clicked();
+    void on_HoughDroite_clicked();
 
 private:
     Ui::MainWindow *ui;                // Interface utilisateur
