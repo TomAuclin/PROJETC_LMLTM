@@ -1,0 +1,216 @@
+#include "Traitement.hpp"
+#include <opencv2/opencv.hpp>
+
+
+Traitement ::Traitement (){}
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Detection de contours ************************
+
+// ----------------------------------------------------------------------------------------------
+
+cv::Mat Traitement::detectionContours(const cv::Mat &image) {
+    if (image.empty()) {
+        std::cerr << "Erreur : L'image fournie est vide." << std::endl;
+        return cv::Mat(); // Retourne une image vide en cas d'erreur
+    }
+
+    // Conversion en niveaux de gris
+    cv::Mat img_nvg;
+    if (image.channels() == 3) {
+        cv::cvtColor(image, img_nvg, cv::COLOR_BGR2GRAY);
+    } else {
+        img_nvg = image;
+    }
+
+    // Application d'un flou pour réduire le bruit
+    cv::Mat img_filtree;
+    cv::GaussianBlur(img_nvg, img_filtree, cv::Size(3, 3), 0);
+
+    // Application du filtre Sobel
+    cv::Mat sobelX = (cv::Mat_<int>(3, 3) << -1, 0, 1, -2, 0, 2, -1, 0, 1);
+    cv::Mat sobelY = (cv::Mat_<int>(3, 3) << -1, -2, -1, 0, 0, 0, 1, 2, 1);
+
+    cv::Mat gradX, gradY;
+    cv::filter2D(img_filtree, gradX, CV_32F, sobelX);
+    cv::filter2D(img_filtree, gradY, CV_32F, sobelY);
+
+    // Calcul de la norme du gradient
+    cv::Mat normeGradient;
+    cv::magnitude(gradX, gradY, normeGradient);
+
+    // Conversion en image 8 bits
+    cv::Mat imgF;
+    normeGradient.convertTo(imgF, CV_8U);
+
+    // Seuillage pour extraire les contours
+    cv::Mat contourImage;
+    double seuil = 30;
+    cv::threshold(imgF, contourImage, seuil, 255, cv::THRESH_BINARY);
+
+    return contourImage; // Retourne l'image des contours
+}
+
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Histogramme ************************
+
+// ----------------------------------------------------------------------------------------------
+
+// Calcul de l'histogramme d'une image en niveaux de gris
+void ImageGris::calculerHistogramme(int histogramme[256], int canal) const {
+    // Initialiser les bins de l'histogramme à zéro
+    for (int i = 0; i < 256; ++i) {
+        histogramme[i] = 0;
+    }
+
+    // Parcourir chaque pixel de l'image en niveaux de gris
+    for (size_t ligne = 0; ligne < m_imageGris.size(); ++ligne) {
+        for (size_t colonne = 0; colonne < m_imageGris[ligne].size(); ++colonne) {
+            uint8_t valeurPixel = m_imageGris[ligne][colonne];
+            histogramme[valeurPixel]++;
+        }
+    }
+}
+
+// Calcul de l'histogramme d'une image couleur
+void ImageCouleur::calculerHistogramme(int histogramme[256], int canal) const {
+    // Initialiser les bins des trois canaux à zéro
+    int histogrammeRouge[256] = {0};
+    int histogrammeVert[256] = {0};
+    int histogrammeBleu[256] = {0};
+
+    // Parcourir chaque pixel de l'image couleur
+    for (size_t ligne = 0; ligne < m_imageCouleur.size(); ++ligne) {
+        for (size_t colonne = 0; colonne < m_imageCouleur[ligne].size(); ++colonne) {
+            uint8_t rouge = m_imageCouleur[ligne][colonne][0];
+            uint8_t vert = m_imageCouleur[ligne][colonne][1];
+            uint8_t bleu = m_imageCouleur[ligne][colonne][2];
+
+            histogrammeRouge[rouge]++;
+            histogrammeVert[vert]++;
+            histogrammeBleu[bleu]++;
+        }
+    }
+
+    // Si un canal spécifique est demandé, on l'affiche
+    if (canal == 0) { // Canal Rouge
+        for (int i = 0; i < 256; ++i) {
+            histogramme[i] = histogrammeRouge[i];
+        }
+    } else if (canal == 1) { // Canal Vert
+        for (int i = 0; i < 256; ++i) {
+            histogramme[i] = histogrammeVert[i];
+        }
+    } else if (canal == 2) { // Canal Bleu
+        for (int i = 0; i < 256; ++i) {
+            histogramme[i] = histogrammeBleu[i];
+        }
+    } else { // Afficher l'histogramme combiné de tous les canaux
+        for (int i = 0; i < 256; ++i) {
+            histogramme[i] = histogrammeRouge[i] + histogrammeVert[i] + histogrammeBleu[i];
+        }
+    }
+}
+
+// Fonction qui permet de calculer l'histogramme d'une image, qu'elle soit en gris ou en couleur
+void Histogramme::calculerHistogramme(const Image& image, int histogramme[256], int canal) {
+    image.calculerHistogramme(histogramme, canal);
+}
+
+
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Détection de Droite ************************
+
+// ----------------------------------------------------------------------------------------------
+
+cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
+    if (image.empty()) {
+        std::cerr << "Erreur : L'image fournie est vide." << std::endl;
+        return cv::Mat();
+    }
+
+    // Détection des contours dans l'image pour réduire le nombre de pixels à analyser
+    cv::Mat contours = detectionContours(image);
+
+    // Dimensions et paramètres
+    int largeur = contours.cols;
+    int hauteur = contours.rows;
+    int maxRho = static_cast<int>(sqrt(largeur * largeur + hauteur * hauteur)); // distance max possible pour rho (diagonale)
+    int angleResolution = 180;
+
+    // Création de l'espace de Hough
+    cv::Mat espaceHough = cv::Mat::zeros(2 * maxRho, angleResolution, CV_32SC1);
+
+    // Parcours des pixels de contour
+    for (int y = 0; y < hauteur; y++) {
+        for (int x = 0; x < largeur; x++) {
+            if (contours.at<uchar>(y, x) > 0) {
+                for (int theta = 0; theta < angleResolution; theta++) {
+                    double angle = CV_PI * theta / angleResolution;
+                    int rho = static_cast<int>(x * cos(angle) + y * sin(angle)); // Calcul de rho pour chaque angle
+                    if (rho >= -maxRho && rho < maxRho) { // si rho dans les limites
+                        espaceHough.at<int>(rho + maxRho, theta)++; // Incrémenter l'espace de Hough à l'indice correspondant
+                    }
+                }
+            }
+        }
+    }
+
+    // Détection des droites les plus probables dans l'espace de Hough
+    double minVal, maxVal;
+    cv::minMaxLoc(espaceHough, &minVal, &maxVal); // Chercher dans l'espace Hough les indices avec des valeurs élevées
+    int seuil = 0.8 * maxVal; // Fixer un seuil pour ne récupérer que les valeurs importantes
+    std::vector<std::pair<int, int>> stockage;
+
+    for (int rho = 0; rho < 2 * maxRho; rho++) {
+        for (int theta = 0; theta < angleResolution; theta++) {
+            if (espaceHough.at<int>(rho, theta) > seuil) {
+                stockage.emplace_back(rho - maxRho, theta); // Stocker les rho et theta détectés
+            }
+        }
+    }
+
+    // Dessin des droites sur l'image d'origine
+    cv::Mat imgDroites = image.clone();  // Utilisation de l'image originale pour dessiner les lignes
+    for (const auto &ligne : stockage) {
+        int rho = ligne.first;   // Récupérer la valeur de rho
+        int theta = ligne.second; // Récupérer la valeur de theta
+        double angle = CV_PI * theta / angleResolution;
+        double a = cos(angle), b = sin(angle);
+        double x0 = a * rho, y0 = b * rho;
+
+        // Points sur les bords de l'image pour dessiner la droite
+        cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
+        cv::Point pt2(cvRound(x0 - 1000 * (-b)), cvRound(y0 - 1000 * a));
+
+        // Dessiner la ligne sur l'image
+        cv::line(imgDroites, pt1, pt2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
+    }
+
+    return imgDroites;  // Retourner l'image avec les droites dessinées
+}
+
+
+
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Réhaussement de contour ************************
+
+// ----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Segmentation couleur ************************
+
+// ----------------------------------------------------------------------------------------------

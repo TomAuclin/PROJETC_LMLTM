@@ -39,6 +39,7 @@ cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     normeGradient.convertTo(imgF, CV_8U);
 
     // Seuillage pour extraire les contours
+    // om mets à 0 ce qui est <30 et à 255 ce qui est >=30
     cv::Mat contourImage;
     double seuil = 30;
     cv::threshold(imgF, contourImage, seuil, 255, cv::THRESH_BINARY);
@@ -67,6 +68,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     // Parcours des pixels de contour
     //rho : Distance entre la droite et l'origine  de l'image.
     //theta : Angle de la normale à la droite avec l'axe des X.
+
    //Representation de chaque droite dans l'espace rho theta
 
     for (int y = 0; y < hauteur; y++) {
@@ -83,7 +85,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         }
     }
 
-    // Détection des droites les plus probables dans l'espace de Hough
+    // Détection des droites les plus probables dans l'espace de Hough ou y a le plus de points
 
     double minVal, maxVal;
     cv::minMaxLoc(espaceHough, &minVal, &maxVal); // on cherche dans la matrice les indice qui ont un valeur elevé
@@ -118,8 +120,8 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         double x0 = a * rho, y0 = b * rho;
 
         // Points sur les bords de l'image pour dessiner la droite
-        cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
-        cv::Point pt2(cvRound(x0 - 1000* (-b)), cvRound(y0 - 1000* a));
+        cv::Point pt1(cvRound(x0 + 500 * (-b)), cvRound(y0 + 500 * a));
+        cv::Point pt2(cvRound(x0 - 500* (-b)), cvRound(y0 - 500* a));
 
         // Dessiner la ligne sur l'image
         cv::line(imgDroites, pt1, pt2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
@@ -128,8 +130,6 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     return imgDroites;  // Retourner l'image avec les droites dessinées
 }
 
-<<<<<<< HEAD
-=======
 cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
     if (image.empty()) {
         std::cerr << "Erreur : L'image fournie est vide." << std::endl;
@@ -161,5 +161,5 @@ cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
     return imgRehaussee; // Retourne l'image rehaussée
 }
 
->>>>>>> f882e21aa8ef1d3a4e3f5ae6dfcb3e14a537c824
+
 

@@ -1,0 +1,40 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <QMainWindow>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+#include <QFileDialog>
+#include <QImage>
+
+#include "histogramme.hpp"
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class MainWindow;
+}
+QT_END_NAMESPACE
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private slots:
+    void on_AfficherImage_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint);
+    void on_ChargerImage_clicked();
+    void on_AfficherHistogramme_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint);
+    void on_CalculeHisto_clicked();
+
+private:
+    Ui::MainWindow *ui;
+    QGraphicsScene *scene;  // La scène pour afficher l'image
+    QImage image;           // L'image chargée
+    Histogramme::HistogrammeCouleur histoCouleur; // L'histogramme couleur
+    int histoGris[256];     // L'histogramme en niveaux de gris
+};
+
+#endif // MAINWINDOW_H
