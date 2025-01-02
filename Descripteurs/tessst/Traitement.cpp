@@ -4,6 +4,26 @@
 
 Traitement ::Traitement (){}
 
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Filtrage par convolution ************************
+
+// ----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Detection de contours ************************
+
+// ----------------------------------------------------------------------------------------------
+
+
 cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     if (image.empty()) {
         std::cerr << "Erreur : L'image fournie est vide." << std::endl;
@@ -47,6 +67,11 @@ cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     return contourImage; // Retourne l'image des contours
 }
 
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Détection de Droite ************************
+
+// ----------------------------------------------------------------------------------------------
 cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     if (image.empty()) {
         std::cerr << "Erreur : L'image fournie est vide." << std::endl;
@@ -129,6 +154,12 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     return imgDroites;  // Retourner l'image avec les droites dessinées
 }
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Réhaussement de contour ************************
+
+// ----------------------------------------------------------------------------------------------
 
 cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
     if (image.empty()) {
