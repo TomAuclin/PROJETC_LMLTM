@@ -87,7 +87,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     double minVal, maxVal;
     cv::minMaxLoc(espaceHough, &minVal, &maxVal); // on cherche dans la matrice les indice qui ont un valeur elevé
-    int seuil = 0.9* maxVal; //on fixe un seuil pour ne recuperer que les valeur importante et eviter d'avoir trop de droites detectée
+    int seuil = 0.8* maxVal; //on fixe un seuil pour ne recuperer que les valeur importante et eviter d'avoir trop de droites detectée
     std::vector<std::pair<int, int>> stockage;
     for (int rho = 0; rho < 2 * maxRho; rho++) {
         for (int theta = 0; theta < angleResolution; theta++) {
@@ -127,4 +127,5 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     return imgDroites;  // Retourner l'image avec les droites dessinées
 }
+
 
