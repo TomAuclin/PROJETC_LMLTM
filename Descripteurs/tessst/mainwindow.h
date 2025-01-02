@@ -26,6 +26,9 @@ private slots:
     void on_DetecterContours_clicked();
     void on_HoughDroite_clicked();
 
+    // Slot pour le réhaussement de contours
+    void on_RehaussementContours_clicked();
+
 private:
     Ui::MainWindow *ui;                // Interface utilisateur
     QGraphicsScene *sceneOriginal;     // Scène pour afficher l'image originale
