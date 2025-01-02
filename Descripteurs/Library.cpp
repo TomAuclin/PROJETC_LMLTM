@@ -1,16 +1,14 @@
 #include "Library.hpp"
-
-
 #include "GestionUtilisateur.hpp"
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
 #include <iomanip>
 #include <memory>
 #include <filesystem>
 #include <string>
+#include <commdlg.h>
+#include <minwindef.h>
 
 namespace fs = std::filesystem;
 

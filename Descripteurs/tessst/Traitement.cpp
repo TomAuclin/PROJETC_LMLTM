@@ -87,7 +87,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     double minVal, maxVal;
     cv::minMaxLoc(espaceHough, &minVal, &maxVal); // on cherche dans la matrice les indice qui ont un valeur elevé
-    int seuil = 0.8 * maxVal; //on fixe un seuil pour ne recuperer que les valeur importante et eviter d'avoir trop de droites detectée
+    int seuil = 0.9* maxVal; //on fixe un seuil pour ne recuperer que les valeur importante et eviter d'avoir trop de droites detectée
     std::vector<std::pair<int, int>> stockage;
     for (int rho = 0; rho < 2 * maxRho; rho++) {
         for (int theta = 0; theta < angleResolution; theta++) {
@@ -97,18 +97,29 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         }
     }
 
+    std::vector<std::pair<int, int>> stockageFiltré;
+    for (const auto &ligne : stockage) {
+        int theta = ligne.second;
+        if (theta < 10 || theta > 170) {     // Tolérance autour de 0° ou 180°
+            stockageFiltré.emplace_back(ligne);
+        }
+    }
+    stockage = stockageFiltré; // Remplacez stockage par la version filtrée
+
+
     // Dessin des droites sur l'image d'origine
     cv::Mat imgDroites = image.clone();  // Utilisation de l'image originale pour dessiner les lignes
     for (const auto &ligne : stockage) {
-        int rho = stockage.first;
-        int theta = stockage.second;
+        int rho = ligne.first;
+        int theta = ligne.second;
+
         double angle = CV_PI * theta / angleResolution;
         double a = cos(angle), b = sin(angle);
         double x0 = a * rho, y0 = b * rho;
 
         // Points sur les bords de l'image pour dessiner la droite
         cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
-        cv::Point pt2(cvRound(x0 - 1000 * (-b)), cvRound(y0 - 1000 * a));
+        cv::Point pt2(cvRound(x0 - 1000* (-b)), cvRound(y0 - 1000* a));
 
         // Dessiner la ligne sur l'image
         cv::line(imgDroites, pt1, pt2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
