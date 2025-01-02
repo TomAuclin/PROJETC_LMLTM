@@ -45,6 +45,7 @@ cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     normeGradient.convertTo(imgF, CV_8U);
 
     // Seuillage pour extraire les contours
+    // om mets à 0 ce qui est <30 et à 255 ce qui est >=30
     cv::Mat contourImage;
     double seuil = 30;
     cv::threshold(imgF, contourImage, seuil, 255, cv::THRESH_BINARY);
@@ -134,19 +135,24 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         return cv::Mat();
     }
 
-    // Détection des contours dans l'image pour réduire le nombre de pixels à analyser
+    // Détection des contours dans l'image pour reduire le nbre de pixel a anlyser
     cv::Mat contours = detectionContours(image);
 
     // Dimensions et paramètres
     int largeur = contours.cols;
     int hauteur = contours.rows;
-    int maxRho = static_cast<int>(sqrt(largeur * largeur + hauteur * hauteur)); // distance max possible pour rho (diagonale)
+    int maxRho = static_cast<int>(sqrt(largeur * largeur + hauteur * hauteur));//distance max possible pour rho (diagonale)
     int angleResolution = 180;
 
-    // Création de l'espace de Hough
+    // Création de l'espace de hough
     cv::Mat espaceHough = cv::Mat::zeros(2 * maxRho, angleResolution, CV_32SC1);
 
     // Parcours des pixels de contour
+    //rho : Distance entre la droite et l'origine  de l'image.
+    //theta : Angle de la normale à la droite avec l'axe des X.
+
+    //Representation de chaque droite dans l'espace rho theta
+
     for (int y = 0; y < hauteur; y++) {
         for (int x = 0; x < largeur; x++) {
             if (contours.at<uchar>(y, x) > 0) {
@@ -154,39 +160,50 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
                     double angle = CV_PI * theta / angleResolution;
                     int rho = static_cast<int>(x * cos(angle) + y * sin(angle)); // Calcul de rho pour chaque angle
                     if (rho >= -maxRho && rho < maxRho) { // si rho dans les limites
-                        espaceHough.at<int>(rho + maxRho, theta)++; // Incrémenter l'espace de Hough à l'indice correspondant
+                        espaceHough.at<int>(rho + maxRho, theta)++; //on incrémente de 1 la valeur de la matrice espaceHough à l'indice correspondant
                     }
                 }
             }
         }
     }
 
-    // Détection des droites les plus probables dans l'espace de Hough
-    double minVal, maxVal;
-    cv::minMaxLoc(espaceHough, &minVal, &maxVal); // Chercher dans l'espace Hough les indices avec des valeurs élevées
-    int seuil = 0.8 * maxVal; // Fixer un seuil pour ne récupérer que les valeurs importantes
-    std::vector<std::pair<int, int>> stockage;
+    // Détection des droites les plus probables dans l'espace de Hough ou y a le plus de points
 
+    double minVal, maxVal;
+    cv::minMaxLoc(espaceHough, &minVal, &maxVal); // on cherche dans la matrice les indice qui ont un valeur elevé
+    int seuil = 0.8* maxVal; //on fixe un seuil pour ne recuperer que les valeur importante et eviter d'avoir trop de droites detectée
+    std::vector<std::pair<int, int>> stockage;
     for (int rho = 0; rho < 2 * maxRho; rho++) {
         for (int theta = 0; theta < angleResolution; theta++) {
             if (espaceHough.at<int>(rho, theta) > seuil) {
-                stockage.emplace_back(rho - maxRho, theta); // Stocker les rho et theta détectés
+                stockage.emplace_back(rho - maxRho, theta); // stockage des theta et rho trouvé
             }
         }
     }
 
+    std::vector<std::pair<int, int>> stockageFiltré;
+    for (const auto &ligne : stockage) {
+        int theta = ligne.second;
+        if (theta < 10 || theta > 170) {     // Tolérance autour de 0° ou 180°
+            stockageFiltré.emplace_back(ligne);
+        }
+    }
+    stockage = stockageFiltré; // Remplacez stockage par la version filtrée
+
+
     // Dessin des droites sur l'image d'origine
     cv::Mat imgDroites = image.clone();  // Utilisation de l'image originale pour dessiner les lignes
     for (const auto &ligne : stockage) {
-        int rho = ligne.first;   // Récupérer la valeur de rho
-        int theta = ligne.second; // Récupérer la valeur de theta
+        int rho = ligne.first;
+        int theta = ligne.second;
+
         double angle = CV_PI * theta / angleResolution;
         double a = cos(angle), b = sin(angle);
         double x0 = a * rho, y0 = b * rho;
 
         // Points sur les bords de l'image pour dessiner la droite
-        cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
-        cv::Point pt2(cvRound(x0 - 1000 * (-b)), cvRound(y0 - 1000 * a));
+        cv::Point pt1(cvRound(x0 + 500 * (-b)), cvRound(y0 + 500 * a));
+        cv::Point pt2(cvRound(x0 - 500* (-b)), cvRound(y0 - 500* a));
 
         // Dessiner la ligne sur l'image
         cv::line(imgDroites, pt1, pt2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
@@ -194,9 +211,6 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     return imgDroites;  // Retourner l'image avec les droites dessinées
 }
-
-
-
 
 // ----------------------------------------------------------------------------------------------
 
