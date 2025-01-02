@@ -222,8 +222,8 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         double x0 = a * rho, y0 = b * rho;
 
         // Points sur les bords de l'image pour dessiner la droite
-        cv::Point pt1(cvRound(x0 + 500 * (-b)), cvRound(y0 + 500 * a));
-        cv::Point pt2(cvRound(x0 - 500* (-b)), cvRound(y0 - 500* a));
+        cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
+        cv::Point pt2(cvRound(x0 - 1000* (-b)), cvRound(y0 - 1000* a));
 
         // Dessiner la ligne sur l'image
         cv::line(imgDroites, pt1, pt2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
