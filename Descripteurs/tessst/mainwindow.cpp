@@ -121,3 +121,29 @@ void MainWindow::on_HoughDroite_clicked() {
 
     ui->statusbar->showMessage("Transformation de Hough appliquée et résultat affiché.");
 }
+
+void MainWindow::on_RehaussementContours_clicked() {
+    if (image_Courante.empty()) {
+        ui->statusbar->showMessage("Veuillez charger une image avant d'appliquer le rehaussement des contours.");
+        return;
+    }
+
+    // Appliquer la fonction de rehaussement des contours
+    Traitement traitement;
+    cv::Mat imgRehaussee = traitement.rehaussementContours(image_Courante);
+
+    if (imgRehaussee.empty()) {
+        ui->statusbar->showMessage("Erreur lors de l'application du rehaussement des contours.");
+        return;
+    }
+
+    // Convertir l'image pour l'afficher dans l'interface Qt
+    QImage imgQt(imgRehaussee.data, imgRehaussee.cols, imgRehaussee.rows, imgRehaussee.step, QImage::Format_Grayscale8);
+    sceneResult->clear();
+    sceneResult->addPixmap(QPixmap::fromImage(imgQt));
+    ui->AfficherImageResultat->fitInView(sceneResult->sceneRect(), Qt::KeepAspectRatio);
+
+    ui->statusbar->showMessage("Rehaussement des contours appliqué avec succès.");
+}
+
+

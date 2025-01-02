@@ -15,6 +15,7 @@ public:
     cv::Mat detectionContours(const cv::Mat &image);
     void setImageOriginale(const cv::Mat &image);
     cv::Mat HoughDroite(const cv::Mat &image);
+    cv::Mat rehaussementContours(const cv::Mat &image);
 
 };
 

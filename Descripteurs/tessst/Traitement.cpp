@@ -128,3 +128,35 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     return imgDroites;  // Retourner l'image avec les droites dessinées
 }
 
+cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
+    if (image.empty()) {
+        std::cerr << "Erreur : L'image fournie est vide." << std::endl;
+        return cv::Mat(); // Retourne une image vide en cas d'erreur
+    }
+
+    // Étape 1 : Convertir en niveaux de gris si l'image est en couleur
+    cv::Mat imgGris;
+    if (image.channels() == 3) {
+        cv::cvtColor(image, imgGris, cv::COLOR_BGR2GRAY);
+    } else {
+        imgGris = image.clone();
+    }
+
+    // Étape 2 : Appliquer un filtre Sobel pour détecter les contours
+    cv::Mat gradX, gradY;
+    cv::Sobel(imgGris, gradX, CV_16S, 1, 0, 3); // Gradient horizontal
+    cv::Sobel(imgGris, gradY, CV_16S, 0, 1, 3); // Gradient vertical
+    cv::convertScaleAbs(gradX, gradX);
+    cv::convertScaleAbs(gradY, gradY);
+
+    cv::Mat magnitude;
+    cv::addWeighted(gradX, 0.5, gradY, 0.5, 0, magnitude);
+
+    // Étape 3 : Ajouter les contours détectés à l'image originale
+    cv::Mat imgRehaussee;
+    cv::addWeighted(imgGris, 0.8, magnitude, 0.5, 0, imgRehaussee);
+
+    return imgRehaussee; // Retourne l'image rehaussée
+}
+
+

@@ -114,3 +114,33 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     return imgDroites;
 }
+
+cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
+    if (image.empty()) {
+        std::cerr << "Erreur : L'image fournie est vide." << std::endl;
+        return cv::Mat();
+    }
+
+    // Étape 1 : Convertir en niveaux de gris (si nécessaire)
+    cv::Mat imgGris;
+    if (image.channels() == 3) {
+        cv::cvtColor(image, imgGris, cv::COLOR_BGR2GRAY);
+    } else {
+        imgGris = image.clone();
+    }
+
+    // Étape 2 : Détecter les contours avec Sobel
+    cv::Mat gradX, gradY, magnitude;
+    cv::Sobel(imgGris, gradX, CV_16S, 1, 0, 3); // Gradient horizontal
+    cv::Sobel(imgGris, gradY, CV_16S, 0, 1, 3); // Gradient vertical
+    cv::convertScaleAbs(gradX, gradX);
+    cv::convertScaleAbs(gradY, gradY);
+    cv::addWeighted(gradX, 0.5, gradY, 0.5, 0, magnitude);
+
+    // Étape 3 : Accentuer les contours en combinant avec l'image originale
+    cv::Mat imgContours;
+    cv::addWeighted(imgGris, 0.8, magnitude, 0.5, 0, imgContours);
+
+    // Étape 4 : Retourner l'image rehaussée
+    return imgContours;
+}

@@ -16,6 +16,7 @@ public:
     void setImageOriginale(const cv::Mat &image);
     cv::Mat HoughDroite(const cv::Mat &image);
     ~Traitement();
+    cv::Mat rehaussementContours(const cv::Mat &image);
 };
 
 #endif // TRAITEMENT_HPP
