@@ -30,7 +30,7 @@
    <widget class="QPushButton" name="DetecterContours">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>290</x>
       <y>0</y>
       <width>131</width>
       <height>21</height>
@@ -63,7 +63,7 @@
    <widget class="QPushButton" name="HoughDroite">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>440</x>
       <y>0</y>
       <width>101</width>
       <height>25</height>
@@ -71,6 +71,19 @@
     </property>
     <property name="text">
      <string>HoughDroite</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="RehaussementContours">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>0</y>
+      <width>141</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RehaussementContours</string>
     </property>
    </widget>
   </widget>
