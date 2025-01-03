@@ -63,7 +63,7 @@ int main() {
        // std::cin >> numeroModification;
 
         // Appel de la méthode pour modifier l'accès dans la liste
-        liste.modifierAcces(numeroModification,"Biblio_test.txt");
+       // liste.modifierAcces(numeroModification,"Biblio_test.txt");
         // Afficher l'image numéro 30
         //std::cout << liste.rechercherImageParNumero(30) << std::endl;
 
