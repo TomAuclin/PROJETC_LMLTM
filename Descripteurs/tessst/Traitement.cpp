@@ -61,7 +61,7 @@ cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     // Seuillage pour extraire les contours
     // om mets à 0 ce qui est <30 et à 255 ce qui est >=30
     cv::Mat contourImage;
-    double seuil = 30;
+    double seuil = 25;
     cv::threshold(imgF, contourImage, seuil, 255, cv::THRESH_BINARY);
 
     return contourImage; // Retourne l'image des contours
