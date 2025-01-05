@@ -125,7 +125,7 @@ void MainWindow::on_CalculerHisto_clicked()
         return;
     }
 
-    // Vérifier si l'image est en niveaux de gris
+    // Vérification si l'image est en niveaux de gris
     bool isGrayscale = dynamic_cast<ImageGris*>(imageObj) != nullptr;
 
     // Calculer l'histogramme
@@ -212,7 +212,7 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int margin = 30;
     int maxVal = 0;
 
-    // Trouver la valeur maximale dans l'histogramme pour le redimensionnement
+    // valeur maximale dans l'histogramme pour le redimensionnement
     for (int i = 0; i < 256; ++i) {
         if (histogramme[i] > maxVal) {
             maxVal = histogramme[i];
@@ -227,11 +227,11 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int maxBarHeight = height - 2 * margin;
     double scaleFactor = static_cast<double>(maxBarHeight) / maxVal;
 
-    // Dessiner les axes de l'histogramme
+    // axes de l'histogramme
     sceneHisto->addLine(margin, height - margin, width, height - margin, QPen(Qt::black)); // Axe X
     sceneHisto->addLine(margin, 0, margin, height - margin, QPen(Qt::black));             // Axe Y
 
-    // Dessiner les graduations pour les axes
+    // graduations pour les axes
     for (int i = 0; i < 256; i += 32) {
         sceneHisto->addLine(i * barWidth + margin, height - margin, i * barWidth + margin, height - margin - 5, QPen(Qt::black));
         QGraphicsTextItem* textItem = sceneHisto->addText(QString::number(i));
@@ -246,7 +246,7 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         textItem->setPos(margin - 30, yPos - 5);
     }
 
-    // Dessiner les histogrammes pour chaque canal en fonction des cases cochées
+    //  les histogrammes pour chaque canal en fonction des cases cochées
     if (ui->Canal_R->isChecked()) {
         int histoRouge[256] = {0};
         Histogramme::calculerHistogramme(*imageObj, histoRouge, 0); // Canal rouge
@@ -277,7 +277,7 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         }
     }
 
-    // Appliquer la scène mise à jour à l'affichage graphique
+
     ui->AffichageResultat->setScene(sceneHisto);
 }
 
@@ -318,7 +318,7 @@ void MainWindow::on_Canal_B_stateChanged(int arg1)
 
 void MainWindow::on_DetectionContour_clicked()
 {
-    // Vérifier si une image a été chargée
+    // Vérification si une image a été chargée
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
@@ -329,34 +329,31 @@ void MainWindow::on_DetectionContour_clicked()
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
 
-    // Créer une cv::Mat pour stocker l'image en OpenCV
+
     cv::Mat imageMat;
 
-    // Si l'image est en couleur (ImageCouleur)
+    // Si l'image est en couleur
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
-        // Accéder aux pixels de l'image couleur via l'accesseur
-        const auto& imageCouleur = img->getImageCouleur(); // tableau des pixels (BGR)
 
-        // Créer une Mat de OpenCV avec les dimensions de l'image
+        const auto& imageCouleur = img->getImageCouleur();
+
         imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
 
-        // Remplir le cv::Mat avec les données des pixels (BGR)
+        // Remplissage de la matrice
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 const auto& pixel = imageCouleur[y][x];
-                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]); // BGR
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]); //RGB
             }
         }
     }
-    // Si l'image est en niveaux de gris (ImageGris)
+    // Si l'image est en niveaux de gris
     else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
-        // Accéder aux pixels de l'image en niveaux de gris via l'accesseur
+
         const auto& imageGris = img->getImageGris(); // tableau des pixels en niveaux de gris
 
-        // Créer une Mat de OpenCV avec les dimensions de l'image
         imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
 
-        // Remplir le cv::Mat avec les données des pixels (niveaux de gris)
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 imageMat.at<uchar>(y, x) = imageGris[y][x];
@@ -364,28 +361,28 @@ void MainWindow::on_DetectionContour_clicked()
         }
     }
 
-    // Appliquer la détection des contours en utilisant la classe Traitement
+    //Détection des contours
     Traitement traitement;
-    cv::Mat contours = traitement.detectionContours(imageMat); // Image des contours
+    cv::Mat contours = traitement.detectionContours(imageMat);
 
     if (contours.empty()) {
         QMessageBox::warning(this, tr("Erreur"), tr("La détection des contours a échoué."));
         return;
     }
 
-    // Convertir l'image des contours en QImage pour l'afficher
+    // Conversion de l'image des contours pour l'afficher
     QImage imgContours(contours.data, contours.cols, contours.rows, contours.step, QImage::Format_Grayscale8);
     QPixmap pixmap = QPixmap::fromImage(imgContours);
 
-    // Redimensionner l'image selon la taille de la vue
+    // Redimensionnement de l'image
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    // Créer une nouvelle scène pour AffichageResultat
+    // Création d' une nouvelle scène pour Affichage le Resultat
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
 
-    // Afficher l'image des contours dans la vue AffichageResultat
+    // Affichage l'image des contours dans la vue AffichageResultat
     ui->AffichageResultat->setScene(sceneResultat);
 }
 
@@ -405,24 +402,23 @@ void MainWindow::on_DetectionDroite_clicked()
         return;
     }
 
-    // Créer une cv::Mat pour stocker l'image en OpenCV
     cv::Mat imageMat;
 
-    // Si l'image est en couleur (ImageCouleur)
+    // Si l'image est en couleur
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
-        const auto& imageCouleur = img->getImageCouleur(); // tableau des pixels (BGR)
+        const auto& imageCouleur = img->getImageCouleur();
         imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 const auto& pixel = imageCouleur[y][x];
-                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]); // BGR
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]);
             }
         }
     }
 
-    // Si l'image est en niveaux de gris (ImageGris)
+    // Si l'image est en niveaux de gris
     else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
-        const auto& imageGris = img->getImageGris(); // tableau des pixels en niveaux de gris
+        const auto& imageGris = img->getImageGris();
         imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
@@ -431,23 +427,23 @@ void MainWindow::on_DetectionDroite_clicked()
         }
     }
 
-    // Appliquer la détection des droites
+    // détection des droites
     Traitement traitement;
     cv::Mat imageAvecDroites = traitement.HoughDroite(imageMat);
 
-    // Vérifier si l'image des droites est vide
+    // si l'image des droites est vide
     if (imageAvecDroites.empty()) {
         QMessageBox::warning(this, tr("Erreur"), tr("La détection des droites a échoué."));
         return;
     }
 
-    // Vérifier le nombre de canaux dans l'image résultante
+
     QImage imgDroites;
 
     if (imageAvecDroites.channels() == 3) {
-        // Convertir BGR à RGB pour les images en couleur
+        // Conversion  pour les images en couleur
         cv::Mat imageRGB;
-        cv::cvtColor(imageAvecDroites, imageRGB, cv::COLOR_BGR2RGB); // BGR -> RGB
+        cv::cvtColor(imageAvecDroites, imageRGB, cv::COLOR_BGR2RGB);
         imgDroites = QImage(imageRGB.data, imageRGB.cols, imageRGB.rows, imageRGB.step, QImage::Format_RGB888);
     }
     else if (imageAvecDroites.channels() == 1) {
@@ -455,30 +451,14 @@ void MainWindow::on_DetectionDroite_clicked()
         imgDroites = QImage(imageAvecDroites.data, imageAvecDroites.cols, imageAvecDroites.rows, imageAvecDroites.step, QImage::Format_Grayscale8);
     }
 
-    // Vérifier si la conversion a échoué
-    if (imgDroites.isNull()) {
-        QMessageBox::warning(this, tr("Erreur"), tr("Le QImage est nul après la conversion."));
-        return;
-    }
 
-    // Créer un QPixmap à partir du QImage
     QPixmap pixmap = QPixmap::fromImage(imgDroites);
 
-    // Vérifier si la conversion en QPixmap est réussie
-    if (pixmap.isNull()) {
-        QMessageBox::warning(this, tr("Erreur"), tr("Le QPixmap est nul après la conversion."));
-        return;
-    }
-
-    // Redimensionner l'image selon la taille de la vue
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    // Créer une nouvelle scène pour AffichageResultat
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
-
-    // Afficher l'image des droites dans la vue AffichageResultat
     ui->AffichageResultat->setScene(sceneResultat);
     }
 
@@ -565,28 +545,24 @@ void MainWindow::on_SegmenterCouleur_clicked() {
 
 void MainWindow::on_RehaussementContours_clicked()
 {
-    // Vérifier si une image a été chargée
+
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
 
-    // Masquer les boutons à cocher si nécessaire
     ui->Canal_R->setVisible(false);
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
 
-    // Créer une cv::Mat pour stocker l'image en OpenCV
     cv::Mat imageMat;
 
-    // Si l'image est en couleur (ImageCouleur)
+
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
         const auto& imageCouleur = img->getImageCouleur();
 
-        // Créer une Mat de OpenCV avec les dimensions de l'image
         imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
 
-        // Remplir le cv::Mat avec les données des pixels (BGR)
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 const auto& pixel = imageCouleur[y][x];
@@ -594,14 +570,13 @@ void MainWindow::on_RehaussementContours_clicked()
             }
         }
     }
-    // Si l'image est en niveaux de gris (ImageGris)
+
     else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
         const auto& imageGris = img->getImageGris();
 
-        // Créer une Mat de OpenCV avec les dimensions de l'image
+
         imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
 
-        // Remplir le cv::Mat avec les données des pixels (niveaux de gris)
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 imageMat.at<uchar>(y, x) = imageGris[y][x];
@@ -609,34 +584,29 @@ void MainWindow::on_RehaussementContours_clicked()
         }
     }
 
-    // Appliquer le rehaussement des contours en utilisant la classe Traitement
+    //  rehaussement des contours
     Traitement traitement;
-    cv::Mat imageRehaussee = traitement.rehaussementContours(imageMat); // Image rehaussée
-
+    cv::Mat imageRehaussee = traitement.rehaussementContours(imageMat);
     if (imageRehaussee.empty()) {
         QMessageBox::warning(this, tr("Erreur"), tr("Le rehaussement des contours a échoué."));
         return;
     }
 
-    // Convertir l'image rehaussée en QImage pour l'afficher
+
     QImage imgRehaussee(imageRehaussee.data, imageRehaussee.cols, imageRehaussee.rows, imageRehaussee.step, QImage::Format_Grayscale8);
 
-    // Si l'image est en couleur, on applique un format adapté
+    // Si l'image est en RGB
     if (imageRehaussee.channels() == 3) {
         imgRehaussee = QImage(imageRehaussee.data, imageRehaussee.cols, imageRehaussee.rows, imageRehaussee.step, QImage::Format_RGB888);
     }
 
     QPixmap pixmap = QPixmap::fromImage(imgRehaussee);
-
-    // Redimensionner l'image selon la taille de la vue
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    // Créer une nouvelle scène pour AffichageResultat
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
 
-    // Afficher l'image rehaussée dans la vue AffichageResultat
     ui->AffichageResultat->setScene(sceneResultat);
 }
 
