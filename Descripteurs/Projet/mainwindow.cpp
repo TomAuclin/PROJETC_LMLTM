@@ -213,6 +213,7 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int margin = 30;
     int maxVal = 0;
 
+    // Trouver la valeur maximale dans l'histogramme pour le redimensionnement
     for (int i = 0; i < 256; ++i) {
         if (histogramme[i] > maxVal) {
             maxVal = histogramme[i];
@@ -227,9 +228,11 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int maxBarHeight = height - 2 * margin;
     double scaleFactor = static_cast<double>(maxBarHeight) / maxVal;
 
-    sceneHisto->addLine(margin, height - margin, width, height - margin, QPen(Qt::black));
-    sceneHisto->addLine(margin, 0, margin, height - margin, QPen(Qt::black));
+    // Dessiner les axes de l'histogramme
+    sceneHisto->addLine(margin, height - margin, width, height - margin, QPen(Qt::black)); // Axe X
+    sceneHisto->addLine(margin, 0, margin, height - margin, QPen(Qt::black));             // Axe Y
 
+    // Dessiner les graduations pour les axes
     for (int i = 0; i < 256; i += 32) {
         sceneHisto->addLine(i * barWidth + margin, height - margin, i * barWidth + margin, height - margin - 5, QPen(Qt::black));
         QGraphicsTextItem* textItem = sceneHisto->addText(QString::number(i));
@@ -244,37 +247,38 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         textItem->setPos(margin - 30, yPos - 5);
     }
 
-    // Vérifier l'état des cases à cocher pour chaque canal et dessiner en conséquence
+    // Dessiner les histogrammes pour chaque canal en fonction des cases cochées
     if (ui->Canal_R->isChecked()) {
         int histoRouge[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoRouge, 0);
+        Histogramme::calculerHistogramme(*imageObj, histoRouge, 0); // Canal rouge
         QColor couleurRouge = Qt::red;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoRouge[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurRouge));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurRouge), QBrush(couleurRouge));
         }
     }
 
     if (ui->Canal_V->isChecked()) {
         int histoVert[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoVert, 1);
+        Histogramme::calculerHistogramme(*imageObj, histoVert, 1); // Canal vert
         QColor couleurVert = Qt::green;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoVert[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurVert));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurVert), QBrush(couleurVert));
         }
     }
 
     if (ui->Canal_B->isChecked()) {
         int histoBleu[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoBleu, 2);
+        Histogramme::calculerHistogramme(*imageObj, histoBleu, 2); // Canal bleu
         QColor couleurBleu = Qt::blue;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoBleu[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurBleu));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurBleu), QBrush(couleurBleu));
         }
     }
 
+    // Appliquer la scène mise à jour à l'affichage graphique
     ui->AffichageResultat->setScene(sceneHisto);
 }
 
