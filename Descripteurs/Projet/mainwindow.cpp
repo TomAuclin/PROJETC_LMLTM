@@ -458,29 +458,35 @@ void MainWindow::on_DetectionDroite_clicked()
 // ************************ Séparation par couleur ************************
 
 // ----------------------------------------------------------------------------------------------
+std::vector<int> MainWindow::getSelectedSegmentationCanaux() {
+    std::vector<int> canaux;
+    if (ui->Segmentation_Canal_R->isChecked()) {
+        canaux.push_back(0); // Rouge
+    }
+    if (ui->Segmentation_Canal_V->isChecked()) {
+        canaux.push_back(1); // Vert
+    }
+    if (ui->Segmentation_Canal_B->isChecked()) {
+        canaux.push_back(2); // Bleu
+    }
+    return canaux;
+}
 
-void MainWindow::on_Valider_clicked() {
+void MainWindow::on_SegmenterCouleur_clicked() {
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
 
-    // Identifier le canal sélectionné
-    int canal = -1;
-    if (ui->Canal_R->isChecked()) {
-        canal = 0; // Rouge
-    } else if (ui->Canal_V->isChecked()) {
-        canal = 1; // Vert
-    } else if (ui->Canal_B->isChecked()) {
-        canal = 2; // Bleu
-    }
+    // Récupération des canaux sélectionnés
+    std::vector<int> canaux = getSelectedSegmentationCanaux();
 
-    if (canal == -1) {
-        QMessageBox::warning(this, tr("Erreur"), tr("Veuillez sélectionner un canal de couleur."));
+    if (canaux.empty() || canaux.size() > 2) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Veuillez sélectionner un ou deux canaux."));
         return;
     }
 
-    // Convertir l'image en cv::Mat
+    // Conversion de l'image en cv::Mat
     cv::Mat imageMat;
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
         const auto& imageCouleur = img->getImageCouleur();
@@ -496,12 +502,12 @@ void MainWindow::on_Valider_clicked() {
         return;
     }
 
-    // Appliquer la séparation par couleur
+    // Appliquer la segmentation
     Traitement traitement;
-    cv::Mat resultat = traitement.separationParCouleur(imageMat, canal);
+    cv::Mat resultat = traitement.separationParCouleur(imageMat, canaux);
 
     if (resultat.empty()) {
-        QMessageBox::warning(this, tr("Erreur"), tr("La séparation des couleurs a échoué."));
+        QMessageBox::warning(this, tr("Erreur"), tr("La segmentation a échoué."));
         return;
     }
 
@@ -515,9 +521,5 @@ void MainWindow::on_Valider_clicked() {
     sceneResultat->addPixmap(pixmap);
     ui->AffichageResultat->setScene(sceneResultat);
 
-    ui->statusbar->showMessage("Séparation par couleur appliquée.");
+    ui->statusbar->showMessage("Segmentation par couleur appliquée.");
 }
-
-
-
-

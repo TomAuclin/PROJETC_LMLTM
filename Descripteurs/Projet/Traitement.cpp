@@ -248,63 +248,67 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 // ************************ Segmentation couleur ************************
 
 // ----------------------------------------------------------------------------------------------
-cv::Mat Traitement::separationParCouleur(const cv::Mat &image, int canal) {
+cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux) {
     if (image.empty() || image.channels() != 3) {
         std::cerr << "Image invalide ou non en couleur." << std::endl;
         return cv::Mat();
     }
 
-    // Calculer l'histogramme pour le canal spécifié
+    // Conversion de l'image OpenCV en ImageCouleur
+    std::vector<std::vector<std::array<uint8_t, 3>>> pixels(image.rows, std::vector<std::array<uint8_t, 3>>(image.cols));
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
+            pixels[y][x] = {pixel[0], pixel[1], pixel[2]}; // Rouge, Vert, Bleu
+        }
+    }
+    ImageCouleur imageCouleur(pixels);
+
+    // Initialisation des histogrammes pour chaque canal
     int histogramme[256] = {0};
-    for (int y = 0; y < image.rows; y++) {
-        for (int x = 0; x < image.cols; x++) {
-            uint8_t valeur = image.at<cv::Vec3b>(y, x)[canal];
-            histogramme[valeur]++;
-        }
-    }
+    int seuils[3] = {0};
 
-    // Calculer le seuil correspondant aux 30% les plus intenses
-    int totalPixels = image.rows * image.cols;
-    int seuilPixels = static_cast<int>(totalPixels * 0.3); // 30% des pixels
-    int cumulativeSum = 0;
-    int seuilBas = 0;
+    // Calcul des seuils pour chaque canal sélectionné
+    for (int canal : canaux) {
+        Histogramme::calculerHistogramme(imageCouleur, histogramme, canal);
 
-    for (int i = 255; i >= 0; i--) {
-        cumulativeSum += histogramme[i];
-        if (cumulativeSum >= seuilPixels) {
-            seuilBas = i;
-            break;
-        }
-    }
+        int totalPixels = image.rows * image.cols;
+        int seuilPixels = static_cast<int>(totalPixels * 0.3); // 30% des pixels les plus intenses
+        int cumulativeSum = 0;
 
-    // Créer une image filtrée où seuls les pixels du canal spécifié dépassant le seuil sont conservés
-    cv::Mat result = cv::Mat::zeros(image.size(), image.type());
-    for (int y = 0; y < image.rows; y++) {
-        for (int x = 0; x < image.cols; x++) {
-            uint8_t bleu = image.at<cv::Vec3b>(y, x)[0]; // Canal bleu
-            uint8_t vert = image.at<cv::Vec3b>(y, x)[1]; // Canal vert
-            uint8_t rouge = image.at<cv::Vec3b>(y, x)[2]; // Canal rouge
-
-            if (canal == 0) { // Bleu
-                // Vérification si le bleu est suffisamment intense et les autres canaux sont faibles
-                if (bleu >= seuilBas && bleu > vert * 1.4 && bleu > rouge * 1.5) {
-                    result.at<cv::Vec3b>(y, x) = image.at<cv::Vec3b>(y, x); // Conserver les pixels avec assez de bleu
-                }
-            } else if (canal == 1) { // Vert
-                // Vérification si le vert est suffisamment intense et les autres canaux sont faibles
-                if (vert >= seuilBas && vert > bleu * 0.9 && vert > rouge * 0.9) {
-                    result.at<cv::Vec3b>(y, x) = image.at<cv::Vec3b>(y, x); // Conserver les pixels avec assez de vert
-                }
-            } else if (canal == 2) { // Rouge
-                // Vérification si le rouge est suffisamment intense et les autres canaux sont faibles
-                if (rouge >= seuilBas && rouge > bleu * 1.1 && rouge > vert * 1.1) {
-                    result.at<cv::Vec3b>(y, x) = image.at<cv::Vec3b>(y, x); // Conserver les pixels avec assez de rouge
-                }
+        for (int i = 255; i >= 0; i--) {
+            cumulativeSum += histogramme[i];
+            if (cumulativeSum >= seuilPixels) {
+                seuils[canal] = i;
+                break;
             }
         }
     }
 
-    return result;
+    // Création d'une image filtrée
+    cv::Mat resultat = cv::Mat::zeros(image.size(), image.type());
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            const cv::Vec3b& pixel = image.at<cv::Vec3b>(y, x);
+            uint8_t rouge = pixel[0];
+            uint8_t vert = pixel[1];
+            uint8_t bleu = pixel[2];
+
+            // Vérification pour chaque combinaison de canaux
+            if (std::find(canaux.begin(), canaux.end(), 0) != canaux.end() && 
+                rouge >= seuils[0] && rouge > bleu * 1.5 && rouge > vert * 1.4) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels rouges
+            }
+            if (std::find(canaux.begin(), canaux.end(), 1) != canaux.end() && 
+                vert >= seuils[1] && vert > rouge * 0.9 && vert > bleu * 0.9) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels verts
+            }
+            if (std::find(canaux.begin(), canaux.end(), 2) != canaux.end() && 
+                bleu >= seuils[2] && bleu > rouge * 0.8 && bleu > vert * 0.8) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels bleus
+            }
+        }
+    }
+
+    return resultat;
 }
-
-

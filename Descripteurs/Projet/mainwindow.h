@@ -31,7 +31,7 @@ private slots:
     void on_DetectionContour_clicked();
 
     void on_DetectionDroite_clicked();
-    void on_Valider_clicked();
+    void on_SegmenterCouleur_clicked();
 
 
 private:
@@ -43,6 +43,7 @@ private:
 
     void afficherHistogramme(int histogramme[256]);   // Méthode pour afficher l'histogramme
     void afficherHistogrammeCanal(int histogramme[256], int canal); // Affichage des histogrammes par canal
+    std::vector<int> getSelectedSegmentationCanaux();
 
     int seuilUtilisateur = 0.8;
 };
