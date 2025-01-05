@@ -555,4 +555,88 @@ void MainWindow::on_SegmenterCouleur_clicked() {
     ui->statusbar->showMessage("Segmentation par couleur appliquée.");
 }
 
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Rehaussement de contours ************************
+
+// ----------------------------------------------------------------------------------------------
+
+
+
+void MainWindow::on_RehaussementContours_clicked()
+{
+    // Vérifier si une image a été chargée
+    if (!imageObj) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
+        return;
+    }
+
+    // Masquer les boutons à cocher si nécessaire
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
+
+    // Créer une cv::Mat pour stocker l'image en OpenCV
+    cv::Mat imageMat;
+
+    // Si l'image est en couleur (ImageCouleur)
+    if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
+        const auto& imageCouleur = img->getImageCouleur();
+
+        // Créer une Mat de OpenCV avec les dimensions de l'image
+        imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
+
+        // Remplir le cv::Mat avec les données des pixels (BGR)
+        for (int y = 0; y < imageMat.rows; ++y) {
+            for (int x = 0; x < imageMat.cols; ++x) {
+                const auto& pixel = imageCouleur[y][x];
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]); // BGR
+            }
+        }
+    }
+    // Si l'image est en niveaux de gris (ImageGris)
+    else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
+        const auto& imageGris = img->getImageGris();
+
+        // Créer une Mat de OpenCV avec les dimensions de l'image
+        imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
+
+        // Remplir le cv::Mat avec les données des pixels (niveaux de gris)
+        for (int y = 0; y < imageMat.rows; ++y) {
+            for (int x = 0; x < imageMat.cols; ++x) {
+                imageMat.at<uchar>(y, x) = imageGris[y][x];
+            }
+        }
+    }
+
+    // Appliquer le rehaussement des contours en utilisant la classe Traitement
+    Traitement traitement;
+    cv::Mat imageRehaussee = traitement.rehaussementContours(imageMat); // Image rehaussée
+
+    if (imageRehaussee.empty()) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Le rehaussement des contours a échoué."));
+        return;
+    }
+
+    // Convertir l'image rehaussée en QImage pour l'afficher
+    QImage imgRehaussee(imageRehaussee.data, imageRehaussee.cols, imageRehaussee.rows, imageRehaussee.step, QImage::Format_Grayscale8);
+
+    // Si l'image est en couleur, on applique un format adapté
+    if (imageRehaussee.channels() == 3) {
+        imgRehaussee = QImage(imageRehaussee.data, imageRehaussee.cols, imageRehaussee.rows, imageRehaussee.step, QImage::Format_RGB888);
+    }
+
+    QPixmap pixmap = QPixmap::fromImage(imgRehaussee);
+
+    // Redimensionner l'image selon la taille de la vue
+    QSize viewSize = ui->AffichageResultat->viewport()->size();
+    pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    // Créer une nouvelle scène pour AffichageResultat
+    QGraphicsScene* sceneResultat = new QGraphicsScene(this);
+    sceneResultat->addPixmap(pixmap);
+
+    // Afficher l'image rehaussée dans la vue AffichageResultat
+    ui->AffichageResultat->setScene(sceneResultat);
+}
 

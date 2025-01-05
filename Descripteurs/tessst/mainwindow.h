@@ -31,7 +31,7 @@ private slots:
     void on_DetectionContour_clicked();
 
     void on_DetectionDroite_clicked();
-
+    void on_RehaussementContours_clicked();
     void on_SegmenterCouleur_clicked();
 
 private:

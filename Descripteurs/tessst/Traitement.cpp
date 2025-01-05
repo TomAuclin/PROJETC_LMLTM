@@ -219,7 +219,51 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
 // ----------------------------------------------------------------------------------------------
 
+cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
+    if (image.empty()) {
+        std::cerr << "Erreur : L'image fournie est vide." << std::endl;
+        return cv::Mat();
+    }
 
+    //Détecter les contours avec la fonction implementée
+    cv::Mat contours = detectionContours(image);
+    if (contours.empty()) {
+        std::cerr << "Erreur : Détection des contours échouée." << std::endl;
+        return cv::Mat();
+    }
+
+    //Initialisation de l'image de sortie
+    cv::Mat imgRehaussee = image.clone();
+
+    //On appliquer les contours à l'image originale (couelru ou nvg)
+    if (image.channels() == 3) {
+        // Si l'image est en couleur on applique les contours à chaque canal
+        for (int i = 0; i < image.rows; ++i) {
+            for (int j = 0; j < image.cols; ++j) {
+                cv::Vec3b& pixel = imgRehaussee.at<cv::Vec3b>(i, j);
+                uchar valeurContour = contours.at<uchar>(i, j);
+
+                // Ajouter les contours à chaque canal (R, G, B)
+                for (int k = 0; k < 3; ++k) {
+                    pixel[k] = cv::saturate_cast<uchar>(pixel[k] + 0.15 * valeurContour);
+                }
+            }
+        }
+    } else {
+        // Si l'image est en niveaux de gris
+        for (int i = 0; i < image.rows; ++i) {
+            for (int j = 0; j < image.cols; ++j) {
+                uchar& pixel = imgRehaussee.at<uchar>(i, j);
+                uchar valeurContour = contours.at<uchar>(i, j);
+
+                // Ajouter les contours au pixel en niveaux de gris
+                pixel = cv::saturate_cast<uchar>(pixel + 0.15 * valeurContour);
+            }
+        }
+    }
+
+    return imgRehaussee; // Retourne l'image rehaussée avec contours
+}
 
 
 
