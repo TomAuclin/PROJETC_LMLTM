@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
 
+
 }
 
 MainWindow::~MainWindow()
@@ -451,6 +452,72 @@ void MainWindow::on_DetectionDroite_clicked()
     ui->AffichageResultat->setScene(sceneResultat);
 
 }
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Séparation par couleur ************************
+
+// ----------------------------------------------------------------------------------------------
+
+void MainWindow::on_Valider_clicked() {
+    if (!imageObj) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
+        return;
+    }
+
+    // Identifier le canal sélectionné
+    int canal = -1;
+    if (ui->Canal_R->isChecked()) {
+        canal = 0; // Rouge
+    } else if (ui->Canal_V->isChecked()) {
+        canal = 1; // Vert
+    } else if (ui->Canal_B->isChecked()) {
+        canal = 2; // Bleu
+    }
+
+    if (canal == -1) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Veuillez sélectionner un canal de couleur."));
+        return;
+    }
+
+    // Convertir l'image en cv::Mat
+    cv::Mat imageMat;
+    if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
+        const auto& imageCouleur = img->getImageCouleur();
+        imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
+        for (int y = 0; y < imageMat.rows; ++y) {
+            for (int x = 0; x < imageMat.cols; ++x) {
+                const auto& pixel = imageCouleur[y][x];
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]);
+            }
+        }
+    } else {
+        QMessageBox::warning(this, tr("Erreur"), tr("L'image doit être en couleur."));
+        return;
+    }
+
+    // Appliquer la séparation par couleur
+    Traitement traitement;
+    cv::Mat resultat = traitement.separationParCouleur(imageMat, canal);
+
+    if (resultat.empty()) {
+        QMessageBox::warning(this, tr("Erreur"), tr("La séparation des couleurs a échoué."));
+        return;
+    }
+
+    // Afficher le résultat
+    QImage imgResultat(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_RGB888);
+    QPixmap pixmap = QPixmap::fromImage(imgResultat);
+    QSize viewSize = ui->AffichageResultat->viewport()->size();
+    pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    QGraphicsScene* sceneResultat = new QGraphicsScene(this);
+    sceneResultat->addPixmap(pixmap);
+    ui->AffichageResultat->setScene(sceneResultat);
+
+    ui->statusbar->showMessage("Séparation par couleur appliquée.");
+}
+
 
 
 

@@ -26,11 +26,13 @@ private slots:
 
     void on_Canal_R_stateChanged(int arg1);
     void on_Canal_V_stateChanged(int arg1);
-    void on_Canal_B_stateChanged(int arg1);
+    void on_Canal_B_stateChanged(int arg1); 
 
     void on_DetectionContour_clicked();
 
     void on_DetectionDroite_clicked();
+    void on_Valider_clicked();
+
 
 private:
     Ui::MainWindow *ui;
