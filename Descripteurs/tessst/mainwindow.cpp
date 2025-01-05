@@ -399,16 +399,11 @@ void MainWindow::on_DetectionContour_clicked()
 
 void MainWindow::on_DetectionDroite_clicked()
 {
-    // Vérifier si une image a été chargée
+    // Vérification si une image a été chargée
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
-
-    // masquer les bouton a cocher
-    ui->Canal_R->setVisible(false);
-    ui->Canal_V->setVisible(false);
-    ui->Canal_B->setVisible(false);
 
     // Créer une cv::Mat pour stocker l'image en OpenCV
     cv::Mat imageMat;
@@ -424,6 +419,8 @@ void MainWindow::on_DetectionDroite_clicked()
             }
         }
     }
+
+    // Si l'image est en niveaux de gris (ImageGris)
     else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
         const auto& imageGris = img->getImageGris(); // tableau des pixels en niveaux de gris
         imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
@@ -438,23 +435,53 @@ void MainWindow::on_DetectionDroite_clicked()
     Traitement traitement;
     cv::Mat imageAvecDroites = traitement.HoughDroite(imageMat);
 
+    // Vérifier si l'image des droites est vide
     if (imageAvecDroites.empty()) {
         QMessageBox::warning(this, tr("Erreur"), tr("La détection des droites a échoué."));
         return;
     }
 
-    QImage imgDroites(imageAvecDroites.data, imageAvecDroites.cols, imageAvecDroites.rows, imageAvecDroites.step, QImage::Format_RGB888);
+    // Vérifier le nombre de canaux dans l'image résultante
+    QImage imgDroites;
+
+    if (imageAvecDroites.channels() == 3) {
+        // Convertir BGR à RGB pour les images en couleur
+        cv::Mat imageRGB;
+        cv::cvtColor(imageAvecDroites, imageRGB, cv::COLOR_BGR2RGB); // BGR -> RGB
+        imgDroites = QImage(imageRGB.data, imageRGB.cols, imageRGB.rows, imageRGB.step, QImage::Format_RGB888);
+    }
+    else if (imageAvecDroites.channels() == 1) {
+        // Pour les images en niveaux de gris
+        imgDroites = QImage(imageAvecDroites.data, imageAvecDroites.cols, imageAvecDroites.rows, imageAvecDroites.step, QImage::Format_Grayscale8);
+    }
+
+    // Vérifier si la conversion a échoué
+    if (imgDroites.isNull()) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Le QImage est nul après la conversion."));
+        return;
+    }
+
+    // Créer un QPixmap à partir du QImage
     QPixmap pixmap = QPixmap::fromImage(imgDroites);
+
+    // Vérifier si la conversion en QPixmap est réussie
+    if (pixmap.isNull()) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Le QPixmap est nul après la conversion."));
+        return;
+    }
 
     // Redimensionner l'image selon la taille de la vue
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
+    // Créer une nouvelle scène pour AffichageResultat
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
-    ui->AffichageResultat->setScene(sceneResultat);
 
-}
+    // Afficher l'image des droites dans la vue AffichageResultat
+    ui->AffichageResultat->setScene(sceneResultat);
+    }
+
 
 
 // ----------------------------------------------------------------------------------------------
