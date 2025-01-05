@@ -73,7 +73,6 @@ cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     return contourImage; // Retourne l'image des contours
 }
 
-
 // ----------------------------------------------------------------------------------------------
 
 // ************************ Histogramme ************************
