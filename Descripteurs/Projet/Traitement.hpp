@@ -10,12 +10,10 @@
 #include <cstdint>
 #include <stdexcept>
 
-
 // ----------------------------------------------------------------------------------------------
-
 // ************************ Histogramme ************************
-
 // ----------------------------------------------------------------------------------------------
+
 class Image {
 public:
     virtual void calculerHistogramme(int histogramme[256], int canal = -1) const = 0; // Fonction virtuelle pure
@@ -58,15 +56,8 @@ public:
     static void calculerHistogramme(const Image& image, int histogramme[256], int canal = -1);
 };
 
-
-
 // ----------------------------------------------------------------------------------------------
-
 // ************************ Traitement ************************
-// ******
-// ********* Détection de contour, Hough *************
-// ******
-
 // ----------------------------------------------------------------------------------------------
 
 class Traitement {
@@ -76,11 +67,13 @@ private:
 
 public:
     Traitement();
-    cv::Mat detectionContours(const cv::Mat &image);
-    void setImageOriginale(const cv::Mat &image);
-    cv::Mat HoughDroite(const cv::Mat &image);
+    cv::Mat detectionContours(const cv::Mat& image);
+    void setImageOriginale(const cv::Mat& image);
+    cv::Mat HoughDroite(const cv::Mat& image);
+    
+    // Méthode mise à jour pour gérer plusieurs canaux
+    cv::Mat separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux);
 
 };
 
 #endif // TRAITEMENT_HPP
-

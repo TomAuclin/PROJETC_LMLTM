@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
 
+
 }
 
 MainWindow::~MainWindow()
@@ -212,6 +213,7 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int margin = 30;
     int maxVal = 0;
 
+    // Trouver la valeur maximale dans l'histogramme pour le redimensionnement
     for (int i = 0; i < 256; ++i) {
         if (histogramme[i] > maxVal) {
             maxVal = histogramme[i];
@@ -226,9 +228,11 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int maxBarHeight = height - 2 * margin;
     double scaleFactor = static_cast<double>(maxBarHeight) / maxVal;
 
-    sceneHisto->addLine(margin, height - margin, width, height - margin, QPen(Qt::black));
-    sceneHisto->addLine(margin, 0, margin, height - margin, QPen(Qt::black));
+    // Dessiner les axes de l'histogramme
+    sceneHisto->addLine(margin, height - margin, width, height - margin, QPen(Qt::black)); // Axe X
+    sceneHisto->addLine(margin, 0, margin, height - margin, QPen(Qt::black));             // Axe Y
 
+    // Dessiner les graduations pour les axes
     for (int i = 0; i < 256; i += 32) {
         sceneHisto->addLine(i * barWidth + margin, height - margin, i * barWidth + margin, height - margin - 5, QPen(Qt::black));
         QGraphicsTextItem* textItem = sceneHisto->addText(QString::number(i));
@@ -243,37 +247,38 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         textItem->setPos(margin - 30, yPos - 5);
     }
 
-    // Vérifier l'état des cases à cocher pour chaque canal et dessiner en conséquence
+    // Dessiner les histogrammes pour chaque canal en fonction des cases cochées
     if (ui->Canal_R->isChecked()) {
         int histoRouge[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoRouge, 0);
+        Histogramme::calculerHistogramme(*imageObj, histoRouge, 0); // Canal rouge
         QColor couleurRouge = Qt::red;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoRouge[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurRouge));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurRouge), QBrush(couleurRouge));
         }
     }
 
     if (ui->Canal_V->isChecked()) {
         int histoVert[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoVert, 1);
+        Histogramme::calculerHistogramme(*imageObj, histoVert, 1); // Canal vert
         QColor couleurVert = Qt::green;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoVert[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurVert));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurVert), QBrush(couleurVert));
         }
     }
 
     if (ui->Canal_B->isChecked()) {
         int histoBleu[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoBleu, 2);
+        Histogramme::calculerHistogramme(*imageObj, histoBleu, 2); // Canal bleu
         QColor couleurBleu = Qt::blue;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoBleu[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurBleu));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurBleu), QBrush(couleurBleu));
         }
     }
 
+    // Appliquer la scène mise à jour à l'affichage graphique
     ui->AffichageResultat->setScene(sceneHisto);
 }
 
@@ -452,5 +457,73 @@ void MainWindow::on_DetectionDroite_clicked()
 
 }
 
+// ----------------------------------------------------------------------------------------------
 
+// ************************ Séparation par couleur ************************
 
+// ----------------------------------------------------------------------------------------------
+std::vector<int> MainWindow::getSelectedSegmentationCanaux() {
+    std::vector<int> canaux;
+    if (ui->Segmentation_Canal_R->isChecked()) {
+        canaux.push_back(0); // Rouge
+    }
+    if (ui->Segmentation_Canal_V->isChecked()) {
+        canaux.push_back(1); // Vert
+    }
+    if (ui->Segmentation_Canal_B->isChecked()) {
+        canaux.push_back(2); // Bleu
+    }
+    return canaux;
+}
+
+void MainWindow::on_SegmenterCouleur_clicked() {
+    if (!imageObj) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
+        return;
+    }
+
+    // Récupération des canaux sélectionnés
+    std::vector<int> canaux = getSelectedSegmentationCanaux();
+
+    if (canaux.empty() || canaux.size() > 2) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Veuillez sélectionner un ou deux canaux."));
+        return;
+    }
+
+    // Conversion de l'image en cv::Mat
+    cv::Mat imageMat;
+    if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
+        const auto& imageCouleur = img->getImageCouleur();
+        imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
+        for (int y = 0; y < imageMat.rows; ++y) {
+            for (int x = 0; x < imageMat.cols; ++x) {
+                const auto& pixel = imageCouleur[y][x];
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]);
+            }
+        }
+    } else {
+        QMessageBox::warning(this, tr("Erreur"), tr("L'image doit être en couleur."));
+        return;
+    }
+
+    // Appliquer la segmentation
+    Traitement traitement;
+    cv::Mat resultat = traitement.separationParCouleur(imageMat, canaux);
+
+    if (resultat.empty()) {
+        QMessageBox::warning(this, tr("Erreur"), tr("La segmentation a échoué."));
+        return;
+    }
+
+    // Afficher le résultat
+    QImage imgResultat(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_RGB888);
+    QPixmap pixmap = QPixmap::fromImage(imgResultat);
+    QSize viewSize = ui->AffichageResultat->viewport()->size();
+    pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    QGraphicsScene* sceneResultat = new QGraphicsScene(this);
+    sceneResultat->addPixmap(pixmap);
+    ui->AffichageResultat->setScene(sceneResultat);
+
+    ui->statusbar->showMessage("Segmentation par couleur appliquée.");
+}

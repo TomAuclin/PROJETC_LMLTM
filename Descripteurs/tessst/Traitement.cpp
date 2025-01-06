@@ -1,20 +1,77 @@
-#include "../Traitement.hpp"
+#include "Traitement.hpp"
 #include <opencv2/opencv.hpp>
 
 
 Traitement ::Traitement (){}
 
 
-// ----------------------------------------------------------------------------------------------
-
-// ************************ Filtrage par convolution ************************
 
 // ----------------------------------------------------------------------------------------------
 
+// ************************ Histogramme ************************
 
+// ----------------------------------------------------------------------------------------------
 
+// Calcul de l'histogramme d'une image en niveaux de gris
+void ImageGris::calculerHistogramme(int histogramme[256], int canal) const {
+    // Initialiser les bins de l'histogramme à zéro
+    for (int i = 0; i < 256; ++i) {
+        histogramme[i] = 0;
+    }
 
+    // Parcourir chaque pixel de l'image en niveaux de gris
+    for (size_t ligne = 0; ligne < m_imageGris.size(); ++ligne) {
+        for (size_t colonne = 0; colonne < m_imageGris[ligne].size(); ++colonne) {
+            uint8_t valeurPixel = m_imageGris[ligne][colonne];
+            histogramme[valeurPixel]++;
+        }
+    }
+}
 
+// Calcul de lhistogramme d'une image couleur
+void ImageCouleur::calculerHistogramme(int histogramme[256], int canal) const {
+    // Initialiser les bins des trois canaux à zéro
+    int histogrammeRouge[256] = {0};
+    int histogrammeVert[256] = {0};
+    int histogrammeBleu[256] = {0};
+
+    // Parcourir chaque pixel de l'image couleur
+    for (size_t ligne = 0; ligne < m_imageCouleur.size(); ++ligne) {
+        for (size_t colonne = 0; colonne < m_imageCouleur[ligne].size(); ++colonne) {
+            uint8_t rouge = m_imageCouleur[ligne][colonne][0];
+            uint8_t vert = m_imageCouleur[ligne][colonne][1];
+            uint8_t bleu = m_imageCouleur[ligne][colonne][2];
+
+            histogrammeRouge[rouge]++;
+            histogrammeVert[vert]++;
+            histogrammeBleu[bleu]++;
+        }
+    }
+
+    // Si un canal spécifique est demandé, on l'affiche
+    if (canal == 0) { // Canal Rouge
+        for (int i = 0; i < 256; ++i) {
+            histogramme[i] = histogrammeRouge[i];
+        }
+    } else if (canal == 1) { // Canal Vert
+        for (int i = 0; i < 256; ++i) {
+            histogramme[i] = histogrammeVert[i];
+        }
+    } else if (canal == 2) { // Canal Bleu
+        for (int i = 0; i < 256; ++i) {
+            histogramme[i] = histogrammeBleu[i];
+        }
+    } else { // Afficher l'histogramme combiné de tous les canaux
+        for (int i = 0; i < 256; ++i) {
+            histogramme[i] = histogrammeRouge[i] + histogrammeVert[i] + histogrammeBleu[i];
+        }
+    }
+}
+
+// Fonction qui permet de calculer l'histogramme d'une image, qu'elle soit en gris ou en couleur
+void Histogramme::calculerHistogramme(const Image& image, int histogramme[256], int canal) {
+    image.calculerHistogramme(histogramme, canal);
+}
 
 
 // ----------------------------------------------------------------------------------------------
@@ -22,7 +79,6 @@ Traitement ::Traitement (){}
 // ************************ Detection de contours ************************
 
 // ----------------------------------------------------------------------------------------------
-
 
 cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     if (image.empty()) {
@@ -59,7 +115,6 @@ cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     normeGradient.convertTo(imgF, CV_8U);
 
     // Seuillage pour extraire les contours
-    // om mets à 0 ce qui est <30 et à 255 ce qui est >=30
     cv::Mat contourImage;
     double seuil = 30;
     cv::threshold(imgF, contourImage, seuil, 255, cv::THRESH_BINARY);
@@ -67,11 +122,68 @@ cv::Mat Traitement::detectionContours(const cv::Mat &image) {
     return contourImage; // Retourne l'image des contours
 }
 
+
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Réhaussement de contours ************************
+
+// ----------------------------------------------------------------------------------------------
+
+cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
+    if (image.empty()) {
+        std::cerr << "Erreur : L'image fournie est vide." << std::endl;
+        return cv::Mat();
+    }
+
+    //Détecter les contours avec la fonction implementée
+    cv::Mat contours = detectionContours(image);
+    if (contours.empty()) {
+        std::cerr << "Erreur : Détection des contours échouée." << std::endl;
+        return cv::Mat();
+    }
+
+    //Initialisation de l'image de sortie
+    cv::Mat imgRehaussee = image.clone();
+
+    //On appliquer les contours à l'image originale (couelru ou nvg)
+    if (image.channels() == 3) {
+        // Si l'image est en couleur on applique les contours à chaque canal
+        for (int i = 0; i < image.rows; ++i) {
+            for (int j = 0; j < image.cols; ++j) {
+                cv::Vec3b& pixel = imgRehaussee.at<cv::Vec3b>(i, j);
+                uchar valeurContour = contours.at<uchar>(i, j);
+
+                // Ajouter les contours à chaque canal (R, G, B)
+                for (int k = 0; k < 3; ++k) {
+                    pixel[k] = cv::saturate_cast<uchar>(pixel[k] + 0.15 * valeurContour);
+                }
+            }
+        }
+    } else {
+        // Si l'image est en niveaux de gris
+        for (int i = 0; i < image.rows; ++i) {
+            for (int j = 0; j < image.cols; ++j) {
+                uchar& pixel = imgRehaussee.at<uchar>(i, j);
+                uchar valeurContour = contours.at<uchar>(i, j);
+
+                // Ajouter les contours au pixel en niveaux de gris
+                pixel = cv::saturate_cast<uchar>(pixel + 0.15 * valeurContour);
+            }
+        }
+    }
+
+    return imgRehaussee; // Retourne l'image rehaussée avec contours
+}
+
+
+
+
 // ----------------------------------------------------------------------------------------------
 
 // ************************ Détection de Droite ************************
 
 // ----------------------------------------------------------------------------------------------
+
 cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     if (image.empty()) {
         std::cerr << "Erreur : L'image fournie est vide." << std::endl;
@@ -79,7 +191,8 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     }
 
     // Détection des contours dans l'image pour reduire le nbre de pixel a anlyser
-    cv::Mat contours = detectionContours(image);
+     cv::Mat contours = detectionContours(image);
+
 
     // Dimensions et paramètres
     int largeur = contours.cols;
@@ -94,7 +207,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     //rho : Distance entre la droite et l'origine  de l'image.
     //theta : Angle de la normale à la droite avec l'axe des X.
 
-   //Representation de chaque droite dans l'espace rho theta
+    //Representation de chaque droite dans l'espace rho theta
 
     for (int y = 0; y < hauteur; y++) {
         for (int x = 0; x < largeur; x++) {
@@ -114,7 +227,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     double minVal, maxVal;
     cv::minMaxLoc(espaceHough, &minVal, &maxVal); // on cherche dans la matrice les indice qui ont un valeur elevé
-    int seuil = 0.8* maxVal; //on fixe un seuil pour ne recuperer que les valeur importante et eviter d'avoir trop de droites detectée
+    int seuil = 0.75* maxVal; //on fixe un seuil pour ne recuperer que les valeur importante et eviter d'avoir trop de droites detectée
     std::vector<std::pair<int, int>> stockage;
     for (int rho = 0; rho < 2 * maxRho; rho++) {
         for (int theta = 0; theta < angleResolution; theta++) {
@@ -145,56 +258,82 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         double x0 = a * rho, y0 = b * rho;
 
         // Points sur les bords de l'image pour dessiner la droite
-        cv::Point pt1(cvRound(x0 + 500 * (-b)), cvRound(y0 + 500 * a));
-        cv::Point pt2(cvRound(x0 - 500* (-b)), cvRound(y0 - 500* a));
-
-        // Dessiner la ligne sur l'image
-        cv::line(imgDroites, pt1, pt2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
+        cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
+        cv::Point pt2(cvRound(x0 - 1000* (-b)), cvRound(y0 - 1000* a));
+        cv::line(imgDroites, pt1, pt2, cv::Scalar(250, 0, 255), 2, cv::LINE_AA);
     }
 
     return imgDroites;  // Retourner l'image avec les droites dessinées
 }
 
-// ----------------------------------------------------------------------------------------------
 
-// ************************ Réhaussement de contour ************************
 
 // ----------------------------------------------------------------------------------------------
 
-cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
-    if (image.empty()) {
-        std::cerr << "Erreur : L'image fournie est vide." << std::endl;
-        return cv::Mat(); // Retourne une image vide en cas d'erreur
+// ************************ Segmentation couleur ************************
+
+// ----------------------------------------------------------------------------------------------
+cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux) {
+    if (image.empty() || image.channels() != 3) {
+        std::cerr << "Image invalide ou non en couleur." << std::endl;
+        return cv::Mat();
     }
 
-    // Étape 1 : Convertir en niveaux de gris si l'image est en couleur
-    cv::Mat imgGris;
-    if (image.channels() == 3) {
-        cv::cvtColor(image, imgGris, cv::COLOR_BGR2GRAY);
-    } else {
-        imgGris = image.clone();
+    // Conversion de l'image OpenCV en ImageCouleur
+    std::vector<std::vector<std::array<uint8_t, 3>>> pixels(image.rows, std::vector<std::array<uint8_t, 3>>(image.cols));
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
+            pixels[y][x] = {pixel[0], pixel[1], pixel[2]}; // Rouge, Vert, Bleu
+        }
+    }
+    ImageCouleur imageCouleur(pixels);
+
+    // Initialisation des histogrammes pour chaque canal
+    int histogramme[256] = {0};
+    int seuils[3] = {0};
+
+    // Calcul des seuils pour chaque canal sélectionné
+    for (int canal : canaux) {
+        Histogramme::calculerHistogramme(imageCouleur, histogramme, canal);
+
+        int totalPixels = image.rows * image.cols;
+        int seuilPixels = static_cast<int>(totalPixels * 0.3); // 30% des pixels les plus intenses
+        int cumulativeSum = 0;
+
+        for (int i = 255; i >= 0; i--) {
+            cumulativeSum += histogramme[i];
+            if (cumulativeSum >= seuilPixels) {
+                seuils[canal] = i;
+                break;
+            }
+        }
     }
 
-    // Étape 2 : Appliquer un filtre Sobel pour détecter les contours
-    cv::Mat gradX, gradY;
-    cv::Sobel(imgGris, gradX, CV_16S, 1, 0, 3); // Gradient horizontal
-    cv::Sobel(imgGris, gradY, CV_16S, 0, 1, 3); // Gradient vertical
-    cv::convertScaleAbs(gradX, gradX);
-    cv::convertScaleAbs(gradY, gradY);
+    // Création d'une image filtrée
+    cv::Mat resultat = cv::Mat::zeros(image.size(), image.type());
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            const cv::Vec3b& pixel = image.at<cv::Vec3b>(y, x);
+            uint8_t rouge = pixel[0];
+            uint8_t vert = pixel[1];
+            uint8_t bleu = pixel[2];
 
-    cv::Mat magnitude;
-    cv::addWeighted(gradX, 0.5, gradY, 0.5, 0, magnitude);
+            // Vérification pour chaque combinaison de canaux
+            if (std::find(canaux.begin(), canaux.end(), 0) != canaux.end() &&
+                rouge >= seuils[0] && rouge > bleu * 1.5 && rouge > vert * 1.4) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels rouges
+            }
+            if (std::find(canaux.begin(), canaux.end(), 1) != canaux.end() &&
+                vert >= seuils[1] && vert > rouge * 0.9 && vert > bleu * 0.9) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels verts
+            }
+            if (std::find(canaux.begin(), canaux.end(), 2) != canaux.end() &&
+                bleu >= seuils[2] && bleu > rouge * 0.8 && bleu > vert * 0.8) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels bleus
+            }
+        }
+    }
 
-    // Étape 3 : Ajouter les contours détectés à l'image originale
-    cv::Mat imgRehaussee;
-    cv::addWeighted(imgGris, 0.8, magnitude, 0.5, 0, imgRehaussee);
-
-    return imgRehaussee; // Retourne l'image rehaussée
+    return resultat;
 }
-
-// ----------------------------------------------------------------------------------------------
-
-// ************************ Ségmentation ************************
-
-// ----------------------------------------------------------------------------------------------
-
