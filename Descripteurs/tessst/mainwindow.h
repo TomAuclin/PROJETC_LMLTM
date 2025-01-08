@@ -40,10 +40,16 @@ private slots:
     void on_actionModifierDescripteur_triggered();
     void on_actionSupprimerDescripteur_triggered();
 
+<<<<<<< HEAD
     //Ajout des descripteurs
     void afficherDetailsDescripteur(const Image& image);  // Afficher les détails du descripteur
     void afficherMenuContextuel(QListWidgetItem* item, const QPoint &pos);  // Afficher le menu contextuel
     void onCustomContextMenuRequested(const QPoint &pos);
+=======
+    //Afficher l'image
+    void on_actionRechercherImage_triggered();
+
+>>>>>>> d03298699e6c4b88fd119b892ef8800401cbd465
 
 private:
     Ui::MainWindow *ui;
