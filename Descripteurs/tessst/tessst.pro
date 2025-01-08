@@ -11,6 +11,9 @@ LIBS += `pkg-config --cflags --libs opencv4`
 
 SOURCES += \
     GestionUtilisateur.cpp \
+    Image.cpp \
+    Library.cpp \
+    GestionUtilisateur.cpp \
     Traitement.cpp \
     bibliowindow.cpp \
     connexion.cpp \
@@ -18,6 +21,9 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    GestionUtilisateur.hpp \
+    Image.hpp \
+    Library.hpp \
     GestionUtilisateur.hpp \
     Traitement.hpp \
     bibliowindow.h \

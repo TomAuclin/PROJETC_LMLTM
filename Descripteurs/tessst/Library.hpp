@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <memory>
 
-std::string openFileDialog();
 
 /**
  * @class ListeChainee
@@ -25,20 +24,22 @@ private:
      * Chaque nœud represente une Image et un
      * pointeur partagé vers le nœud suivant.
      */
-    struct Node {
+    struct INode {
         Image data; /**< L'image stockée dans le nœud. */
-        std::shared_ptr<Node> next; /**< Pointeur vers le nœud suivant. */
+        std::shared_ptr<INode> next; /**< Pointeur vers le nœud suivant. */
 
         /**
          * Constructeur de la structure Node.
          * img L'image à stocker dans le nœud.
          */
-        Node(const Image& img) : data(img), next(nullptr) {}
+        INode(const Image& img) : data(img), next(nullptr) {}
     };
  
-    std::shared_ptr<Node> head; /**< Pointeur partagé vers le premier nœud de la liste. */
+
 
 public:
+
+    std::shared_ptr<INode> head; /**< Pointeur partagé vers le premier nœud de la liste. */
     
     Library();
 
