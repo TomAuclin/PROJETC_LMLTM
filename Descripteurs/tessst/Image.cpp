@@ -1,5 +1,7 @@
 
 #include "Image.hpp"
+#include <fstream>
+#include <iostream>
 
 Image::Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ, int nTp, int ide)
     : source(src), titre(tit), numero(num), prix(prx), acces(acc), type(typ), nbTraitementPossible(nTp), identite(ide){}
@@ -140,7 +142,39 @@ void Image::setnbTraitementPossible(int _nbTraitementPossible)
     nbTraitementPossible = _nbTraitementPossible;
 }
 
+void Image::associerDescripteur(const std::string& fichierDescripteurs) {
+    std::ifstream fichier(fichierDescripteurs);
+    if (!fichier.is_open()) {
+        std::cerr << "Erreur lors de l'ouverture du fichier descripteurs." << std::endl;
+        return;
+    }
 
+    std::string ligne;
+    while (std::getline(fichier, ligne)) {
+        std::istringstream iss(ligne);
+        std::string src, tit, typ;
+        int num, nTp, ide;
+        double prx;
+        char acc;
+
+        if (!(iss >> src >> tit >> num >> prx >> acc >> typ >> nTp >> ide)) {
+            continue; // ignorer les lignes mal formées
+        }
+
+        if (tit == titre) {
+            source = src;
+            numero = num;
+            prix = prx;
+            acces = acc;
+            type = typ;
+            nbTraitementPossible = nTp;
+            identite = ide;
+            break;
+        }
+    }
+
+    fichier.close();
+}
 
 Image::~Image() {
    

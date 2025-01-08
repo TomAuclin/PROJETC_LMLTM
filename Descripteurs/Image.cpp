@@ -142,6 +142,9 @@ void Image::setnbTraitementPossible(int _nbTraitementPossible)
 
 
 
+
+
+
 Image::~Image() {
    
 }

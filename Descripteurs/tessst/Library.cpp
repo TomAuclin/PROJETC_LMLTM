@@ -502,6 +502,8 @@ void Library::chargerDepuisFichier(const std::string& nomFichier) {
     std::cout << "Les descripteurs ont été chargés depuis " << nomFichier << std::endl;
 }
 
+
+
 /*
 // Fonction pour ouvrir une boîte de dialogue et sélectionner un fichier
 std::string openFileDialog() {

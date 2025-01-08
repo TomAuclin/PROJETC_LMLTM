@@ -40,6 +40,11 @@ private slots:
     void on_actionModifierDescripteur_triggered();
     void on_actionSupprimerDescripteur_triggered();
 
+    //Ajout des descripteurs
+    void afficherDetailsDescripteur(const Image& image);  // Afficher les détails du descripteur
+    void afficherMenuContextuel(QListWidgetItem* item, const QPoint &pos);  // Afficher le menu contextuel
+    void onCustomContextMenuRequested(const QPoint &pos);
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *sceneImage;   // Scène pour afficher l'image
@@ -50,7 +55,7 @@ private:
     void afficherHistogramme(int histogramme[256]);   // Méthode pour afficher l'histogramme
     void afficherHistogrammeCanal(int histogramme[256], int canal); // Affichage des histogrammes par canal
     std::vector<int> getSelectedSegmentationCanaux();
-
+    QListWidget *listWidget;
     int seuilUtilisateur = 0.8;
 };
 

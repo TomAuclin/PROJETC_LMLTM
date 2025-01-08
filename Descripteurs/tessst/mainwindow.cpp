@@ -24,6 +24,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->AfficherImage->setScene(sceneImage);
     ui->AffichageResultat->setScene(sceneHisto);
+    listWidget = ui->listWidget;  // Assurez-vous que listWidget est le bon nom d'élément dans le fichier .ui
+
+    // Connecter le signal du clic droit au slot de gestion du menu contextuel
+    connect(listWidget, &QListWidget::customContextMenuRequested, this, &MainWindow::onCustomContextMenuRequested);
+
+    // Charger les images et descripteurs dans la liste (par exemple)
+    // Assurez-vous de charger les images et de les associer avec des descripteurs
+    // Exemple : chargerImagesAvecDescripteurs("chemin/vers/fichierDescripteurs.txt");
+    for (const Image& image : images) {
+        QListWidgetItem* item = new QListWidgetItem(QString::fromStdString(image.getTitre()));
+        item->setData(Qt::UserRole, QVariant::fromValue(image)); // Associe l'image à l'élément
+        listWidget->addItem(item);
 
     // Cacher les boutons de sélection des canaux par défaut
     ui->Canal_R->setVisible(false);
@@ -669,6 +681,52 @@ void MainWindow::on_actionSupprimerDescripteur_triggered() {
     QMessageBox::information(this, "Succès", "Le descripteur a été supprimé avec succès !");
 }
 
+/**************************************************************************************************/
 
+void MainWindow::afficherDetailsDescripteur(const Image& image) {
+    // Associer le descripteur à l'image en utilisant la fonction associée
+    Image imageAvecDescripteur = image;  // Crée une copie de l'image
+    imageAvecDescripteur.associerDescripteur("/media/sf_PROJETC_LMLTM1/Descripteurs/Biblio_init.txt");  // Associe le descripteur depuis le fichier
 
+    // Récupère le descripteur associé à l'image
+    Descripteur descripteur = imageAvecDescripteur.getDescripteur();
+
+    // Affiche les détails dans une boîte de dialogue
+    QString details = QString("Titre: %1\nPrix: %2\nAccès: %3\nType: %4\nNombre de traitements possibles: %5\nIdentité: %6")
+                          .arg(QString::fromStdString(descripteur.getTitre()))
+                          .arg(descripteur.getPrix())
+                          .arg(descripteur.getAcces())
+                          .arg(QString::fromStdString(descripteur.getType()))
+                          .arg(descripteur.getNbTraitementPossible())
+                          .arg(descripteur.getIdentite());
+
+    QMessageBox::information(this, "Détails de l'image", details);
+}
+
+void MainWindow::afficherMenuContextuel(QListWidgetItem* item, const QPoint &pos) {
+    // Récupérer l'image associée à l'élément
+    Image image = item->data(Qt::UserRole).value<Image>();
+
+    // Créer un menu contextuel
+    QMenu contextMenu(tr("Menu contextuel"), this);
+
+    // Ajouter l'option pour afficher les détails
+    QAction* detailsAction = new QAction(tr("Voir les détails"), this);
+
+    // Connecter l'action à la fonction qui affiche les détails
+    connect(detailsAction, &QAction::triggered, this, [this, image]() {
+        afficherDetailsDescripteur(image); // Appelle la fonction pour afficher les détails
+    });
+
+    contextMenu.addAction(detailsAction);
+    contextMenu.exec(pos);
+}
+
+void MainWindow::onCustomContextMenuRequested(const QPoint &pos) {
+    // Récupérer l'élément à la position du clic
+    QListWidgetItem* item = listWidget->itemAt(pos);
+    if (item) {
+        afficherMenuContextuel(item, pos); // Ouvre le menu contextuel
+    }
+}
 

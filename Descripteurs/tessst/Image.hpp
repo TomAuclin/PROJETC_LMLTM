@@ -69,6 +69,7 @@ class Image {
         void setAccess(char _Access);
         void setType(std::string _Type);
         void setnbTraitementPossible(int _nbTraitementPossible);
+        void associerDescripteur(const std::string& fichierDescripteurs);
 
         
         
