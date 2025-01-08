@@ -668,7 +668,6 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
 // Modifier
 
 void MainWindow::on_actionModifierDescripteur_triggered() {
-<<<<<<< HEAD
     // Demander le numéro du descripteur à modifier
     bool ok;
     int numero = QInputDialog::getInt(this, "Modifier un descripteur",
@@ -754,12 +753,12 @@ void MainWindow::on_actionModifierDescripteur_triggered() {
     } else {
         QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
     }
-=======
+
     Library library;
     int numero = QInputDialog::getInt(this, "Modifier un descripteur", "Entrez le numéro unique de l'image :", 0);
     library.modifdescripteurs(numero, library);
     QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
->>>>>>> 776d77f2fc9415e59db9c1dd5ab5fd89c5c1b1ba
+
 }
 
 // Supprimer
@@ -773,12 +772,11 @@ void MainWindow::on_actionSupprimerDescripteur_triggered() {
 
 /**************************************************************************************************/
 
-<<<<<<< HEAD
 void MainWindow::afficherDetailsDescripteur(const Image& image) {
     // Associer le descripteur à l'image en utilisant la fonction associée
     Image imageAvecDescripteur = image;  // Crée une copie de l'image
     imageAvecDescripteur.associerDescripteur("/media/sf_PROJETC_LMLTM1/Descripteurs/Biblio_init.txt");  // Associe le descripteur depuis le fichier
-=======
+
 // --------------------------------------------------------------------------------------------------
 
 // ***************************** Afficher image **************************
@@ -806,8 +804,6 @@ void MainWindow::on_actionRechercherImage_triggered() {
     }
 }
 
-
->>>>>>> d03298699e6c4b88fd119b892ef8800401cbd465
 
     // Récupère le descripteur associé à l'image
     Descripteur descripteur = imageAvecDescripteur.getDescripteur();
