@@ -22,7 +22,7 @@ Library::Library() : head(nullptr) {}
  * vers l'ancien premier nœud.
  */
 void Library::ajouterDescripteurs(const Image& img) {
-    auto nouveau = std::make_shared<Node>(img); // Crée un nouveau nœud
+    auto nouveau = std::make_shared<INode>(img); // Crée un nouveau nœud
     nouveau->next = head; // L'ancien premier nœud devient le suivant
     head = nouveau; // La tête pointe maintenant vers le nouveau nœud
 }
@@ -560,7 +560,7 @@ void Library::permuterImages(int numero1, int numero2) {
     }
 
     // Pointeurs pour les nœuds contenant les images à permuter
-    std::shared_ptr<Node> node1 = nullptr, node2 = nullptr;
+    std::shared_ptr<INode> node1 = nullptr, node2 = nullptr;
     auto current = head;
 
     // Parcours de la liste pour trouver les nœuds correspondants

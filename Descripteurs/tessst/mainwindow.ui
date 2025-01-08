@@ -221,6 +221,7 @@
     <addaction name="actionAjouterDescripteur"/>
     <addaction name="actionModifierDescripteur"/>
     <addaction name="actionSupprimerDescripteur"/>
+    <addaction name="actionRechercherImage"/>
    </widget>
    <addaction name="menuDescripteur"/>
   </widget>
@@ -238,6 +239,11 @@
   <action name="actionSupprimerDescripteur">
    <property name="text">
     <string>Supprimer un descripteur</string>
+   </property>
+  </action>
+  <action name="actionRechercherImage">
+   <property name="text">
+    <string>Rechercher un descripteur</string>
    </property>
   </action>
  </widget>

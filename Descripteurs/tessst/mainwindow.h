@@ -40,6 +40,10 @@ private slots:
     void on_actionModifierDescripteur_triggered();
     void on_actionSupprimerDescripteur_triggered();
 
+    //Afficher l'image
+    void on_actionRechercherImage_triggered();
+
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *sceneImage;   // Scène pour afficher l'image

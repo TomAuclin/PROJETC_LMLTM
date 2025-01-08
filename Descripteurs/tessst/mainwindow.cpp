@@ -6,6 +6,8 @@
 #include <stdexcept>
 #include <QInputDialog>
 
+Library library;
+
 
 // ----------------------------------------------------------------------------------------------
 
@@ -654,9 +656,91 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
 // Modifier
 
 void MainWindow::on_actionModifierDescripteur_triggered() {
-    int numero = QInputDialog::getInt(this, "Modifier un descripteur", "Entrez le numéro unique de l'image :", 0);
-    library.modifdescripteurs(numero, library);
-    QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
+    // Demander le numéro du descripteur à modifier
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Modifier un descripteur",
+                                      "Entrez le numéro unique du descripteur :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Modification annulée.");
+        return;
+    }
+
+    // Parcourir la liste pour trouver le descripteur correspondant
+    auto current = library.head; // Accès à la liste chaînée depuis votre bibliothèque
+    bool descripteurTrouve = false;
+
+    while (current) {
+        if (current->data.getNumero() == numero) {
+            descripteurTrouve = true;
+
+            // Parcourir les attributs à modifier
+            QStringList options = {"Titre", "Numéro", "Prix", "Accès", "Type", "Nombre de traitements"};
+            for (int i = 0; i < options.size(); i++) {
+                QString choix = QInputDialog::getItem(this, "Modifier un attribut",
+                                                      "Choisissez un attribut à modifier :", options, i, false, &ok);
+                if (!ok) break;
+
+                if (choix == "Titre") {
+                    QString titre = QInputDialog::getText(this, "Modifier le titre",
+                                                          "Entrez le nouveau titre :", QLineEdit::Normal, "", &ok);
+                    if (ok && !titre.isEmpty()) {
+                        // Vérifiez l'unicité avec titrecheck
+                        while (library.titrecheck(titre.toStdString()) != 0) {
+                            titre = QInputDialog::getText(this, "Erreur",
+                                                          "Le titre existe déjà, entrez un autre titre :", QLineEdit::Normal, "", &ok);
+                            if (!ok) break;
+                        }
+                        current->data.setTitre(titre.toStdString());
+                    }
+                } else if (choix == "Numéro") {
+                    int num = QInputDialog::getInt(this, "Modifier le numéro",
+                                                   "Entrez le nouveau numéro :", 0, 0, 10000, 1, &ok);
+                    if (ok) {
+                        // Vérifiez l'unicité avec numerocheck
+                        while (library.numerocheck(num) != 0) {
+                            num = QInputDialog::getInt(this, "Erreur",
+                                                       "Le numéro existe déjà, entrez un autre numéro :", 0, 0, 10000, 1, &ok);
+                            if (!ok) break;
+                        }
+                        current->data.setNumero(num);
+                    }
+                } else if (choix == "Prix") {
+                    double prix = QInputDialog::getDouble(this, "Modifier le prix",
+                                                          "Entrez le nouveau prix :", 0, 0, 10000, 2, &ok);
+                    if (ok) {
+                        current->data.setPrix(prix);
+                    }
+                } else if (choix == "Accès") {
+                    QString acces = QInputDialog::getText(this, "Modifier l'accès",
+                                                          "Entrez le nouvel accès (O ou L) :", QLineEdit::Normal, "O", &ok);
+                    if (ok && (acces == "O" || acces == "L")) {
+                        current->data.setAccess(acces.toStdString()[0]);
+                    }
+                } else if (choix == "Type") {
+                    QString type = QInputDialog::getText(this, "Modifier le type",
+                                                         "Entrez le nouveau type (couleur ou gris) :", QLineEdit::Normal, "couleur", &ok);
+                    if (ok && !type.isEmpty()) {
+                        current->data.setType(type.toStdString());
+                    }
+                } else if (choix == "Nombre de traitements") {
+                    int nbTraitement = QInputDialog::getInt(this, "Modifier le nombre de traitements",
+                                                            "Entrez le nouveau nombre de traitements possibles :", 1, 1, 100, 1, &ok);
+                    if (ok) {
+                        current->data.setnbTraitementPossible(nbTraitement);
+                    }
+                }
+            }
+
+            break; // Modification terminée pour ce descripteur
+        }
+        current = current->next;
+    }
+
+    if (!descripteurTrouve) {
+        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce numéro.");
+    } else {
+        QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
+    }
 }
 
 // Supprimer
@@ -665,6 +749,34 @@ void MainWindow::on_actionSupprimerDescripteur_triggered() {
     int numero = QInputDialog::getInt(this, "Supprimer un descripteur", "Entrez le numéro unique de l'image :", 0);
     library.supprimerDescripteurs(numero);
     QMessageBox::information(this, "Succès", "Le descripteur a été supprimé avec succès !");
+}
+
+
+// --------------------------------------------------------------------------------------------------
+
+// ***************************** Afficher image **************************
+
+// ----------------------------------------------------------------
+
+void MainWindow::on_actionRechercherImage_triggered() {
+    // Demander le numéro de l'image
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Rechercher une image",
+                                      "Entrez le numéro de l'image :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Recherche annulée.");
+        return;
+    }
+
+    // Appeler la méthode de recherche dans Library
+    std::string resultat = library.rechercherImageParNumero(numero);
+
+    // Afficher le résultat
+    if (resultat == "Image non trouvée.") {
+        QMessageBox::warning(this, "Résultat", "Aucune image trouvée avec ce numéro.");
+    } else {
+        QMessageBox::information(this, "Résultat", QString::fromStdString(resultat));
+    }
 }
 
 

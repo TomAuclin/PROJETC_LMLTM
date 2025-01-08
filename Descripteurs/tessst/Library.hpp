@@ -35,9 +35,11 @@ private:
         INode(const Image& img) : data(img), next(nullptr) {}
     };
  
-    std::shared_ptr<INode> head; /**< Pointeur partagé vers le premier nœud de la liste. */
+
 
 public:
+
+    std::shared_ptr<INode> head; /**< Pointeur partagé vers le premier nœud de la liste. */
     
     Library();
 
