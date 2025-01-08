@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QImage>
 #include "Traitement.hpp"
+#include "Library.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,6 +35,24 @@ private slots:
     void on_RehaussementContours_clicked();
     void on_SegmenterCouleur_clicked();
 
+<<<<<<< HEAD
+=======
+    //Ajout du menu Descripteur
+    void on_actionAjouterDescripteur_triggered();
+    void on_actionModifierDescripteur_triggered();
+    void on_actionSupprimerDescripteur_triggered();
+
+<<<<<<< HEAD
+    //Ajout des descripteurs
+    void afficherDetailsDescripteur(const Image& image);  // Afficher les détails du descripteur
+    void afficherMenuContextuel(QListWidgetItem* item, const QPoint &pos);  // Afficher le menu contextuel
+    void onCustomContextMenuRequested(const QPoint &pos);
+=======
+    //Afficher l'image
+    void on_actionRechercherImage_triggered();
+
+>>>>>>> d03298699e6c4b88fd119b892ef8800401cbd465
+>>>>>>> 3de15a3f379c2af1909b49ffb40e671860ef70b3
 
 private:
     Ui::MainWindow *ui;
@@ -45,7 +64,7 @@ private:
     void afficherHistogramme(int histogramme[256]);   // Méthode pour afficher l'histogramme
     void afficherHistogrammeCanal(int histogramme[256], int canal); // Affichage des histogrammes par canal
     std::vector<int> getSelectedSegmentationCanaux();
-
+    QListWidget *listWidget;
     int seuilUtilisateur = 0.8;
 };
 

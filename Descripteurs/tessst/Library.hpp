@@ -6,7 +6,10 @@
 #include <filesystem>
 #include <memory>
 
+<<<<<<< HEAD
 std::string openFileDialog();
+=======
+>>>>>>> 3de15a3f379c2af1909b49ffb40e671860ef70b3
 
 /**
  * @class ListeChainee
@@ -25,20 +28,37 @@ private:
      * Chaque nœud represente une Image et un
      * pointeur partagé vers le nœud suivant.
      */
+<<<<<<< HEAD
     struct Node {
         Image data; /**< L'image stockée dans le nœud. */
         std::shared_ptr<Node> next; /**< Pointeur vers le nœud suivant. */
+=======
+    struct INode {
+        Image data; /**< L'image stockée dans le nœud. */
+        std::shared_ptr<INode> next; /**< Pointeur vers le nœud suivant. */
+>>>>>>> 3de15a3f379c2af1909b49ffb40e671860ef70b3
 
         /**
          * Constructeur de la structure Node.
          * img L'image à stocker dans le nœud.
          */
+<<<<<<< HEAD
         Node(const Image& img) : data(img), next(nullptr) {}
     };
  
     std::shared_ptr<Node> head; /**< Pointeur partagé vers le premier nœud de la liste. */
 
 public:
+=======
+        INode(const Image& img) : data(img), next(nullptr) {}
+    };
+ 
+
+
+public:
+
+    std::shared_ptr<INode> head; /**< Pointeur partagé vers le premier nœud de la liste. */
+>>>>>>> 3de15a3f379c2af1909b49ffb40e671860ef70b3
     
     Library();
 
@@ -104,4 +124,8 @@ public:
     ~Library();
 };
 
+<<<<<<< HEAD
 #endif
+=======
+#endif
+>>>>>>> 3de15a3f379c2af1909b49ffb40e671860ef70b3

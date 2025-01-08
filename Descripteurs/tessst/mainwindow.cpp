@@ -6,6 +6,8 @@
 #include <stdexcept>
 #include <QInputDialog>
 
+Library library;
+
 
 // ----------------------------------------------------------------------------------------------
 
@@ -24,6 +26,18 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->AfficherImage->setScene(sceneImage);
     ui->AffichageResultat->setScene(sceneHisto);
+    listWidget = ui->listWidget;  // Assurez-vous que listWidget est le bon nom d'élément dans le fichier .ui
+
+    // Connecter le signal du clic droit au slot de gestion du menu contextuel
+    connect(listWidget, &QListWidget::customContextMenuRequested, this, &MainWindow::onCustomContextMenuRequested);
+
+    // Charger les images et descripteurs dans la liste (par exemple)
+    // Assurez-vous de charger les images et de les associer avec des descripteurs
+    // Exemple : chargerImagesAvecDescripteurs("chemin/vers/fichierDescripteurs.txt");
+    for (const Image& image : images) {
+        QListWidgetItem* item = new QListWidgetItem(QString::fromStdString(image.getTitre()));
+        item->setData(Qt::UserRole, QVariant::fromValue(image)); // Associe l'image à l'élément
+        listWidget->addItem(item);
 
     // Cacher les boutons de sélection des canaux par défaut
     ui->Canal_R->setVisible(false);
@@ -606,5 +620,234 @@ void MainWindow::on_RehaussementContours_clicked()
     sceneResultat->addPixmap(pixmap);
 
     ui->AffichageResultat->setScene(sceneResultat);
+}
+
+
+// -----------------------------------------------------------------------------------------
+
+// *************************** Ajout Menu Descripteur *************************************
+
+// -----------------------------------------------------------------------------------------
+
+// Ajouter
+
+void MainWindow::on_actionAjouterDescripteur_triggered() {
+    QString cheminImage = QFileDialog::getOpenFileName(this, "Sélectionnez une image à ajouter", "", "Images (*.png *.jpg *.jpeg *.bmp);;Tous les fichiers (*)");
+    if (cheminImage.isEmpty()) {
+        QMessageBox::warning(this, "Avertissement", "Aucun fichier sélectionné !");
+        return;
+    }
+    Library library ;
+    // Demander les informations de l'utilisateur
+    bool ok;
+    QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok);
+    if (!ok || titre.isEmpty()) return;
+
+    int numero = QInputDialog::getInt(this, "Ajouter un descripteur", "Numéro unique :", 0, 0, 10000, 1, &ok);
+    if (!ok) return;
+
+    double prix = QInputDialog::getDouble(this, "Ajouter un descripteur", "Prix :", 0, 0, 10000, 2, &ok);
+    if (!ok) return;
+
+    QString acces = QInputDialog::getText(this, "Ajouter un descripteur", "Accès (O/L) :", QLineEdit::Normal, "O", &ok);
+    if (!ok || acces.isEmpty()) return;
+
+    QString type = QInputDialog::getText(this, "Ajouter un descripteur", "Type (couleur/gris) :", QLineEdit::Normal, "couleur", &ok);
+    if (!ok || type.isEmpty()) return;
+
+    int nbTraitement = QInputDialog::getInt(this, "Ajouter un descripteur", "Nombre de traitements possibles :", 1, 1, 100, 1, &ok);
+    if (!ok) return;
+
+    // Ajouter le descripteur à la bibliothèque
+    Image nouvelleImage(cheminImage.toStdString(), titre.toStdString(), numero, prix, acces.toStdString()[0], type.toStdString(), nbTraitement, 0);
+    library.ajouterDescripteurs(nouvelleImage);
+
+    QMessageBox::information(this, "Succès", "Le descripteur a été ajouté avec succès !");
+}
+
+// Modifier
+
+void MainWindow::on_actionModifierDescripteur_triggered() {
+<<<<<<< HEAD
+    // Demander le numéro du descripteur à modifier
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Modifier un descripteur",
+                                      "Entrez le numéro unique du descripteur :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Modification annulée.");
+        return;
+    }
+
+    // Parcourir la liste pour trouver le descripteur correspondant
+    auto current = library.head; // Accès à la liste chaînée depuis votre bibliothèque
+    bool descripteurTrouve = false;
+
+    while (current) {
+        if (current->data.getNumero() == numero) {
+            descripteurTrouve = true;
+
+            // Parcourir les attributs à modifier
+            QStringList options = {"Titre", "Numéro", "Prix", "Accès", "Type", "Nombre de traitements"};
+            for (int i = 0; i < options.size(); i++) {
+                QString choix = QInputDialog::getItem(this, "Modifier un attribut",
+                                                      "Choisissez un attribut à modifier :", options, i, false, &ok);
+                if (!ok) break;
+
+                if (choix == "Titre") {
+                    QString titre = QInputDialog::getText(this, "Modifier le titre",
+                                                          "Entrez le nouveau titre :", QLineEdit::Normal, "", &ok);
+                    if (ok && !titre.isEmpty()) {
+                        // Vérifiez l'unicité avec titrecheck
+                        while (library.titrecheck(titre.toStdString()) != 0) {
+                            titre = QInputDialog::getText(this, "Erreur",
+                                                          "Le titre existe déjà, entrez un autre titre :", QLineEdit::Normal, "", &ok);
+                            if (!ok) break;
+                        }
+                        current->data.setTitre(titre.toStdString());
+                    }
+                } else if (choix == "Numéro") {
+                    int num = QInputDialog::getInt(this, "Modifier le numéro",
+                                                   "Entrez le nouveau numéro :", 0, 0, 10000, 1, &ok);
+                    if (ok) {
+                        // Vérifiez l'unicité avec numerocheck
+                        while (library.numerocheck(num) != 0) {
+                            num = QInputDialog::getInt(this, "Erreur",
+                                                       "Le numéro existe déjà, entrez un autre numéro :", 0, 0, 10000, 1, &ok);
+                            if (!ok) break;
+                        }
+                        current->data.setNumero(num);
+                    }
+                } else if (choix == "Prix") {
+                    double prix = QInputDialog::getDouble(this, "Modifier le prix",
+                                                          "Entrez le nouveau prix :", 0, 0, 10000, 2, &ok);
+                    if (ok) {
+                        current->data.setPrix(prix);
+                    }
+                } else if (choix == "Accès") {
+                    QString acces = QInputDialog::getText(this, "Modifier l'accès",
+                                                          "Entrez le nouvel accès (O ou L) :", QLineEdit::Normal, "O", &ok);
+                    if (ok && (acces == "O" || acces == "L")) {
+                        current->data.setAccess(acces.toStdString()[0]);
+                    }
+                } else if (choix == "Type") {
+                    QString type = QInputDialog::getText(this, "Modifier le type",
+                                                         "Entrez le nouveau type (couleur ou gris) :", QLineEdit::Normal, "couleur", &ok);
+                    if (ok && !type.isEmpty()) {
+                        current->data.setType(type.toStdString());
+                    }
+                } else if (choix == "Nombre de traitements") {
+                    int nbTraitement = QInputDialog::getInt(this, "Modifier le nombre de traitements",
+                                                            "Entrez le nouveau nombre de traitements possibles :", 1, 1, 100, 1, &ok);
+                    if (ok) {
+                        current->data.setnbTraitementPossible(nbTraitement);
+                    }
+                }
+            }
+
+            break; // Modification terminée pour ce descripteur
+        }
+        current = current->next;
+    }
+
+    if (!descripteurTrouve) {
+        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce numéro.");
+    } else {
+        QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
+    }
+=======
+    Library library;
+    int numero = QInputDialog::getInt(this, "Modifier un descripteur", "Entrez le numéro unique de l'image :", 0);
+    library.modifdescripteurs(numero, library);
+    QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
+>>>>>>> 776d77f2fc9415e59db9c1dd5ab5fd89c5c1b1ba
+}
+
+// Supprimer
+
+void MainWindow::on_actionSupprimerDescripteur_triggered() {
+    Library library ;
+    int numero = QInputDialog::getInt(this, "Supprimer un descripteur", "Entrez le numéro unique de l'image :", 0);
+    library.supprimerDescripteurs(numero);
+    QMessageBox::information(this, "Succès", "Le descripteur a été supprimé avec succès !");
+}
+
+/**************************************************************************************************/
+
+<<<<<<< HEAD
+void MainWindow::afficherDetailsDescripteur(const Image& image) {
+    // Associer le descripteur à l'image en utilisant la fonction associée
+    Image imageAvecDescripteur = image;  // Crée une copie de l'image
+    imageAvecDescripteur.associerDescripteur("/media/sf_PROJETC_LMLTM1/Descripteurs/Biblio_init.txt");  // Associe le descripteur depuis le fichier
+=======
+// --------------------------------------------------------------------------------------------------
+
+// ***************************** Afficher image **************************
+
+// ----------------------------------------------------------------
+
+void MainWindow::on_actionRechercherImage_triggered() {
+    // Demander le numéro de l'image
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Rechercher une image",
+                                      "Entrez le numéro de l'image :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Recherche annulée.");
+        return;
+    }
+
+    // Appeler la méthode de recherche dans Library
+    std::string resultat = library.rechercherImageParNumero(numero);
+
+    // Afficher le résultat
+    if (resultat == "Image non trouvée.") {
+        QMessageBox::warning(this, "Résultat", "Aucune image trouvée avec ce numéro.");
+    } else {
+        QMessageBox::information(this, "Résultat", QString::fromStdString(resultat));
+    }
+}
+
+
+>>>>>>> d03298699e6c4b88fd119b892ef8800401cbd465
+
+    // Récupère le descripteur associé à l'image
+    Descripteur descripteur = imageAvecDescripteur.getDescripteur();
+
+    // Affiche les détails dans une boîte de dialogue
+    QString details = QString("Titre: %1\nPrix: %2\nAccès: %3\nType: %4\nNombre de traitements possibles: %5\nIdentité: %6")
+                          .arg(QString::fromStdString(descripteur.getTitre()))
+                          .arg(descripteur.getPrix())
+                          .arg(descripteur.getAcces())
+                          .arg(QString::fromStdString(descripteur.getType()))
+                          .arg(descripteur.getNbTraitementPossible())
+                          .arg(descripteur.getIdentite());
+
+    QMessageBox::information(this, "Détails de l'image", details);
+}
+
+void MainWindow::afficherMenuContextuel(QListWidgetItem* item, const QPoint &pos) {
+    // Récupérer l'image associée à l'élément
+    Image image = item->data(Qt::UserRole).value<Image>();
+
+    // Créer un menu contextuel
+    QMenu contextMenu(tr("Menu contextuel"), this);
+
+    // Ajouter l'option pour afficher les détails
+    QAction* detailsAction = new QAction(tr("Voir les détails"), this);
+
+    // Connecter l'action à la fonction qui affiche les détails
+    connect(detailsAction, &QAction::triggered, this, [this, image]() {
+        afficherDetailsDescripteur(image); // Appelle la fonction pour afficher les détails
+    });
+
+    contextMenu.addAction(detailsAction);
+    contextMenu.exec(pos);
+}
+
+void MainWindow::onCustomContextMenuRequested(const QPoint &pos) {
+    // Récupérer l'élément à la position du clic
+    QListWidgetItem* item = listWidget->itemAt(pos);
+    if (item) {
+        afficherMenuContextuel(item, pos); // Ouvre le menu contextuel
+    }
 }
 

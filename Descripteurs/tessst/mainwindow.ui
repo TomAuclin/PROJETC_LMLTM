@@ -213,8 +213,39 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuDescripteur">
+    <property name="title">
+     <string>Descripteur</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionAjouterDescripteur"/>
+    <addaction name="actionModifierDescripteur"/>
+    <addaction name="actionSupprimerDescripteur"/>
+    <addaction name="actionRechercherImage"/>
+   </widget>
+   <addaction name="menuDescripteur"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAjouterDescripteur">
+   <property name="text">
+    <string>Ajouter un descripteur</string>
+   </property>
+  </action>
+  <action name="actionModifierDescripteur">
+   <property name="text">
+    <string>Modifier un descripteur</string>
+   </property>
+  </action>
+  <action name="actionSupprimerDescripteur">
+   <property name="text">
+    <string>Supprimer un descripteur</string>
+   </property>
+  </action>
+  <action name="actionRechercherImage">
+   <property name="text">
+    <string>Rechercher un descripteur</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
