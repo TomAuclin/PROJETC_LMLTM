@@ -623,7 +623,7 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
         QMessageBox::warning(this, "Avertissement", "Aucun fichier sélectionné !");
         return;
     }
-
+    Library library ;
     // Demander les informations de l'utilisateur
     bool ok;
     QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok);
@@ -654,6 +654,7 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
 // Modifier
 
 void MainWindow::on_actionModifierDescripteur_triggered() {
+    Library library;
     int numero = QInputDialog::getInt(this, "Modifier un descripteur", "Entrez le numéro unique de l'image :", 0);
     library.modifdescripteurs(numero, library);
     QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
@@ -662,6 +663,7 @@ void MainWindow::on_actionModifierDescripteur_triggered() {
 // Supprimer
 
 void MainWindow::on_actionSupprimerDescripteur_triggered() {
+    Library library ;
     int numero = QInputDialog::getInt(this, "Supprimer un descripteur", "Entrez le numéro unique de l'image :", 0);
     library.supprimerDescripteurs(numero);
     QMessageBox::information(this, "Succès", "Le descripteur a été supprimé avec succès !");
