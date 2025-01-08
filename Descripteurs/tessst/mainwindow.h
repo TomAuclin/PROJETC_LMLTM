@@ -34,6 +34,7 @@ private slots:
     void on_RehaussementContours_clicked();
     void on_SegmenterCouleur_clicked();
 
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *sceneImage;   // Scène pour afficher l'image
