@@ -460,7 +460,7 @@ void MainWindow::on_DetectionDroite_clicked()
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
     ui->AffichageResultat->setScene(sceneResultat);
-    }
+}
 
 
 
@@ -540,8 +540,6 @@ void MainWindow::on_SegmenterCouleur_clicked() {
 // ************************ Rehaussement de contours ************************
 
 // ----------------------------------------------------------------------------------------------
-
-
 
 void MainWindow::on_RehaussementContours_clicked()
 {

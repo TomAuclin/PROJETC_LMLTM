@@ -2,7 +2,7 @@
 % Fonction image Matlab 
 addpath('C:\Users\utilisateur\Downloads\BigProjet\PROJETC_LMLTM\Bibliotheque\Gratuites'); 
 
-img= 'C:\Users\utilisateur\Downloads\BigProjet\PROJETC_LMLTM\Bibliotheque\_100\StatuPorte_gris.pgm';
+img= 'Banc02_gris.pgm';
 
 
 if exist(img, 'file')
