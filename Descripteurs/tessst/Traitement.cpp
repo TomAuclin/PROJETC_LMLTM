@@ -69,7 +69,7 @@ void ImageCouleur::calculerHistogramme(int histogramme[256], int canal) const {
 }
 
 // Fonction qui permet de calculer l'histogramme d'une image, qu'elle soit en gris ou en couleur
-void Histogramme::calculerHistogramme(const Image& image, int histogramme[256], int canal) {
+void Histogramme::calculerHistogramme(const Image_color& image, int histogramme[256], int canal) {
     image.calculerHistogramme(histogramme, canal);
 }
 
@@ -192,10 +192,17 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     // Conversion en niveaux de gris pour la détection des contours
     cv::Mat grayImage;
-    if (image.channels() == 3) {
-        cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
+    if (image.channels() > 1) {  // Vérification si l'image est en couleur
+        // Si l'image a un canal alpha, on le supprime et on convertit en niveaux de gris
+        cv::Mat temp;
+        if (image.channels() == 4) {
+            cv::cvtColor(image, temp, cv::COLOR_BGRA2BGR);  // Conversion BGRA -> BGR
+        } else {
+            temp = image.clone();  // Pour les autres images avec 3 canaux (BGR)
+        }
+        cv::cvtColor(temp, grayImage, cv::COLOR_BGR2GRAY);  // Conversion BGR -> Grayscale
     } else {
-        grayImage = image.clone();
+        grayImage = image.clone();  // Si l'image est déjà en niveaux de gris, on la garde telle quelle
     }
 
     // Détection des contours
@@ -209,17 +216,12 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     int largeur = contours.cols;
     int hauteur = contours.rows;
     int maxRho = static_cast<int>(sqrt(largeur * largeur + hauteur * hauteur));
-    int angleResolution = 180; // La résolution angulaire de l'espace de Hough
+    int angleResolution = 180;  // La résolution angulaire de l'espace de Hough
 
     // Création de l'espace de Hough
     cv::Mat espaceHough = cv::Mat::zeros(2 * maxRho, angleResolution, CV_32SC1);
 
     // Parcours des pixels de contour
-    //rho : Distance entre la droite et l'origine  de l'image.
-    //theta : Angle de la normale à la droite avec l'axe des X.
-
-    //Representation de chaque droite dans l'espace rho theta
-    // Remplissage de l'espace de Hough
     for (int y = 0; y < hauteur; y++) {
         for (int x = 0; x < largeur; x++) {
             if (contours.at<uchar>(y, x) > 0) {  // Si le pixel fait partie d'un contour
@@ -233,10 +235,11 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
             }
         }
     }
- // Détection des droites les plus probables dans l'espace de Hough ou y a le plus de points
+
+    // Détection des droites les plus probables dans l'espace de Hough
     double minVal, maxVal;
     cv::minMaxLoc(espaceHough, &minVal, &maxVal);
-    int seuil = static_cast<int>(0.80 * maxVal);  //seuil pour la détection des lignes
+    int seuil = static_cast<int>(0.80 * maxVal);  // seuil pour la détection des lignes
     std::vector<std::pair<int, int>> stockage;
     for (int rho = 0; rho < 2 * maxRho; rho++) {
         for (int theta = 0; theta < angleResolution; theta++) {
@@ -270,12 +273,11 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
         // Filtrage des droites de 45°
         if (thetaDeg > angleMin && thetaDeg < angleMax) {
-            continue;  // on exclu les droites diagonales
+            continue;  // on exclut les droites diagonales
         }
 
         stockageFiltréSansDiagonales.push_back(ligne);
     }
-
 
     // Dessin des droites sur l'image d'origine
     cv::Mat imgDroites = image.clone();
