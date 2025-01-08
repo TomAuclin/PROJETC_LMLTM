@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QImage>
 #include "Traitement.hpp"
+#include "Library.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -33,6 +34,11 @@ private slots:
     void on_DetectionDroite_clicked();
     void on_RehaussementContours_clicked();
     void on_SegmenterCouleur_clicked();
+
+    //Ajout du menu Descripteur
+    void on_actionAjouterDescripteur_triggered();
+    void on_actionModifierDescripteur_triggered();
+    void on_actionSupprimerDescripteur_triggered();
 
 private:
     Ui::MainWindow *ui;

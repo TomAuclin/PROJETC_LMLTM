@@ -610,3 +610,65 @@ void MainWindow::on_RehaussementContours_clicked()
     ui->AffichageResultat->setScene(sceneResultat);
 }
 
+
+// -----------------------------------------------------------------------------------------
+
+// *************************** Ajout Menu Descripteur *************************************
+
+// -----------------------------------------------------------------------------------------
+
+// Ajouter
+
+void MainWindow::on_actionAjouterDescripteur_triggered() {
+    QString cheminImage = QFileDialog::getOpenFileName(this, "Sélectionnez une image à ajouter", "", "Images (*.png *.jpg *.jpeg *.bmp);;Tous les fichiers (*)");
+    if (cheminImage.isEmpty()) {
+        QMessageBox::warning(this, "Avertissement", "Aucun fichier sélectionné !");
+        return;
+    }
+
+    // Demander les informations de l'utilisateur
+    bool ok;
+    QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok);
+    if (!ok || titre.isEmpty()) return;
+
+    int numero = QInputDialog::getInt(this, "Ajouter un descripteur", "Numéro unique :", 0, 0, 10000, 1, &ok);
+    if (!ok) return;
+
+    double prix = QInputDialog::getDouble(this, "Ajouter un descripteur", "Prix :", 0, 0, 10000, 2, &ok);
+    if (!ok) return;
+
+    QString acces = QInputDialog::getText(this, "Ajouter un descripteur", "Accès (O/L) :", QLineEdit::Normal, "O", &ok);
+    if (!ok || acces.isEmpty()) return;
+
+    QString type = QInputDialog::getText(this, "Ajouter un descripteur", "Type (couleur/gris) :", QLineEdit::Normal, "couleur", &ok);
+    if (!ok || type.isEmpty()) return;
+
+    int nbTraitement = QInputDialog::getInt(this, "Ajouter un descripteur", "Nombre de traitements possibles :", 1, 1, 100, 1, &ok);
+    if (!ok) return;
+
+    // Ajouter le descripteur à la bibliothèque
+    Image nouvelleImage(cheminImage.toStdString(), titre.toStdString(), numero, prix, acces.toStdString()[0], type.toStdString(), nbTraitement, 0);
+    library.ajouterDescripteurs(nouvelleImage);
+
+    QMessageBox::information(this, "Succès", "Le descripteur a été ajouté avec succès !");
+}
+
+// Modifier
+
+void MainWindow::on_actionModifierDescripteur_triggered() {
+    int numero = QInputDialog::getInt(this, "Modifier un descripteur", "Entrez le numéro unique de l'image :", 0);
+    library.modifdescripteurs(numero, library);
+    QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
+}
+
+// Supprimer
+
+void MainWindow::on_actionSupprimerDescripteur_triggered() {
+    int numero = QInputDialog::getInt(this, "Supprimer un descripteur", "Entrez le numéro unique de l'image :", 0);
+    library.supprimerDescripteurs(numero);
+    QMessageBox::information(this, "Succès", "Le descripteur a été supprimé avec succès !");
+}
+
+
+
+
