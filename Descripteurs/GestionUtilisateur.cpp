@@ -19,7 +19,6 @@ void GestionUtilisateur::connexion() {
             std::cout << "Connexion échouée." << std::endl;
         }
     }
-
 }
 
 void GestionUtilisateur::deconnexion() {
