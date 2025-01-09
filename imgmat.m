@@ -1,9 +1,10 @@
 
 % Fonction image Matlab 
-addpath('C:\Users\utilisateur\Downloads\BigProjet\PROJETC_LMLTM\Bibliotheque\Gratuites'); 
+addpath('C:\Users\Utilisateur\Desktop\PROJET\PROJETC_LMLTM\Bibliotheque\Gratuites'); 
 
-img= 'Banc02_gris.pgm';
+img= 'C:\Users\Utilisateur\Desktop\PROJET\PROJETC_LMLTM\Bibliotheque\Gratuites\Lena_gris.pgm';
 
+close all;
 
 if exist(img, 'file')
     img = imread(img); % Lecture de l'image
@@ -37,7 +38,7 @@ if exist(img, 'file')
 
     % 2. Filtrage par un filtre de convolution (matrice 3x3)
 
-    noisyImg = imnoise(img, 'gaussian', 0, 0.01); % Bruit gaussien avec variance 0.01
+    noisyImg = imnoise(img, 'gaussian', 0, 0.1); % Bruit gaussien avec variance 0.01
     
     % Affichage de l'image originale et bruitée
     figure;
