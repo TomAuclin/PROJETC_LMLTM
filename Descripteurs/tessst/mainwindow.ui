@@ -6,85 +6,202 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>900</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Application de Traitement d'Images</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="ChargerImage">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>11</y>
-      <width>111</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ChargerImage</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="DetecterContours">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>0</y>
-      <width>131</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>DetecterContours</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="AfficherImageOriginale">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>291</width>
-      <height>241</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="AfficherImageResultat">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>40</y>
-      <width>291</width>
-      <height>241</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="HoughDroite">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>0</y>
-      <width>101</width>
+      <x>20</x>
+      <y>10</y>
+      <width>120</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>HoughDroite</string>
+     <string>Charger Image</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="RehaussementContours">
+   <widget class="QGraphicsView" name="AfficherImage">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>0</y>
+      <x>160</x>
+      <y>10</y>
+      <width>300</width>
+      <height>250</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="AffichageResultat">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>10</y>
+      <width>300</width>
+      <height>250</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="CalculerHisto">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>50</y>
+      <width>120</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Calculer Histogramme</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="Canal_R">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>100</y>
+      <width>100</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Canal Rouge</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="Canal_V">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>130</y>
+      <width>100</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Canal Vert</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="Canal_B">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>160</y>
+      <width>100</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Canal Bleu</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="DetectionContour">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>200</y>
+      <width>120</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Détection Contours</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="DetectionDroite">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>240</y>
+      <width>120</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Détection Droites</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="AppliquerConvolution">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>290</y>
       <width>141</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>RehaussementContours</string>
+     <string>Appliquer Convolution</string>
     </property>
+   </widget>
+   <widget class="QGroupBox" name="GroupeSegmentation">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>270</y>
+      <width>200</width>
+      <height>200</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Segmentation Couleur</string>
+    </property>
+    <widget class="QCheckBox" name="Segmentation_Canal_R">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>150</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Rouge</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="Segmentation_Canal_V">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>150</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Vert</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="Segmentation_Canal_B">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>150</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Bleu</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="SegmenterCouleur">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>120</y>
+       <width>150</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Segmenter</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -92,7 +209,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>900</width>
      <height>22</height>
     </rect>
    </property>
