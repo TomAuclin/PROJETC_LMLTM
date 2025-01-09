@@ -26,15 +26,13 @@ private slots:
 
     void on_Canal_R_stateChanged(int arg1);
     void on_Canal_V_stateChanged(int arg1);
-    void on_Canal_B_stateChanged(int arg1); 
+    void on_Canal_B_stateChanged(int arg1);
 
     void on_DetectionContour_clicked();
 
     void on_DetectionDroite_clicked();
+    void on_RehaussementContours_clicked();
     void on_SegmenterCouleur_clicked();
-    void on_AppliquerConvolution_clicked();
-
-
 
 
 private:
@@ -42,14 +40,13 @@ private:
     QGraphicsScene *sceneImage;   // Scène pour afficher l'image
     QGraphicsScene *sceneHisto;   // Scène pour afficher l'histogramme
     QImage image;                 // Image chargée
-    Image* imageObj;              // Pointeur vers une image (gris ou couleur)
+    Image_color* imageObj;              // Pointeur vers une image (gris ou couleur)
 
     void afficherHistogramme(int histogramme[256]);   // Méthode pour afficher l'histogramme
     void afficherHistogrammeCanal(int histogramme[256], int canal); // Affichage des histogrammes par canal
     std::vector<int> getSelectedSegmentationCanaux();
 
     int seuilUtilisateur = 0.8;
-
 };
 
 #endif // MAINWINDOW_H

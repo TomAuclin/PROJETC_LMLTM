@@ -9,63 +9,6 @@ Traitement ::Traitement (){}
 
 // ----------------------------------------------------------------------------------------------
 
-cv::Mat Traitement::convolution(const cv::Mat& image) {
-
-    cv::Mat filter = (cv::Mat_<float>(3, 3) << 
-        1.0f/16, 2.0f/16, 1.0f/16, 
-        2.0f/16, 4.0f/16, 2.0f/16, 
-        1.0f/16, 2.0f/16, 1.0f/16);
-
-    int rows = image.rows;
-    int cols = image.cols;
-    int filterSize = filter.rows; 
-    int pad = filterSize/2;   
-
-    cv::Mat result;
-    if (image.channels() == 3) {
-   
-        std::vector<cv::Mat> channels(3);
-        cv::split(image, channels); 
-
-        for (int c = 0; c < 3; ++c) {
-            cv::Mat temp = cv::Mat::zeros(rows, cols, CV_32F);
-            for (int i = pad; i < rows - pad; ++i) {
-                for (int j = pad; j < cols - pad; ++j) {
-                    float sum = 0.0f;
-                    for (int k = -pad; k <= pad; ++k) {
-                        for (int l = -pad; l <= pad; ++l) {
-                            sum += channels[c].at<uchar>(i + k, j + l) * filter.at<float>(pad + k, pad + l);
-                        }
-                    }
-                    temp.at<float>(i, j) = sum;
-                }
-            }
-            temp.convertTo(channels[c], CV_8U); 
-        }
-
-        cv::merge(channels, result); 
-    } else if (image.channels() == 1) {
-        result = cv::Mat::zeros(rows, cols, CV_32F);
-        for (int i = pad; i < rows - pad; ++i) {
-            for (int j = pad; j < cols - pad; ++j) {
-                float sum = 0.0f;
-                for (int k = -pad; k <= pad; ++k) {
-                    for (int l = -pad; l <= pad; ++l) {
-                        sum += image.at<uchar>(i + k, j + l) * filter.at<float>(pad + k, pad + l);
-                    }
-                }
-                result.at<float>(i, j) = sum;
-            }
-        }
-        result.convertTo(result, CV_8U);
-    } else {
-        std::cerr << "Erreur : Type d'image non pris en charge." << std::endl;
-        return cv::Mat();
-    }
-
-    return result;
-}
-
 
 
 

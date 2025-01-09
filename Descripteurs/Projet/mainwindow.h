@@ -32,9 +32,6 @@ private slots:
 
     void on_DetectionDroite_clicked();
     void on_SegmenterCouleur_clicked();
-    void on_AppliquerConvolution_clicked();
-
-
 
 
 private:
@@ -49,7 +46,6 @@ private:
     std::vector<int> getSelectedSegmentationCanaux();
 
     int seuilUtilisateur = 0.8;
-
 };
 
 #endif // MAINWINDOW_H

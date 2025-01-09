@@ -73,10 +73,7 @@ public:
     
     // Méthode mise à jour pour gérer plusieurs canaux
     cv::Mat separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux);
-    cv::Mat convolution(const cv::Mat& image);
 
 };
-
-
 
 #endif // TRAITEMENT_HPP

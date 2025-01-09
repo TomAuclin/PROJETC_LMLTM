@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
 
-
 }
 
 MainWindow::~MainWindow()
@@ -126,7 +125,7 @@ void MainWindow::on_CalculerHisto_clicked()
         return;
     }
 
-    // Vérifier si l'image est en niveaux de gris
+    // Vérification si l'image est en niveaux de gris
     bool isGrayscale = dynamic_cast<ImageGris*>(imageObj) != nullptr;
 
     // Calculer l'histogramme
@@ -213,6 +212,7 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int margin = 30;
     int maxVal = 0;
 
+    // valeur maximale dans l'histogramme pour le redimensionnement
     for (int i = 0; i < 256; ++i) {
         if (histogramme[i] > maxVal) {
             maxVal = histogramme[i];
@@ -227,9 +227,11 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int maxBarHeight = height - 2 * margin;
     double scaleFactor = static_cast<double>(maxBarHeight) / maxVal;
 
-    sceneHisto->addLine(margin, height - margin, width, height - margin, QPen(Qt::black));
-    sceneHisto->addLine(margin, 0, margin, height - margin, QPen(Qt::black));
+    // axes de l'histogramme
+    sceneHisto->addLine(margin, height - margin, width, height - margin, QPen(Qt::black)); // Axe X
+    sceneHisto->addLine(margin, 0, margin, height - margin, QPen(Qt::black));             // Axe Y
 
+    // graduations pour les axes
     for (int i = 0; i < 256; i += 32) {
         sceneHisto->addLine(i * barWidth + margin, height - margin, i * barWidth + margin, height - margin - 5, QPen(Qt::black));
         QGraphicsTextItem* textItem = sceneHisto->addText(QString::number(i));
@@ -244,36 +246,37 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         textItem->setPos(margin - 30, yPos - 5);
     }
 
-    // Vérifier l'état des cases à cocher pour chaque canal et dessiner en conséquence
+    //  les histogrammes pour chaque canal en fonction des cases cochées
     if (ui->Canal_R->isChecked()) {
         int histoRouge[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoRouge, 0);
+        Histogramme::calculerHistogramme(*imageObj, histoRouge, 0); // Canal rouge
         QColor couleurRouge = Qt::red;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoRouge[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurRouge));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurRouge), QBrush(couleurRouge));
         }
     }
 
     if (ui->Canal_V->isChecked()) {
         int histoVert[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoVert, 1);
+        Histogramme::calculerHistogramme(*imageObj, histoVert, 1); // Canal vert
         QColor couleurVert = Qt::green;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoVert[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurVert));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurVert), QBrush(couleurVert));
         }
     }
 
     if (ui->Canal_B->isChecked()) {
         int histoBleu[256] = {0};
-        Histogramme::calculerHistogramme(*imageObj, histoBleu, 2);
+        Histogramme::calculerHistogramme(*imageObj, histoBleu, 2); // Canal bleu
         QColor couleurBleu = Qt::blue;
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoBleu[i] * scaleFactor);
-            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(couleurBleu));
+            sceneHisto->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurBleu), QBrush(couleurBleu));
         }
     }
+
 
     ui->AffichageResultat->setScene(sceneHisto);
 }
@@ -315,7 +318,7 @@ void MainWindow::on_Canal_B_stateChanged(int arg1)
 
 void MainWindow::on_DetectionContour_clicked()
 {
-    // Vérifier si une image a été chargée
+    // Vérification si une image a été chargée
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
@@ -326,34 +329,31 @@ void MainWindow::on_DetectionContour_clicked()
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
 
-    // Créer une cv::Mat pour stocker l'image en OpenCV
+
     cv::Mat imageMat;
 
-    // Si l'image est en couleur (ImageCouleur)
+    // Si l'image est en couleur
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
-        // Accéder aux pixels de l'image couleur via l'accesseur
-        const auto& imageCouleur = img->getImageCouleur(); // tableau des pixels (BGR)
 
-        // Créer une Mat de OpenCV avec les dimensions de l'image
+        const auto& imageCouleur = img->getImageCouleur();
+
         imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
 
-        // Remplir le cv::Mat avec les données des pixels (BGR)
+        // Remplissage de la matrice
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 const auto& pixel = imageCouleur[y][x];
-                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]); // BGR
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]); //RGB
             }
         }
     }
-    // Si l'image est en niveaux de gris (ImageGris)
+    // Si l'image est en niveaux de gris
     else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
-        // Accéder aux pixels de l'image en niveaux de gris via l'accesseur
+
         const auto& imageGris = img->getImageGris(); // tableau des pixels en niveaux de gris
 
-        // Créer une Mat de OpenCV avec les dimensions de l'image
         imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
 
-        // Remplir le cv::Mat avec les données des pixels (niveaux de gris)
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 imageMat.at<uchar>(y, x) = imageGris[y][x];
@@ -361,28 +361,28 @@ void MainWindow::on_DetectionContour_clicked()
         }
     }
 
-    // Appliquer la détection des contours en utilisant la classe Traitement
+    //Détection des contours
     Traitement traitement;
-    cv::Mat contours = traitement.detectionContours(imageMat); // Image des contours
+    cv::Mat contours = traitement.detectionContours(imageMat);
 
     if (contours.empty()) {
         QMessageBox::warning(this, tr("Erreur"), tr("La détection des contours a échoué."));
         return;
     }
 
-    // Convertir l'image des contours en QImage pour l'afficher
+    // Conversion de l'image des contours pour l'afficher
     QImage imgContours(contours.data, contours.cols, contours.rows, contours.step, QImage::Format_Grayscale8);
     QPixmap pixmap = QPixmap::fromImage(imgContours);
 
-    // Redimensionner l'image selon la taille de la vue
+    // Redimensionnement de l'image
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    // Créer une nouvelle scène pour AffichageResultat
+    // Création d' une nouvelle scène pour Affichage le Resultat
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
 
-    // Afficher l'image des contours dans la vue AffichageResultat
+    // Affichage l'image des contours dans la vue AffichageResultat
     ui->AffichageResultat->setScene(sceneResultat);
 }
 
@@ -396,33 +396,29 @@ void MainWindow::on_DetectionContour_clicked()
 
 void MainWindow::on_DetectionDroite_clicked()
 {
-    // Vérifier si une image a été chargée
+    // Vérification si une image a été chargée
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
 
-    // masquer les bouton a cocher
-    ui->Canal_R->setVisible(false);
-    ui->Canal_V->setVisible(false);
-    ui->Canal_B->setVisible(false);
-
-    // Créer une cv::Mat pour stocker l'image en OpenCV
     cv::Mat imageMat;
 
-    // Si l'image est en couleur (ImageCouleur)
+    // Si l'image est en couleur
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
-        const auto& imageCouleur = img->getImageCouleur(); // tableau des pixels (BGR)
+        const auto& imageCouleur = img->getImageCouleur();
         imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 const auto& pixel = imageCouleur[y][x];
-                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]); // BGR
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]);
             }
         }
     }
+
+    // Si l'image est en niveaux de gris
     else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
-        const auto& imageGris = img->getImageGris(); // tableau des pixels en niveaux de gris
+        const auto& imageGris = img->getImageGris();
         imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
@@ -431,27 +427,42 @@ void MainWindow::on_DetectionDroite_clicked()
         }
     }
 
-    // Appliquer la détection des droites
+    // détection des droites
     Traitement traitement;
     cv::Mat imageAvecDroites = traitement.HoughDroite(imageMat);
 
+    // si l'image des droites est vide
     if (imageAvecDroites.empty()) {
         QMessageBox::warning(this, tr("Erreur"), tr("La détection des droites a échoué."));
         return;
     }
 
-    QImage imgDroites(imageAvecDroites.data, imageAvecDroites.cols, imageAvecDroites.rows, imageAvecDroites.step, QImage::Format_RGB888);
+
+    QImage imgDroites;
+
+    if (imageAvecDroites.channels() == 3) {
+        // Conversion  pour les images en couleur
+        cv::Mat imageRGB;
+        cv::cvtColor(imageAvecDroites, imageRGB, cv::COLOR_BGR2RGB);
+        imgDroites = QImage(imageRGB.data, imageRGB.cols, imageRGB.rows, imageRGB.step, QImage::Format_RGB888);
+    }
+    else if (imageAvecDroites.channels() == 1) {
+        // Pour les images en niveaux de gris
+        imgDroites = QImage(imageAvecDroites.data, imageAvecDroites.cols, imageAvecDroites.rows, imageAvecDroites.step, QImage::Format_Grayscale8);
+    }
+
+
     QPixmap pixmap = QPixmap::fromImage(imgDroites);
 
-    // Redimensionner l'image selon la taille de la vue
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
     ui->AffichageResultat->setScene(sceneResultat);
-
 }
+
+
 
 // ----------------------------------------------------------------------------------------------
 
@@ -524,72 +535,76 @@ void MainWindow::on_SegmenterCouleur_clicked() {
     ui->statusbar->showMessage("Segmentation par couleur appliquée.");
 }
 
-void MainWindow::on_AppliquerConvolution_clicked()
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Rehaussement de contours ************************
+
+// ----------------------------------------------------------------------------------------------
+
+void MainWindow::on_RehaussementContours_clicked()
 {
+
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
 
-    // Convertir l'image en cv::Mat
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
+
     cv::Mat imageMat;
+
+
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
-        // Image en couleur
         const auto& imageCouleur = img->getImageCouleur();
+
         imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
+
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 const auto& pixel = imageCouleur[y][x];
-                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[2], pixel[1], pixel[0]); // Convertir en BGR
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]); // BGR
             }
         }
-    } else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
-        // Image en niveaux de gris
+    }
+
+    else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
         const auto& imageGris = img->getImageGris();
+
+
         imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
+
         for (int y = 0; y < imageMat.rows; ++y) {
             for (int x = 0; x < imageMat.cols; ++x) {
                 imageMat.at<uchar>(y, x) = imageGris[y][x];
             }
         }
-    } else {
-        QMessageBox::warning(this, tr("Erreur"), tr("Type d'image non pris en charge."));
-        return;
     }
 
-    // Appliquer la convolution
+    //  rehaussement des contours
     Traitement traitement;
-    cv::Mat resultat = traitement.convolution(imageMat);
-
-    if (resultat.empty()) {
-        QMessageBox::warning(this, tr("Erreur"), tr("La convolution a échoué."));
+    cv::Mat imageRehaussee = traitement.rehaussementContours(imageMat);
+    if (imageRehaussee.empty()) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Le rehaussement des contours a échoué."));
         return;
     }
 
-    // Afficher le résultat
-    QImage imgResultat;
-    if (resultat.channels() == 3) {
-        // Image en couleur
-        imgResultat = QImage(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_RGB888).rgbSwapped();
-    } else if (resultat.channels() == 1) {
-        // Image en niveaux de gris
-        imgResultat = QImage(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_Grayscale8);
-    } else {
-        QMessageBox::warning(this, tr("Erreur"), tr("Type d'image non pris en charge pour l'affichage."));
-        return;
+
+    QImage imgRehaussee(imageRehaussee.data, imageRehaussee.cols, imageRehaussee.rows, imageRehaussee.step, QImage::Format_Grayscale8);
+
+    // Si l'image est en RGB
+    if (imageRehaussee.channels() == 3) {
+        imgRehaussee = QImage(imageRehaussee.data, imageRehaussee.cols, imageRehaussee.rows, imageRehaussee.step, QImage::Format_RGB888);
     }
 
-    QPixmap pixmap = QPixmap::fromImage(imgResultat);
+    QPixmap pixmap = QPixmap::fromImage(imgRehaussee);
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
+
     ui->AffichageResultat->setScene(sceneResultat);
-
-    ui->statusbar->showMessage("Convolution appliquée.");
 }
-
-
-
 
