@@ -33,6 +33,7 @@ private slots:
     void on_DetectionDroite_clicked();
     void on_RehaussementContours_clicked();
     void on_SegmenterCouleur_clicked();
+    void on_AppliquerConvolution_clicked();
 
 
 private:

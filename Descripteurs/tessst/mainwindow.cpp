@@ -608,3 +608,79 @@ void MainWindow::on_RehaussementContours_clicked()
     ui->AffichageResultat->setScene(sceneResultat);
 }
 
+// ----------------------------------------------------------------------------------------------
+
+// ************************ Convolution ************************
+
+// ----------------------------------------------------------------------------------------------
+void MainWindow::on_AppliquerConvolution_clicked()
+{
+    if (!imageObj) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
+        return;
+    }
+
+    // Convertir l'image en cv::Mat
+    cv::Mat imageMat;
+    if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
+        // Image en couleur
+        const auto& imageCouleur = img->getImageCouleur();
+        imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
+        for (int y = 0; y < imageMat.rows; ++y) {
+            for (int x = 0; x < imageMat.cols; ++x) {
+                const auto& pixel = imageCouleur[y][x];
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[2], pixel[1], pixel[0]); // Convertir en BGR
+            }
+        }
+    } else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
+        // Image en niveaux de gris
+        const auto& imageGris = img->getImageGris();
+        imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
+        for (int y = 0; y < imageMat.rows; ++y) {
+            for (int x = 0; x < imageMat.cols; ++x) {
+                imageMat.at<uchar>(y, x) = imageGris[y][x];
+            }
+        }
+    } else {
+        QMessageBox::warning(this, tr("Erreur"), tr("Type d'image non pris en charge."));
+        return;
+    }
+
+    // Appliquer la convolution
+    Traitement traitement;
+    cv::Mat resultat = traitement.convolution(imageMat);
+
+    if (resultat.empty()) {
+        QMessageBox::warning(this, tr("Erreur"), tr("La convolution a échoué."));
+        return;
+    }
+
+    // Afficher le résultat
+    QImage imgResultat;
+    if (resultat.channels() == 3) {
+        // Image en couleur
+        imgResultat = QImage(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_RGB888).rgbSwapped();
+    } else if (resultat.channels() == 1) {
+        // Image en niveaux de gris
+        imgResultat = QImage(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_Grayscale8);
+    } else {
+        QMessageBox::warning(this, tr("Erreur"), tr("Type d'image non pris en charge pour l'affichage."));
+        return;
+    }
+
+    QPixmap pixmap = QPixmap::fromImage(imgResultat);
+    QSize viewSize = ui->AffichageResultat->viewport()->size();
+    pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    QGraphicsScene* sceneResultat = new QGraphicsScene(this);
+    sceneResultat->addPixmap(pixmap);
+    ui->AffichageResultat->setScene(sceneResultat);
+
+    ui->statusbar->showMessage("Convolution appliquée.");
+}
+
+
+
+
+
+
