@@ -10,12 +10,11 @@
 #define UI_BIBLIOWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
 
@@ -24,38 +23,41 @@ QT_BEGIN_NAMESPACE
 class Ui_BiblioWindow
 {
 public:
-    QAction *actionCharger_la_Bibliotheque;
     QWidget *centralwidget;
-    QGraphicsView *AffichageBiblio;
+    QPushButton *ChargerBiblioButton;
+    QPushButton *DetailsButton;
+    QListWidget *AffichageBiblio;
+    QPushButton *TraitementButton;
     QMenuBar *menubar;
-    QMenu *menuFichier;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *BiblioWindow)
     {
         if (BiblioWindow->objectName().isEmpty())
             BiblioWindow->setObjectName(QString::fromUtf8("BiblioWindow"));
-        BiblioWindow->resize(800, 600);
-        actionCharger_la_Bibliotheque = new QAction(BiblioWindow);
-        actionCharger_la_Bibliotheque->setObjectName(QString::fromUtf8("actionCharger_la_Bibliotheque"));
+        BiblioWindow->resize(936, 521);
         centralwidget = new QWidget(BiblioWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        AffichageBiblio = new QGraphicsView(centralwidget);
+        ChargerBiblioButton = new QPushButton(centralwidget);
+        ChargerBiblioButton->setObjectName(QString::fromUtf8("ChargerBiblioButton"));
+        ChargerBiblioButton->setGeometry(QRect(40, 10, 171, 25));
+        DetailsButton = new QPushButton(centralwidget);
+        DetailsButton->setObjectName(QString::fromUtf8("DetailsButton"));
+        DetailsButton->setGeometry(QRect(810, 40, 80, 21));
+        AffichageBiblio = new QListWidget(centralwidget);
         AffichageBiblio->setObjectName(QString::fromUtf8("AffichageBiblio"));
-        AffichageBiblio->setGeometry(QRect(100, 60, 621, 351));
+        AffichageBiblio->setGeometry(QRect(10, 40, 781, 431));
+        TraitementButton = new QPushButton(centralwidget);
+        TraitementButton->setObjectName(QString::fromUtf8("TraitementButton"));
+        TraitementButton->setGeometry(QRect(810, 80, 80, 25));
         BiblioWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(BiblioWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 800, 22));
-        menuFichier = new QMenu(menubar);
-        menuFichier->setObjectName(QString::fromUtf8("menuFichier"));
+        menubar->setGeometry(QRect(0, 0, 936, 22));
         BiblioWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(BiblioWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
         BiblioWindow->setStatusBar(statusbar);
-
-        menubar->addAction(menuFichier->menuAction());
-        menuFichier->addAction(actionCharger_la_Bibliotheque);
 
         retranslateUi(BiblioWindow);
 
@@ -65,8 +67,9 @@ public:
     void retranslateUi(QMainWindow *BiblioWindow)
     {
         BiblioWindow->setWindowTitle(QCoreApplication::translate("BiblioWindow", "MainWindow", nullptr));
-        actionCharger_la_Bibliotheque->setText(QCoreApplication::translate("BiblioWindow", "Charger la Bibliotheque", nullptr));
-        menuFichier->setTitle(QCoreApplication::translate("BiblioWindow", "Fichier", nullptr));
+        ChargerBiblioButton->setText(QCoreApplication::translate("BiblioWindow", "Charger biblio", nullptr));
+        DetailsButton->setText(QCoreApplication::translate("BiblioWindow", "Details", nullptr));
+        TraitementButton->setText(QCoreApplication::translate("BiblioWindow", "Traitement", nullptr));
     } // retranslateUi
 
 };

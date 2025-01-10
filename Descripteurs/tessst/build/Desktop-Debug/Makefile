@@ -55,19 +55,19 @@ OBJECTS_DIR   = ./
 SOURCES       = ../../GestionUtilisateur.cpp \
 		../../Traitement.cpp \
 		../../bibliowindow.cpp \
-		../../connexion.cpp \
+		../../connexionwindow.cpp \
 		../../main.cpp \
 		../../mainwindow.cpp moc_bibliowindow.cpp \
-		moc_connexion.cpp \
+		moc_connexionwindow.cpp \
 		moc_mainwindow.cpp
 OBJECTS       = GestionUtilisateur.o \
 		Traitement.o \
 		bibliowindow.o \
-		connexion.o \
+		connexionwindow.o \
 		main.o \
 		mainwindow.o \
 		moc_bibliowindow.o \
-		moc_connexion.o \
+		moc_connexionwindow.o \
 		moc_mainwindow.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
@@ -127,7 +127,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		../../.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -151,11 +150,11 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../../../../tessst.pro ../../GestionUtilisateur.hpp \
 		../../Traitement.hpp \
 		../../bibliowindow.h \
-		../../connexion.h \
+		../../connexionwindow.h \
 		../../mainwindow.h ../../GestionUtilisateur.cpp \
 		../../Traitement.cpp \
 		../../bibliowindow.cpp \
-		../../connexion.cpp \
+		../../connexionwindow.cpp \
 		../../main.cpp \
 		../../mainwindow.cpp
 QMAKE_TARGET  = tessst
@@ -166,7 +165,7 @@ TARGET        = tessst
 first: all
 ####### Build rules
 
-tessst: ui_bibliowindow.h ui_connexion.h ui_mainwindow.h $(OBJECTS)  
+tessst: ui_bibliowindow.h ui_connexionwindow.h ui_mainwindow.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../../tessst.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -227,7 +226,6 @@ Makefile: ../../tessst.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qma
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -308,7 +306,6 @@ Makefile: ../../tessst.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qma
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
-.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -345,9 +342,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../GestionUtilisateur.hpp ../../Traitement.hpp ../../bibliowindow.h ../../connexion.h ../../mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../GestionUtilisateur.cpp ../../Traitement.cpp ../../bibliowindow.cpp ../../connexion.cpp ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../bibliowindow.ui ../../connexion.ui ../../mainwindow.ui $(DISTDIR)/
+	$(COPY_FILE) --parents ../../GestionUtilisateur.hpp ../../Traitement.hpp ../../bibliowindow.h ../../connexionwindow.h ../../mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../GestionUtilisateur.cpp ../../Traitement.cpp ../../bibliowindow.cpp ../../connexionwindow.cpp ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../bibliowindow.ui ../../connexionwindow.ui ../../mainwindow.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -379,20 +376,23 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	clang++ -pipe -g -std=gnu++1z -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_bibliowindow.cpp moc_connexion.cpp moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_bibliowindow.cpp moc_connexionwindow.cpp moc_mainwindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_bibliowindow.cpp moc_connexion.cpp moc_mainwindow.cpp
+	-$(DEL_FILE) moc_bibliowindow.cpp moc_connexionwindow.cpp moc_mainwindow.cpp
 moc_bibliowindow.cpp: ../../bibliowindow.h \
+		../../mainwindow.h \
+		../../Traitement.hpp \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /media/sf_PROJETC_LMLTM/Descripteurs/tessst/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang -I/media/sf_PROJETC_LMLTM/Descripteurs/tessst -I/usr/include/opencv4 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/llvm-18/lib/clang/18/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../bibliowindow.h -o moc_bibliowindow.cpp
 
-moc_connexion.cpp: ../../connexion.h \
-		../../GestionUtilisateur.hpp \
-		../../BiblioWindow.h \
+moc_connexionwindow.cpp: ../../connexionwindow.h \
+		../../bibliowindow.h \
+		../../mainwindow.h \
+		../../Traitement.hpp \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /media/sf_PROJETC_LMLTM/Descripteurs/tessst/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang -I/media/sf_PROJETC_LMLTM/Descripteurs/tessst -I/usr/include/opencv4 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/llvm-18/lib/clang/18/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../connexion.h -o moc_connexion.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /media/sf_PROJETC_LMLTM/Descripteurs/tessst/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang -I/media/sf_PROJETC_LMLTM/Descripteurs/tessst -I/usr/include/opencv4 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/llvm-18/lib/clang/18/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../connexionwindow.h -o moc_connexionwindow.cpp
 
 moc_mainwindow.cpp: ../../mainwindow.h \
 		../../Traitement.hpp \
@@ -404,16 +404,16 @@ compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_bibliowindow.h ui_connexion.h ui_mainwindow.h
+compiler_uic_make_all: ui_bibliowindow.h ui_connexionwindow.h ui_mainwindow.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_bibliowindow.h ui_connexion.h ui_mainwindow.h
+	-$(DEL_FILE) ui_bibliowindow.h ui_connexionwindow.h ui_mainwindow.h
 ui_bibliowindow.h: ../../bibliowindow.ui \
 		/usr/lib/qt5/bin/uic
 	/usr/lib/qt5/bin/uic ../../bibliowindow.ui -o ui_bibliowindow.h
 
-ui_connexion.h: ../../connexion.ui \
+ui_connexionwindow.h: ../../connexionwindow.ui \
 		/usr/lib/qt5/bin/uic
-	/usr/lib/qt5/bin/uic ../../connexion.ui -o ui_connexion.h
+	/usr/lib/qt5/bin/uic ../../connexionwindow.ui -o ui_connexionwindow.h
 
 ui_mainwindow.h: ../../mainwindow.ui \
 		/usr/lib/qt5/bin/uic
@@ -435,20 +435,22 @@ GestionUtilisateur.o: ../../GestionUtilisateur.cpp ../../GestionUtilisateur.hpp
 Traitement.o: ../../Traitement.cpp ../../Traitement.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Traitement.o ../../Traitement.cpp
 
-bibliowindow.o: ../../bibliowindow.cpp ../../BiblioWindow.h
+bibliowindow.o: ../../bibliowindow.cpp ../../bibliowindow.h \
+		../../mainwindow.h \
+		../../Traitement.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bibliowindow.o ../../bibliowindow.cpp
 
-connexion.o: ../../connexion.cpp ../../Connexion.h \
-		../../GestionUtilisateur.hpp \
-		../../BiblioWindow.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o connexion.o ../../connexion.cpp
+connexionwindow.o: ../../connexionwindow.cpp ../../connexionwindow.h \
+		../../bibliowindow.h \
+		../../mainwindow.h \
+		../../Traitement.hpp \
+		ui_connexionwindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o connexionwindow.o ../../connexionwindow.cpp
 
 main.o: ../../main.cpp ../../mainwindow.h \
 		../../Traitement.hpp \
 		../../bibliowindow.h \
-		../../connexion.h \
-		../../GestionUtilisateur.hpp \
-		../../BiblioWindow.h
+		../../connexionwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../main.cpp
 
 mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
@@ -459,8 +461,8 @@ mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 moc_bibliowindow.o: moc_bibliowindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_bibliowindow.o moc_bibliowindow.cpp
 
-moc_connexion.o: moc_connexion.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_connexion.o moc_connexion.cpp
+moc_connexionwindow.o: moc_connexionwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_connexionwindow.o moc_connexionwindow.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
