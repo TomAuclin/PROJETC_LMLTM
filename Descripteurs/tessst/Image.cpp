@@ -1,6 +1,11 @@
 #include "Image.hpp"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <cctype>
+#include <string>
+#include <sstream>
+
 
 
 Image::Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ, int nTp, int ide)
@@ -145,7 +150,25 @@ void Image::setnbTraitementPossible(int _nbTraitementPossible)
 void Image::setSource(const std::string& src) {
     source = src;
 }
-/*
+
+
+// Fonction pour supprimer les espaces en début et fin de chaîne
+std::string trim(const std::string& str) {
+    size_t first = str.find_first_not_of(" \t\r\n");
+    if (first == std::string::npos) {
+        return ""; // Si la chaîne est vide
+    }
+    size_t last = str.find_last_not_of(" \t\r\n");
+    return str.substr(first, (last - first + 1));
+}
+
+// Fonction pour convertir une chaîne de caractères en minuscules
+std::string toLowerCase(const std::string& str) {
+    std::string result = str;
+    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+    return result;
+}
+
 void Image::associerDescripteur(const std::string& fichierDescripteurs) {
     std::ifstream fichier(fichierDescripteurs);
     if (!fichier.is_open()) {
@@ -158,7 +181,6 @@ void Image::associerDescripteur(const std::string& fichierDescripteurs) {
         std::stringstream ss(ligne);
         std::string champ;
 
-        // Extraction des champs depuis la ligne
         std::getline(ss, champ, ',');
         std::string fichierSource = champ;
 
@@ -172,61 +194,14 @@ void Image::associerDescripteur(const std::string& fichierDescripteurs) {
         double fichierPrix = std::stod(champ);
 
         std::getline(ss, champ, ',');
-        char fichierAcces = champ[0];
+        std::string fichierAcces = champ;
 
-        std::getline(ss, champ, ',');
-        std::string fichierType = champ;
-
-        std::getline(ss, champ, ',');
-        int fichierNbTraitement = std::stoi(champ);
-
-        std::getline(ss, champ, ',');
-        int fichierIdentite = std::stoi(champ);
-
-        // Vérification si le titre correspond
-        if (fichierTitre == this->titre) {
-            this->source = fichierSource;
-            this->titre = fichierTitre;
-            this->numero = fichierNumero;
-            this->prix = fichierPrix;
-            this->acces = fichierAcces;
-            this->type = fichierType;
-            this->nbTraitementPossible = fichierNbTraitement;
-            this->identite = fichierIdentite;
-            break;
+        // Vérification de la valeur d'accès
+        fichierAcces = trim(fichierAcces); // Applique trim ici pour enlever les espaces
+        if (fichierAcces.empty() || (fichierAcces != "O" && fichierAcces != "L")) {
+            std::cerr << "Avertissement : valeur d'accès invalide '" << fichierAcces << "' dans le fichier descripteur." << std::endl;
+            continue;  // Passe à la ligne suivante si l'accès est incorrect
         }
-    }
-
-    fichier.close();
-}*/
-
-void Image::associerDescripteur(const std::string& fichierDescripteurs) {
-    std::ifstream fichier(fichierDescripteurs);
-    if (!fichier.is_open()) {
-        std::cerr << "Erreur : impossible d'ouvrir le fichier " << fichierDescripteurs << std::endl;
-        return;
-    }
-
-    std::string ligne;
-    while (std::getline(fichier, ligne)) {
-        std::stringstream ss(ligne);
-        std::string champ;
-
-        // Extraction des champs depuis la ligne
-        std::getline(ss, champ, ',');
-        std::string fichierSource = champ;
-
-        std::getline(ss, champ, ',');
-        std::string fichierTitre = champ;
-
-        std::getline(ss, champ, ',');
-        int fichierNumero = std::stoi(champ);
-
-        std::getline(ss, champ, ',');
-        double fichierPrix = std::stod(champ);
-
-        std::getline(ss, champ, ',');
-        char fichierAcces = champ[0];
 
         std::getline(ss, champ, ',');
         std::string fichierType = champ;
@@ -234,30 +209,39 @@ void Image::associerDescripteur(const std::string& fichierDescripteurs) {
         std::getline(ss, champ, ',');
         int fichierNbTraitement = std::stoi(champ);
 
+        std::cout << "Titre fichier : " << fichierTitre << std::endl;
+        std::cout << "Titre image : " << this->getTitre() << std::endl;
 
+        // Comparaison en supprimant les espaces et en ignorant la casse
+        std::string trimmedFichierTitre = toLowerCase(trim(fichierTitre));
+        std::string trimmedImageTitre = toLowerCase(trim(this->getTitre()));
 
-        // Vérification si le titre correspond
-        if (fichierTitre == this->getTitre()) {  // Comparer avec le titre
-            // Utilisation des setters pour affecter les valeurs
+        std::cout << "Titre fichier (modifié) : " << trimmedFichierTitre << std::endl;
+        std::cout << "Titre image (modifié) : " << trimmedImageTitre << std::endl;
+
+        if (trimmedFichierTitre == trimmedImageTitre) {
             this->setSource(fichierSource);
             this->setTitre(fichierTitre);
             this->setNumero(fichierNumero);
             this->setPrix(fichierPrix);
-            this->setAccess(fichierAcces);
+            this->setAccess(fichierAcces[0]);  // Utilisation du premier caractère
             this->setType(fichierType);
             this->setnbTraitementPossible(fichierNbTraitement);
 
-        std::cout << "Source : " << this->source << std::endl;
-        std::cout << "Titre : " << this->titre << std::endl;
-        std::cout << "Numéro : " << this->numero << std::endl;
-        std::cout << "Prix : " << this->prix << std::endl;
-        std::cout << "Accès : " << this->acces << std::endl;
-        std::cout << "Type : " << this->type << std::endl;
-        std::cout << "Nb Traitements : " << this->nbTraitementPossible << std::endl;
+            // Affichage des attributs mis à jour
+            std::cout << "Descripteur mis à jour :\n";
+            std::cout << "Source : " << this->getSource() << std::endl;
+            std::cout << "Titre : " << this->getTitre() << std::endl;
+            std::cout << "Numéro : " << this->getNumero() << std::endl;
+            std::cout << "Prix : " << this->getPrix() << std::endl;
+            std::cout << "Accès (caractère) : " << this->getAccess() << std::endl;
+            std::cout << "Type : " << this->getType() << std::endl;
+            std::cout << "Nb Traitements : " << this->getnbTraitementPossible() << std::endl;
+        }
     }
 
     fichier.close();
- }
+}
 
 
 Image::~Image() {}
