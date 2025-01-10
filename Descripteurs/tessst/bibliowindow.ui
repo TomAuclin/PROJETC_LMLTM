@@ -63,6 +63,19 @@
      <string>Traitement</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButtonRechercherp">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>0</y>
+      <width>80</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Prix Image</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

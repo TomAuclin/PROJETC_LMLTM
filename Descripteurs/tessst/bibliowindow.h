@@ -6,7 +6,7 @@
 #include <QString>
 #include <QMouseEvent>
 #include "Image.hpp"
-
+#include "Library.hpp"
 #include "mainwindow.h"
 #include <memory>
 
@@ -31,15 +31,17 @@ private slots:
     void on_AffichageBiblio_itemClicked(QListWidgetItem *item); // Clic sur une image
     void on_TraitementButton_clicked(); // Clic sur le bouton "Traitement"
 
-    //void on_DetailsButton_clicked();
     void on_DetailsButton_clicked();
+
+    void on_pushButtonRechercherp_clicked();
 
 private:
     Ui::BiblioWindow *ui;
 
     QString selectedImagePath; // Chemin de l'image sélectionnée
     void loadImagesIntoList(const QString &directoryPath); // Charger les images dans la liste
-
+    int currentImageNumber;  // Pour stocker le numéro de l'image
+    double currentImagePrice; // Pour stocker le prix de l'image
     std::unique_ptr<MainWindow> mainWindow; // Pointeur unique pour gérer la fenêtre MainWindow
 
 };

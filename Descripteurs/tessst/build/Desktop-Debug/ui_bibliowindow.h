@@ -28,6 +28,7 @@ public:
     QPushButton *DetailsButton;
     QListWidget *AffichageBiblio;
     QPushButton *TraitementButton;
+    QPushButton *pushButtonRechercherp;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -50,6 +51,9 @@ public:
         TraitementButton = new QPushButton(centralwidget);
         TraitementButton->setObjectName(QString::fromUtf8("TraitementButton"));
         TraitementButton->setGeometry(QRect(810, 80, 80, 25));
+        pushButtonRechercherp = new QPushButton(centralwidget);
+        pushButtonRechercherp->setObjectName(QString::fromUtf8("pushButtonRechercherp"));
+        pushButtonRechercherp->setGeometry(QRect(810, 0, 80, 25));
         BiblioWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(BiblioWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -70,6 +74,7 @@ public:
         ChargerBiblioButton->setText(QCoreApplication::translate("BiblioWindow", "Charger biblio", nullptr));
         DetailsButton->setText(QCoreApplication::translate("BiblioWindow", "Details", nullptr));
         TraitementButton->setText(QCoreApplication::translate("BiblioWindow", "Traitement", nullptr));
+        pushButtonRechercherp->setText(QCoreApplication::translate("BiblioWindow", "Prix Image", nullptr));
     } // retranslateUi
 
 };
