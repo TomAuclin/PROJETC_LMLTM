@@ -136,26 +136,6 @@ void Library::modifierAcces(int numero, const std::string& nomFichier) {
     std::cerr << "Image non trouvée." << std::endl;
 }
 
-//void Library::modifierAcces(int numero) {
-//    auto current = head; // Commence à la tête de la liste
-//    while (current) { // Parcourt la liste chaînée
-//        if (current->data.getNumero() == numero) { // Vérifie si le numéro correspond
-//            // Bascule entre 'O' et 'L' pour l'accès
-//            if (current->data.getAccess() == 'O') {
-//                current->data.setAccess('L');
-//            } else {
-//                current->data.setAccess('O');
-//            }
-//            std::cout << "L'accès de l'image numéro " << numero << " a été modifié." << std::endl;
-//            return; // Arrête la recherche après la modification
-//        }
-//        current = current->next; // Passe au nœud suivant
-//    }
-//    std::cerr << "Image avec le numéro " << numero << " non trouvée dans la liste." << std::endl;
-//}
-
-
-
 
 void Library::afficherImagesAvecAccesO(const std::string &nomFichier) const
 {
@@ -306,7 +286,7 @@ void Library::sousListetype(int numero)
  * les numéros des images jusqu'à trouver une correspondance ou atteindre
  * la fin de la liste.
  */
-std::string Library::rechercherImageParNumero(int numero) const {
+/*Image Library::rechercherImageParNumero(int numero) const {
     auto current = head; // Commence à la tête de la liste
     while (current) { // Parcourt la liste tant qu'il y a des nœuds
         if (current->data.getNumero() == numero) {
@@ -315,7 +295,18 @@ std::string Library::rechercherImageParNumero(int numero) const {
         current = current->next; // Passe au nœud suivant
     }
     return "Image non trouvée."; // Retourne un message si aucune image ne correspond
+}*/
+
+Image Library::rechercherImageParNumero(int numero) {
+    for (const auto& img : images) {
+        if (img.getNumero() == numero) {
+            return img;  // Retourne un objet Image trouvé
+        }
+    }
+    // Si l'image n'est pas trouvée, on peut retourner une image vide ou créer un cas d'erreur
+    return Image(); // Exemple : retourne une image vide si non trouvée
 }
+
 
 void Library::modifdescripteurs(int numero, Library bibli)
 {

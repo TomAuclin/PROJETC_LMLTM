@@ -10,6 +10,9 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QScreen>
+#include "Library.hpp"
+#include <QInputDialog>
+
 
 
 BiblioWindow::BiblioWindow(QWidget *parent)
@@ -39,6 +42,8 @@ BiblioWindow::BiblioWindow(QWidget *parent)
 
     ui->TraitementButton->setVisible(false);
     ui->DetailsButton->setVisible(false);
+    ui->pushButtonRechercherp->setVisible(true);
+
 
 
     // Connecter le clic sur une image
@@ -107,6 +112,7 @@ void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
     ui->DetailsButton->setVisible(true);
 }
 
+
 void BiblioWindow::on_TraitementButton_clicked()
 {
     if (!selectedImagePath.isEmpty()) {
@@ -152,8 +158,7 @@ void BiblioWindow::on_DetailsButton_clicked() {
 
     // Création de l'instance Image
     Image image;
-    image.titre = QFileInfo(selectedImagePath).fileName().toStdString(); // Inclut l'extension
-
+    image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
     // Association des descripteurs
     image.associerDescripteur(cheminDescripteurs);
 
@@ -176,3 +181,25 @@ void BiblioWindow::on_DetailsButton_clicked() {
 }
 
 
+void BiblioWindow::on_pushButtonRechercherp_clicked() {
+    bool ok;
+    int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
+                                           tr("Saisissez le numéro de l'image pour avoir son prix :"),
+                                           0, 0, 9999, 1, &ok);
+    if (ok) {
+        Image image;
+        std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+
+        if (image.rechercherPrix(numeroImage, cheminDescripteurs)) {
+            double prix = image.getPrix();
+            QString details = QString("Le prix de l'image numéro %1 est : %2 €")
+                                  .arg(numeroImage)
+                                  .arg(prix);
+            QMessageBox::information(this, "Résultat", details);
+        } else {
+            QMessageBox::warning(this, "Erreur", "Aucune image avec ce numéro n'a été trouvée !");
+        }
+    } else {
+        qDebug() << "L'utilisateur a annulé la saisie.";
+    }
+}

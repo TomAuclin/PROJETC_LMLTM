@@ -1,6 +1,5 @@
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
-
 #include <string>
 #include <sstream>
 #include <vector>
@@ -53,8 +52,7 @@ public:
     void setnbTraitementPossible(int _nbTraitementPossible);
     void associerDescripteur(const std::string& fichierDescripteurs);
     void setSource(const std::string& src);
-
-
+    bool rechercherPrix(int numero, const std::string& cheminDescripteurs);
 
     // Destructeur
     ~Image();

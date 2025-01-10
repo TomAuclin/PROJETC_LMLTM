@@ -54,6 +54,7 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../../GestionUtilisateur.cpp \
 		../../Image.cpp \
+		../../Library.cpp \
 		../../Traitement.cpp \
 		../../bibliowindow.cpp \
 		../../connexionwindow.cpp \
@@ -63,6 +64,7 @@ SOURCES       = ../../GestionUtilisateur.cpp \
 		moc_mainwindow.cpp
 OBJECTS       = GestionUtilisateur.o \
 		Image.o \
+		Library.o \
 		Traitement.o \
 		bibliowindow.o \
 		connexionwindow.o \
@@ -129,6 +131,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		../../.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -151,11 +154,13 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../../../../tessst.pro ../../GestionUtilisateur.hpp \
 		../../Image.hpp \
+		../../Library.hpp \
 		../../Traitement.hpp \
 		../../bibliowindow.h \
 		../../connexionwindow.h \
 		../../mainwindow.h ../../GestionUtilisateur.cpp \
 		../../Image.cpp \
+		../../Library.cpp \
 		../../Traitement.cpp \
 		../../bibliowindow.cpp \
 		../../connexionwindow.cpp \
@@ -230,6 +235,7 @@ Makefile: ../../tessst.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qma
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -310,6 +316,7 @@ Makefile: ../../tessst.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qma
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -346,8 +353,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../GestionUtilisateur.hpp ../../Image.hpp ../../Traitement.hpp ../../bibliowindow.h ../../connexionwindow.h ../../mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../GestionUtilisateur.cpp ../../Image.cpp ../../Traitement.cpp ../../bibliowindow.cpp ../../connexionwindow.cpp ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../GestionUtilisateur.hpp ../../Image.hpp ../../Library.hpp ../../Traitement.hpp ../../bibliowindow.h ../../connexionwindow.h ../../mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../GestionUtilisateur.cpp ../../Image.cpp ../../Library.cpp ../../Traitement.cpp ../../bibliowindow.cpp ../../connexionwindow.cpp ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../bibliowindow.ui ../../connexionwindow.ui ../../mainwindow.ui $(DISTDIR)/
 
 
@@ -384,6 +391,8 @@ compiler_moc_header_make_all: moc_bibliowindow.cpp moc_connexionwindow.cpp moc_m
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_bibliowindow.cpp moc_connexionwindow.cpp moc_mainwindow.cpp
 moc_bibliowindow.cpp: ../../bibliowindow.h \
+		../../Image.hpp \
+		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		moc_predefs.h \
@@ -392,6 +401,8 @@ moc_bibliowindow.cpp: ../../bibliowindow.h \
 
 moc_connexionwindow.cpp: ../../connexionwindow.h \
 		../../bibliowindow.h \
+		../../Image.hpp \
+		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		moc_predefs.h \
@@ -439,18 +450,26 @@ GestionUtilisateur.o: ../../GestionUtilisateur.cpp ../../GestionUtilisateur.hpp
 Image.o: ../../Image.cpp ../../Image.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Image.o ../../Image.cpp
 
+Library.o: ../../Library.cpp ../../Library.hpp \
+		../../Image.hpp \
+		../../GestionUtilisateur.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Library.o ../../Library.cpp
+
 Traitement.o: ../../Traitement.cpp ../../Traitement.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Traitement.o ../../Traitement.cpp
 
 bibliowindow.o: ../../bibliowindow.cpp ../../bibliowindow.h \
+		../../Image.hpp \
+		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
-		ui_bibliowindow.h \
-		../../Image.hpp
+		ui_bibliowindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bibliowindow.o ../../bibliowindow.cpp
 
 connexionwindow.o: ../../connexionwindow.cpp ../../connexionwindow.h \
 		../../bibliowindow.h \
+		../../Image.hpp \
+		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		ui_connexionwindow.h
@@ -459,6 +478,8 @@ connexionwindow.o: ../../connexionwindow.cpp ../../connexionwindow.h \
 main.o: ../../main.cpp ../../mainwindow.h \
 		../../Traitement.hpp \
 		../../bibliowindow.h \
+		../../Image.hpp \
+		../../Library.hpp \
 		../../connexionwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../main.cpp
 

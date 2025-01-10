@@ -5,7 +5,7 @@
 #include <cctype>
 #include <string>
 #include <sstream>
-
+#include <QDebug>
 
 
 Image::Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ, int nTp, int ide)
@@ -224,7 +224,7 @@ void Image::associerDescripteur(const std::string& fichierDescripteurs) {
             this->setTitre(fichierTitre);
             this->setNumero(fichierNumero);
             this->setPrix(fichierPrix);
-            this->setAccess(fichierAcces[0]);  // Utilisation du premier caractère
+            this->setAccess(fichierAcces[0]);
             this->setType(fichierType);
             this->setnbTraitementPossible(fichierNbTraitement);
 
@@ -241,6 +241,47 @@ void Image::associerDescripteur(const std::string& fichierDescripteurs) {
     }
 
     fichier.close();
+}
+
+
+bool Image::rechercherPrix(int numeroImage, const std::string& fichierDescripteurs) {
+    std::ifstream fichier(fichierDescripteurs);
+    if (!fichier.is_open()) {
+        std::cerr << "Erreur : impossible d'ouvrir le fichier " << fichierDescripteurs << std::endl;
+        return false;
+    }
+
+    std::string ligne;
+    while (std::getline(fichier, ligne)) {
+        std::stringstream ss(ligne);
+        std::string champ;
+
+        // Lecture des champs dans l'ordre attendu
+        std::getline(ss, champ, ','); // Source
+        std::getline(ss, champ, ','); // Titre
+        std::getline(ss, champ, ',');
+        int fichierNumero = std::stoi(champ); // Numéro
+
+        std::getline(ss, champ, ',');
+        double fichierPrix = std::stod(champ); // Prix
+
+        // Comparaison avec le numéro recherché
+        if (fichierNumero == numeroImage) {
+            // Mise à jour des attributs pertinents
+            this->setNumero(fichierNumero);
+            this->setPrix(fichierPrix);
+
+            // Facultatif : afficher les détails trouvés
+            std::cout << "Numéro trouvé : " << fichierNumero << ", Prix : " << fichierPrix << std::endl;
+
+            fichier.close();
+            return true;
+        }
+    }
+
+    fichier.close();
+    std::cerr << "Aucune image trouvée avec le numéro : " << numeroImage << std::endl;
+    return false;
 }
 
 
