@@ -1,8 +1,9 @@
 
 % Fonction image Matlab 
-addpath('C:\Users\utilisateur\Downloads\BigProjet\PROJETC_LMLTM\Bibliotheque\Gratuites'); 
+addpath('C:\Users\utilisateur\Downloads\BigProjet\bibliotheque\_9.99'); 
 
-img= 'Banc02_gris.pgm';
+img= 'C:\Users\utilisateur\Downloads\BigProjet\bibliotheque\_9.99\ArbreMultiBranche_gris.pgm';
+
 
 
 if exist(img, 'file')

@@ -5,6 +5,7 @@
 #include <QListWidget>
 #include <QString>
 #include <QMouseEvent>
+#include "Image.hpp"
 
 #include "mainwindow.h"
 #include <memory>
@@ -30,6 +31,7 @@ private slots:
     void on_AffichageBiblio_itemClicked(QListWidgetItem *item); // Clic sur une image
     void on_TraitementButton_clicked(); // Clic sur le bouton "Traitement"
 
+    //void on_DetailsButton_clicked();
     void on_DetailsButton_clicked();
 
 private:

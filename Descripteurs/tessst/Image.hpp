@@ -3,6 +3,8 @@
 
 #include <string>
 #include <sstream>
+#include <vector>
+
 
 /*
  * Classe Image
@@ -50,7 +52,9 @@ public:
     void setType(std::string _Type);
     void setnbTraitementPossible(int _nbTraitementPossible);
     void associerDescripteur(const std::string& fichierDescripteurs);
-     void setSource(const std::string& src);
+    void setSource(const std::string& src);
+
+
 
     // Destructeur
     ~Image();
