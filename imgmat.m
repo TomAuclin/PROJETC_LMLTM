@@ -2,9 +2,9 @@
 % Fonction image Matlab 
 addpath('C:\Users\utilisateur\Downloads\BigProjet\bibliotheque\_9.99'); 
 
-img= 'C:\Users\utilisateur\Downloads\BigProjet\bibliotheque\_9.99\Vitraille_gris.pgm';
+img= 'C:\Users\utilisateur\Downloads\BigProjet\bibliotheque\_9.99\ArbreMultiBranche_gris.pgm';
 
-%4 5 3 6 6 6 6 4 4 6 4 5 5 5 6 5 6
+
 
 if exist(img, 'file')
     img = imread(img); % Lecture de l'image
