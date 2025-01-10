@@ -392,7 +392,6 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_bibliowindow.cpp moc_connexionwindow.cpp moc_mainwindow.cpp
 moc_bibliowindow.cpp: ../../bibliowindow.h \
 		../../Image.hpp \
-		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		moc_predefs.h \
@@ -402,7 +401,6 @@ moc_bibliowindow.cpp: ../../bibliowindow.h \
 moc_connexionwindow.cpp: ../../connexionwindow.h \
 		../../bibliowindow.h \
 		../../Image.hpp \
-		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		moc_predefs.h \
@@ -460,7 +458,6 @@ Traitement.o: ../../Traitement.cpp ../../Traitement.hpp
 
 bibliowindow.o: ../../bibliowindow.cpp ../../bibliowindow.h \
 		../../Image.hpp \
-		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		ui_bibliowindow.h
@@ -469,7 +466,6 @@ bibliowindow.o: ../../bibliowindow.cpp ../../bibliowindow.h \
 connexionwindow.o: ../../connexionwindow.cpp ../../connexionwindow.h \
 		../../bibliowindow.h \
 		../../Image.hpp \
-		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		ui_connexionwindow.h
@@ -479,7 +475,6 @@ main.o: ../../main.cpp ../../mainwindow.h \
 		../../Traitement.hpp \
 		../../bibliowindow.h \
 		../../Image.hpp \
-		../../Library.hpp \
 		../../connexionwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../main.cpp
 
