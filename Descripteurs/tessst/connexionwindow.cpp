@@ -30,7 +30,7 @@ ConnexionWindow::ConnexionWindow(QWidget *parent)
 void ConnexionWindow::setupLogo()
 {
     // Chemin vers l'image
-    QString imagePath = "/media/sf_PROJETC_LMLTM/logo_fac.png";
+    QString imagePath = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/logo_fac.png";
 
     // Charger l'image
     QPixmap pixmap(imagePath);
