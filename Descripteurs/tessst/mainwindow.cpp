@@ -797,7 +797,8 @@ void MainWindow::on_AppliquerConvolution_clicked()
 }
 
 
+void MainWindow::on_RetourVersBiblio_clicked()
+{
 
-
-
+}
 

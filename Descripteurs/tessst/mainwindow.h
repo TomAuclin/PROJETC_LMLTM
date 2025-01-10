@@ -38,6 +38,8 @@ private slots:
     void on_AppliquerConvolution_clicked();
 
 
+    void on_RetourVersBiblio_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *sceneImage;   // Scène pour afficher l'image

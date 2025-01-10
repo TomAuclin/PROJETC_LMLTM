@@ -131,7 +131,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		../../.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -235,7 +234,6 @@ Makefile: ../../tessst.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qma
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -316,7 +314,6 @@ Makefile: ../../tessst.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qma
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
-.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -392,6 +389,7 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_bibliowindow.cpp moc_connexionwindow.cpp moc_mainwindow.cpp
 moc_bibliowindow.cpp: ../../bibliowindow.h \
 		../../Image.hpp \
+		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		moc_predefs.h \
@@ -401,6 +399,7 @@ moc_bibliowindow.cpp: ../../bibliowindow.h \
 moc_connexionwindow.cpp: ../../connexionwindow.h \
 		../../bibliowindow.h \
 		../../Image.hpp \
+		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		moc_predefs.h \
@@ -458,6 +457,7 @@ Traitement.o: ../../Traitement.cpp ../../Traitement.hpp
 
 bibliowindow.o: ../../bibliowindow.cpp ../../bibliowindow.h \
 		../../Image.hpp \
+		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		ui_bibliowindow.h
@@ -466,6 +466,7 @@ bibliowindow.o: ../../bibliowindow.cpp ../../bibliowindow.h \
 connexionwindow.o: ../../connexionwindow.cpp ../../connexionwindow.h \
 		../../bibliowindow.h \
 		../../Image.hpp \
+		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
 		ui_connexionwindow.h
@@ -475,6 +476,7 @@ main.o: ../../main.cpp ../../mainwindow.h \
 		../../Traitement.hpp \
 		../../bibliowindow.h \
 		../../Image.hpp \
+		../../Library.hpp \
 		../../connexionwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../main.cpp
 

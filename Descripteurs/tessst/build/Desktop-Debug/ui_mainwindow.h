@@ -41,6 +41,7 @@ public:
     QCheckBox *Segmentation_Canal_V;
     QCheckBox *Segmentation_Canal_B;
     QPushButton *SegmenterCouleur;
+    QPushButton *RetourVersBiblio;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -96,6 +97,9 @@ public:
         SegmenterCouleur = new QPushButton(GroupeSegmentation);
         SegmenterCouleur->setObjectName(QString::fromUtf8("SegmenterCouleur"));
         SegmenterCouleur->setGeometry(QRect(10, 120, 150, 30));
+        RetourVersBiblio = new QPushButton(centralwidget);
+        RetourVersBiblio->setObjectName(QString::fromUtf8("RetourVersBiblio"));
+        RetourVersBiblio->setGeometry(QRect(80, 470, 80, 25));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -126,6 +130,7 @@ public:
         Segmentation_Canal_V->setText(QCoreApplication::translate("MainWindow", "Vert", nullptr));
         Segmentation_Canal_B->setText(QCoreApplication::translate("MainWindow", "Bleu", nullptr));
         SegmenterCouleur->setText(QCoreApplication::translate("MainWindow", "Segmenter", nullptr));
+        RetourVersBiblio->setText(QCoreApplication::translate("MainWindow", "Retour", nullptr));
     } // retranslateUi
 
 };
