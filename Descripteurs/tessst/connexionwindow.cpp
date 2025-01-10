@@ -3,6 +3,8 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QScreen>
+#include <QGraphicsPixmapItem>
+
 
 ConnexionWindow::ConnexionWindow(QWidget *parent)
     : QDialog(parent)
@@ -21,7 +23,40 @@ ConnexionWindow::ConnexionWindow(QWidget *parent)
         int y = (screenGeometry.height() - this->height()) / 2;
         this->move(x, y);
     }
+    setupLogo();
 
+}
+
+void ConnexionWindow::setupLogo()
+{
+    // Chemin vers l'image
+    QString imagePath = "/media/sf_PROJETC_LMLTM/logo_fac.png";
+
+    // Charger l'image
+    QPixmap pixmap(imagePath);
+    if (pixmap.isNull()) {
+        qWarning() << "Erreur : Impossible de charger l'image à l'emplacement" << imagePath;
+        return;
+    }
+
+    // Créer une scène et ajouter l'image
+    QGraphicsScene *scene = new QGraphicsScene(this);
+    QGraphicsPixmapItem *pixmapItem = scene->addPixmap(pixmap);
+
+    // Trouver le QGraphicsView
+    QGraphicsView *view = ui->LogoUps; // Utilisez directement le pointeur généré par `setupUi`
+    if (!view) {
+        qWarning() << "Erreur : QGraphicsView introuvable.";
+        return;
+    }
+
+    // Associer la scène au QGraphicsView
+    view->setScene(scene);
+
+    // Ajuster l'image pour qu'elle s'adapte à la taille de la vue
+    QRectF pixmapRect = pixmapItem->boundingRect(); // Obtenir la taille de l'image
+    view->fitInView(pixmapRect, Qt::KeepAspectRatio);
+    view->setRenderHint(QPainter::Antialiasing);
 }
 
 ConnexionWindow::~ConnexionWindow()
@@ -57,31 +92,3 @@ void ConnexionWindow::on_connexionButton_clicked()
         ui->Login->clear(); // Permet de saisir un nouveau mot de passe
     }
 }
-
-
-void ConnexionWindow::on_Logo_ups_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint)
-{
-    // Charger l'image logo de la fac
-    QPixmap pixmap("/media/sf_PROJETC_LMLTM/logo_fac.png");
-
-    // Vérifier si l'image est chargée
-    if (pixmap.isNull()) {
-        qWarning("Impossible de charger l'image logo");
-        return;
-    }
-
-    // Créer une scène
-    QGraphicsScene *scene = new QGraphicsScene(this);
-
-    // Ajouter l'image à la scène
-    QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
-
-    // Associer la scène à la QGraphicsView
-    ui->Logo_ups->setScene(scene);
-
-    // Adapter l'image à la taille de la QGraphicsView
-    ui->Logo_ups->setSceneRect(pixmap.rect()); // Définir la scène en fonction de l'image
-    ui->Logo_ups->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
-
-}
-

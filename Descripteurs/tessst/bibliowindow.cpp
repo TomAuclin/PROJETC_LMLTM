@@ -1,5 +1,6 @@
 #include "bibliowindow.h"
-#include "ui_biblioWindow.h"
+#include "ui_bibliowindow.h"
+#include "Image.hpp"
 
 #include <QFileDialog>
 #include <QListWidgetItem>
@@ -140,3 +141,69 @@ void BiblioWindow::mousePressEvent(QMouseEvent *event)
 
     QMainWindow::mousePressEvent(event);
 }
+
+/*void BiblioWindow::on_DetailsButton_clicked()
+{
+    if (selectedImagePath.isEmpty()) {
+        QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
+        return;
+    }
+
+    // Chemin du fichier descripteurs (à adapter selon ton organisation)
+    std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+
+    // Création de l'instance Image
+    Image image;
+    image.titre = QFileInfo(selectedImagePath).baseName().toStdString();
+
+    // Associer les descripteurs
+    image.associerDescripteur(cheminDescripteurs);
+
+    // Afficher les détails associés
+    QString details = QString::fromStdString(
+        "Titre : " + image.titre + "\n" +
+        "Source : " + image.source + "\n" +
+        "Numéro : " + std::to_string(image.numero) + "\n" +
+        "Prix : " + std::to_string(image.prix) + "\n" +
+        "Accès : " + image.acces + "\n" +
+        "Type : " + image.type + "\n" +
+        "Nombre de traitements possibles : " + std::to_string(image.nbTraitementPossible) + "\n" +
+        "Identité : " + std::to_string(image.identite)
+        );
+
+    QMessageBox::information(this, "Détails de l'image", details);
+}*/
+
+void BiblioWindow::on_DetailsButton_clicked()
+{
+    if (selectedImagePath.isEmpty()) {
+        QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
+        return;
+    }
+
+    // Chemin du fichier descripteurs (à adapter selon votre organisation)
+    std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+
+    // Création de l'instance Image
+    Image image;
+    image.titre = QFileInfo(selectedImagePath).fileName().toStdString(); // Inclut l'extension
+
+    // Associer les descripteurs
+    image.associerDescripteur(cheminDescripteurs);
+
+    // Afficher les détails associés en utilisant les getters
+    QString details = QString::fromStdString(
+        "Titre : " + image.getTitre() + "\n" +
+        "Source : " + image.getSource() + "\n" +
+        "Numéro : " + std::to_string(image.getNumero()) + "\n" +
+        "Prix : " + std::to_string(image.getPrix()) + "\n" +
+        "Accès : " + std::string(1, image.getAccess()) + "\n" +
+        "Type : " + image.getType() + "\n" +
+        "Nombre de traitements possibles : " + std::to_string(image.getnbTraitementPossible()) + "\n"
+
+        );
+
+    QMessageBox::information(this, "Détails de l'image", details);
+}
+
+

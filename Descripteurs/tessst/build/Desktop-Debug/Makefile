@@ -53,6 +53,7 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../../GestionUtilisateur.cpp \
+		../../Image.cpp \
 		../../Traitement.cpp \
 		../../bibliowindow.cpp \
 		../../connexionwindow.cpp \
@@ -61,6 +62,7 @@ SOURCES       = ../../GestionUtilisateur.cpp \
 		moc_connexionwindow.cpp \
 		moc_mainwindow.cpp
 OBJECTS       = GestionUtilisateur.o \
+		Image.o \
 		Traitement.o \
 		bibliowindow.o \
 		connexionwindow.o \
@@ -148,10 +150,12 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../../../../tessst.pro ../../GestionUtilisateur.hpp \
+		../../Image.hpp \
 		../../Traitement.hpp \
 		../../bibliowindow.h \
 		../../connexionwindow.h \
 		../../mainwindow.h ../../GestionUtilisateur.cpp \
+		../../Image.cpp \
 		../../Traitement.cpp \
 		../../bibliowindow.cpp \
 		../../connexionwindow.cpp \
@@ -342,8 +346,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../GestionUtilisateur.hpp ../../Traitement.hpp ../../bibliowindow.h ../../connexionwindow.h ../../mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../GestionUtilisateur.cpp ../../Traitement.cpp ../../bibliowindow.cpp ../../connexionwindow.cpp ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../GestionUtilisateur.hpp ../../Image.hpp ../../Traitement.hpp ../../bibliowindow.h ../../connexionwindow.h ../../mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../GestionUtilisateur.cpp ../../Image.cpp ../../Traitement.cpp ../../bibliowindow.cpp ../../connexionwindow.cpp ../../main.cpp ../../mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../bibliowindow.ui ../../connexionwindow.ui ../../mainwindow.ui $(DISTDIR)/
 
 
@@ -432,12 +436,17 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 GestionUtilisateur.o: ../../GestionUtilisateur.cpp ../../GestionUtilisateur.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o GestionUtilisateur.o ../../GestionUtilisateur.cpp
 
+Image.o: ../../Image.cpp ../../Image.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Image.o ../../Image.cpp
+
 Traitement.o: ../../Traitement.cpp ../../Traitement.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Traitement.o ../../Traitement.cpp
 
 bibliowindow.o: ../../bibliowindow.cpp ../../bibliowindow.h \
 		../../mainwindow.h \
-		../../Traitement.hpp
+		../../Traitement.hpp \
+		ui_bibliowindow.h \
+		../../Image.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bibliowindow.o ../../bibliowindow.cpp
 
 connexionwindow.o: ../../connexionwindow.cpp ../../connexionwindow.h \
