@@ -141,7 +141,6 @@ void BiblioWindow::mousePressEvent(QMouseEvent *event)
     QMainWindow::mousePressEvent(event);
 }
 
-
 void BiblioWindow::on_DetailsButton_clicked() {
     if (selectedImagePath.isEmpty()) {
         QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
@@ -158,17 +157,21 @@ void BiblioWindow::on_DetailsButton_clicked() {
     // Association des descripteurs
     image.associerDescripteur(cheminDescripteurs);
 
+    // Formatage du prix avec le symbole €
+    std::string prixAvecEuro = std::to_string(image.getPrix()) + " €";
+
     // Affichage des détails associés en utilisant les getters
     QString details = QString::fromStdString(
         "Titre : " + image.getTitre() + "\n" +
         "Source : " + image.getSource() + "\n" +
         "Numéro : " + std::to_string(image.getNumero()) + "\n" +
-        "Prix : " + std::to_string(image.getPrix()) + "\n" +
+        "Prix : " + prixAvecEuro + "\n" +  // Affichage avec le symbole euro
         "Accès : " + std::string(1, image.getAccess()) + "\n" +
         "Type : " + image.getType() + "\n" +
         "Nombre de traitements possibles : " + std::to_string(image.getnbTraitementPossible()) + "\n"
         );
 
+    // Affichage des détails dans une boîte de message
     QMessageBox::information(this, "Détails de l'image", details);
 }
 
