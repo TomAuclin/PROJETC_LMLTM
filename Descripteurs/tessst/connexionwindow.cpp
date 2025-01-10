@@ -13,7 +13,7 @@ ConnexionWindow::ConnexionWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Connexion");
-    resize(350, 200);
+    resize(450, 300);
 
     // Centrer la fenêtre sur l'écran
     QScreen *screen = QGuiApplication::primaryScreen();
