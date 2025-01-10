@@ -1,0 +1,45 @@
+#ifndef BIBLIOWINDOW_H
+#define BIBLIOWINDOW_H
+
+#include <QMainWindow>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+
+namespace Ui {
+class BiblioWindow;
+}
+
+class ImageItem : public QGraphicsPixmapItem
+{
+public:
+    ImageItem(const QPixmap &pixmap)
+        : QGraphicsPixmapItem(pixmap) {}
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+};
+
+class BiblioWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit BiblioWindow(QWidget *parent = nullptr);
+    ~BiblioWindow();
+
+    void showDetailsButton();  // Déclare la méthode comme publique
+
+private slots:
+    void on_AffichageBiblio_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint);
+
+    void on_ChargerBiblioButton_clicked();
+
+    void on_DetailsButton_clicked();  // Nouveau slot pour le bouton de détails
+
+private:
+    Ui::BiblioWindow *ui;
+    QGraphicsScene *scene;
+    void loadImagesFromDirectory(const QString &directoryPath); // Méthode pour charger les images
+};
+
+#endif // BIBLIOWINDOW_H

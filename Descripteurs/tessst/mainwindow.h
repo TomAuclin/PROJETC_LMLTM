@@ -17,6 +17,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    // Ajout d'un constructeur prenant le chemin de l'image en paramètre
+    explicit MainWindow(const QString &imagePath = QString(), QWidget *parent = nullptr);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -33,6 +35,7 @@ private slots:
     void on_DetectionDroite_clicked();
     void on_RehaussementContours_clicked();
     void on_SegmenterCouleur_clicked();
+    void on_AppliquerConvolution_clicked();
 
 
 private:
@@ -47,6 +50,9 @@ private:
     std::vector<int> getSelectedSegmentationCanaux();
 
     int seuilUtilisateur = 0.8;
+
+    // Méthode pour charger et afficher une image directement
+    void loadAndDisplayImage(const QString &fileName);
 };
 
 #endif // MAINWINDOW_H

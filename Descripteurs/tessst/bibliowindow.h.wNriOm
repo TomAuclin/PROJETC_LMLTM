@@ -30,8 +30,6 @@ private slots:
     void on_AffichageBiblio_itemClicked(QListWidgetItem *item); // Clic sur une image
     void on_TraitementButton_clicked(); // Clic sur le bouton "Traitement"
 
-    void on_DetailsButton_clicked();
-
 private:
     Ui::BiblioWindow *ui;
 

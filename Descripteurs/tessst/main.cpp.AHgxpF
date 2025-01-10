@@ -12,5 +12,10 @@ int main(int argc, char *argv[])
     user.show();
 
 
+    MainWindow w;
+    //w.show();
+
+
+
     return a.exec();
 }

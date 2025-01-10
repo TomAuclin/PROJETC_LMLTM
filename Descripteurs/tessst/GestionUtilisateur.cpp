@@ -5,15 +5,13 @@
 GestionUtilisateur::GestionUtilisateur() : login("") {}
 
 void GestionUtilisateur::connexion() {
-    // Si login "ad-01-ao" ou "us-02-al" alors connexion réussie
-    while (login != "ad-01-ao" && login != "us-02-al") {
-        if (login == "ad-01-ao" || login == "us-02-al") {
-            std::cout << "Connexion réussie." << std::endl;
-        } else {
-            std::cout << "Connexion échouée." << std::endl;
-        }
+    if (login == "ad-01-ao" || login == "us-02-al") {
+        std::cout << "Connexion réussie." << std::endl;
+    } else {
+        std::cout << "Connexion échouée." << std::endl;
     }
 }
+
 
 void GestionUtilisateur::deconnexion() {
     // Se déconnecter

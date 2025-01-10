@@ -1,0 +1,122 @@
+#include "bibliowindow.h"
+#include "ui_bibliowindow.h"
+#include <QFileDialog>
+#include <QGraphicsPixmapItem>
+#include <QMessageBox>
+#include <QDebug>
+#include <QGraphicsView>
+#include <QGraphicsSceneMouseEvent>
+
+BiblioWindow::BiblioWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::BiblioWindow)
+    , scene(new QGraphicsScene(this)) // Initialisation de la scène graphique
+{
+    ui->setupUi(this);
+    ui->AffichageBiblio->setScene(scene); // Associer la scène au QGraphicsView
+    ui->DetailsButton->setVisible(false);  // Cacher le bouton Détails au départ
+}
+
+BiblioWindow::~BiblioWindow()
+{
+    delete ui;
+}
+
+void BiblioWindow::on_AffichageBiblio_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint)
+{
+    Q_UNUSED(viewportRect);
+    Q_UNUSED(fromScenePoint);
+    Q_UNUSED(toScenePoint);
+}
+
+void BiblioWindow::on_ChargerBiblioButton_clicked()
+{
+    // Ouvrir un sélecteur de dossier
+    QString directoryPath = QFileDialog::getExistingDirectory(this, "Sélectionnez un dossier d'images");
+
+    if (directoryPath.isEmpty()) {
+        qDebug() << "Aucun dossier sélectionné.";
+        return;
+    }
+
+    qDebug() << "Dossier sélectionné : " << directoryPath;
+    loadImagesFromDirectory(directoryPath);
+}
+
+void BiblioWindow::loadImagesFromDirectory(const QString &directoryPath)
+{
+    // Effacer la scène actuelle
+    scene->clear();
+
+    // Filtrer pour ne prendre que les fichiers image
+    QDir dir(directoryPath);
+    QStringList imageFiles = dir.entryList(QStringList() << "*.png" << "*.pgm" << "*.CR2", QDir::Files);
+
+    if (imageFiles.isEmpty()) {
+        QMessageBox::information(this, "Aucune image", "Le dossier sélectionné ne contient aucune image.");
+        return;
+    }
+
+    // Paramètres pour la grille (mosaïque)
+    const int imageWidth = 150;  // Largeur d'une image
+    const int imageHeight = 150; // Hauteur d'une image
+    const int margin = 10;       // Espacement entre les images
+    int xPos = margin;           // Position X de l'image
+    int yPos = margin;           // Position Y de l'image
+    const int imagesPerRow = 5;  // Nombre d'images par ligne (vous pouvez ajuster ce nombre)
+
+    // Charger chaque image dans la scène et les placer en mosaïque
+    for (int i = 0; i < imageFiles.size(); ++i) {
+        QString fileName = imageFiles[i];
+        QString filePath = directoryPath + "/" + fileName;
+        QPixmap pixmap(filePath);
+
+        if (!pixmap.isNull()) {
+            // Redimensionner l'image pour qu'elle corresponde à la taille définie
+            pixmap = pixmap.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio);
+
+            // Créer un ImageItem pour chaque image et gérer les clics
+            ImageItem *item = new ImageItem(pixmap);
+            item->setPos(xPos, yPos); // Positionner l'image à la bonne place dans la scène
+            scene->addItem(item);
+
+            // Ajuster la position pour la prochaine image
+            xPos += imageWidth + margin;  // Décalage horizontal
+
+            if ((i + 1) % imagesPerRow == 0) {
+                // Passer à la ligne suivante après avoir atteint le nombre d'images par ligne
+                xPos = margin;
+                yPos += imageHeight + margin;  // Décalage vertical
+            }
+        } else {
+            qDebug() << "Impossible de charger l'image : " << filePath;
+        }
+    }
+
+    // Ajuster la vue pour montrer tout le contenu
+    ui->AffichageBiblio->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
+}
+
+void BiblioWindow::showDetailsButton()
+{
+    // Afficher le bouton de détails
+    ui->DetailsButton->setVisible(true);
+}
+
+void BiblioWindow::on_DetailsButton_clicked()
+{
+    // Ajoutez ici ce que vous voulez faire lorsque le bouton Détails est cliqué
+    QMessageBox::information(this, "Détails", "Affichage des détails de l'image.");
+}
+
+// Détecter le clic sur une image
+void ImageItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event);
+
+    // Appeler la méthode showDetailsButton de BiblioWindow pour afficher le bouton
+    BiblioWindow *biblioWindow = qobject_cast<BiblioWindow *>(this->scene()->views().first()->parent());
+    if (biblioWindow) {
+        biblioWindow->showDetailsButton();
+    }
+}
