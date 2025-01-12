@@ -22,6 +22,7 @@ class BiblioWindow : public QMainWindow
 public:
     explicit BiblioWindow(QWidget *parent = nullptr);
     ~BiblioWindow();
+    Library library;
 
 protected:
     void mousePressEvent(QMouseEvent *event) override; // Gérer les clics dans la fenêtre principale
@@ -34,6 +35,8 @@ private slots:
     void on_DetailsButton_clicked();
 
     void on_pushButtonRechercherp_clicked();
+    void on_ChargeBoutton_clicked();
+    void on_SaveBoutton_clicked();
 
 private:
     Ui::BiblioWindow *ui;
@@ -43,6 +46,7 @@ private:
     int currentImageNumber;  // Pour stocker le numéro de l'image
     double currentImagePrice; // Pour stocker le prix de l'image
     std::unique_ptr<MainWindow> mainWindow; // Pointeur unique pour gérer la fenêtre MainWindow
+    
 
 };
 
