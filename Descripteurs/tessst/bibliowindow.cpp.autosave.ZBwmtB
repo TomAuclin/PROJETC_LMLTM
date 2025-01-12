@@ -224,7 +224,7 @@ void BiblioWindow::on_DetailsButton_clicked() {
 }
 
 
-void BiblioWindow::on_RechercherPrix_clicked() {
+void BiblioWindow::on_Rechercher_clicked() {
 
     bool ok;
     int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
