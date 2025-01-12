@@ -10,7 +10,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QScreen>
-#include "Library.hpp"
+//#include "Library.hpp"
 #include <QInputDialog>
 
 
@@ -65,6 +65,24 @@ void BiblioWindow::on_ChargerBiblioButton_clicked()
     }
 
     loadImagesIntoList(directoryPath);
+}
+
+void BiblioWindow::on_ChargeBoutton_clicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
+    if (!filePath.isEmpty()) {
+        library.chargerDepuisFichier(filePath.toStdString());
+        QMessageBox::information(this, "Chargement", "Bibliothèque chargée depuis le fichier.");
+    }
+}
+
+void BiblioWindow::on_SaveBoutton_clicked()
+{
+    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer sous", "", "Text Files (*.txt);;All Files (*)");
+    if (!filePath.isEmpty()) {
+        library.sauvegarderDansFichier(filePath.toStdString());
+        QMessageBox::information(this, "Sauvegarde", "Bibliothèque sauvegardée dans le fichier.");
+    }
 }
 
 void BiblioWindow::loadImagesIntoList(const QString &directoryPath)

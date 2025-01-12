@@ -25,6 +25,8 @@ class Ui_BiblioWindow
 public:
     QWidget *centralwidget;
     QPushButton *ChargerBiblioButton;
+    QPushButton *ChargeBoutton;
+    QPushButton *SaveBoutton;
     QPushButton *DetailsButton;
     QListWidget *AffichageBiblio;
     QPushButton *TraitementButton;
@@ -42,6 +44,12 @@ public:
         ChargerBiblioButton = new QPushButton(centralwidget);
         ChargerBiblioButton->setObjectName(QString::fromUtf8("ChargerBiblioButton"));
         ChargerBiblioButton->setGeometry(QRect(40, 10, 171, 25));
+        ChargeBoutton = new QPushButton(centralwidget);
+        ChargeBoutton->setObjectName(QString::fromUtf8("ChargeBoutton"));
+        ChargeBoutton->setGeometry(QRect(50, 500, 100, 30));
+        SaveBoutton = new QPushButton(centralwidget);
+        SaveBoutton->setObjectName(QString::fromUtf8("SaveBoutton"));
+        SaveBoutton->setGeometry(QRect(160, 500, 100, 30));
         DetailsButton = new QPushButton(centralwidget);
         DetailsButton->setObjectName(QString::fromUtf8("DetailsButton"));
         DetailsButton->setGeometry(QRect(810, 40, 80, 21));
@@ -72,6 +80,8 @@ public:
     {
         BiblioWindow->setWindowTitle(QCoreApplication::translate("BiblioWindow", "MainWindow", nullptr));
         ChargerBiblioButton->setText(QCoreApplication::translate("BiblioWindow", "Charger biblio", nullptr));
+        ChargeBoutton->setText(QCoreApplication::translate("BiblioWindow", "Charger", nullptr));
+        SaveBoutton->setText(QCoreApplication::translate("BiblioWindow", "Sauvegarder", nullptr));
         DetailsButton->setText(QCoreApplication::translate("BiblioWindow", "Details", nullptr));
         TraitementButton->setText(QCoreApplication::translate("BiblioWindow", "Traitement", nullptr));
         pushButtonRechercherp->setText(QCoreApplication::translate("BiblioWindow", "Prix Image", nullptr));
