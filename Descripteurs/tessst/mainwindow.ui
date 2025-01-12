@@ -14,19 +14,6 @@
    <string>Application de Traitement d'Images</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="ChargerImage">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>181</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Charger Image</string>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="AfficherImage">
     <property name="geometry">
      <rect>

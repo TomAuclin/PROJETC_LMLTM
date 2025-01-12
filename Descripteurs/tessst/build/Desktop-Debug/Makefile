@@ -392,6 +392,7 @@ moc_bibliowindow.cpp: ../../bibliowindow.h \
 		../../Library.hpp \
 		../../mainwindow.h \
 		../../Traitement.hpp \
+		../../bibliowindow.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /media/sf_PROJETC_LMLTM/Descripteurs/tessst/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang -I/media/sf_PROJETC_LMLTM/Descripteurs/tessst -I/usr/include/opencv4 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/llvm-18/lib/clang/18/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../bibliowindow.h -o moc_bibliowindow.cpp
@@ -408,6 +409,10 @@ moc_connexionwindow.cpp: ../../connexionwindow.h \
 
 moc_mainwindow.cpp: ../../mainwindow.h \
 		../../Traitement.hpp \
+		../../bibliowindow.h \
+		../../Image.hpp \
+		../../Library.hpp \
+		../../mainwindow.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /media/sf_PROJETC_LMLTM/Descripteurs/tessst/build/Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-clang -I/media/sf_PROJETC_LMLTM/Descripteurs/tessst -I/usr/include/opencv4 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/llvm-18/lib/clang/18/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../../mainwindow.h -o moc_mainwindow.cpp
@@ -482,6 +487,9 @@ main.o: ../../main.cpp ../../mainwindow.h \
 
 mainwindow.o: ../../mainwindow.cpp ../../mainwindow.h \
 		../../Traitement.hpp \
+		../../bibliowindow.h \
+		../../Image.hpp \
+		../../Library.hpp \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../../mainwindow.cpp
 

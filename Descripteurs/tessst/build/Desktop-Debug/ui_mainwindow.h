@@ -26,7 +26,6 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QPushButton *ChargerImage;
     QGraphicsView *AfficherImage;
     QGraphicsView *AffichageResultat;
     QPushButton *CalculerHisto;
@@ -52,9 +51,6 @@ public:
         MainWindow->resize(1299, 700);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        ChargerImage = new QPushButton(centralwidget);
-        ChargerImage->setObjectName(QString::fromUtf8("ChargerImage"));
-        ChargerImage->setGeometry(QRect(20, 10, 181, 25));
         AfficherImage = new QGraphicsView(centralwidget);
         AfficherImage->setObjectName(QString::fromUtf8("AfficherImage"));
         AfficherImage->setGeometry(QRect(220, 0, 461, 421));
@@ -117,7 +113,6 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Application de Traitement d'Images", nullptr));
-        ChargerImage->setText(QCoreApplication::translate("MainWindow", "Charger Image", nullptr));
         CalculerHisto->setText(QCoreApplication::translate("MainWindow", "Calculer Histogramme", nullptr));
         Canal_R->setText(QCoreApplication::translate("MainWindow", "Canal Rouge", nullptr));
         Canal_V->setText(QCoreApplication::translate("MainWindow", "Canal Vert", nullptr));

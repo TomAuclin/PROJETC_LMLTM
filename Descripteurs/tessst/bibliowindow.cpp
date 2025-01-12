@@ -42,8 +42,7 @@ BiblioWindow::BiblioWindow(QWidget *parent)
 
     ui->TraitementButton->setVisible(false);
     ui->DetailsButton->setVisible(false);
-    ui->pushButtonRechercherp->setVisible(true);
-
+    ui->RechercherPrix->setVisible(false);
 
 
     // Connecter le clic sur une image
@@ -65,6 +64,7 @@ void BiblioWindow::on_ChargerBiblioButton_clicked()
     }
 
     loadImagesIntoList(directoryPath);
+    ui->RechercherPrix->setVisible(true);
 }
 
 void BiblioWindow::on_ChargeBoutton_clicked()
@@ -198,6 +198,7 @@ void BiblioWindow::on_DetailsButton_clicked() {
 
 
 void BiblioWindow::on_pushButtonRechercherp_clicked() {
+
     bool ok;
     int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
                                            tr("Saisissez le numéro de l'image pour avoir son prix :"),
