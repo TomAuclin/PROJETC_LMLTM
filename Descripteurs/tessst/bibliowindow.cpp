@@ -58,9 +58,13 @@ void BiblioWindow::on_ChargeBoutton_clicked()
 {
     ui->RechercherPrix->setVisible(true);
 
+    // Ouvrir la boîte de dialogue pour choisir un fichier .txt
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
 
     if (!filePath.isEmpty()) {
+        // Mémoriser le chemin du fichier sélectionné
+        cheminBiblio = filePath;
+
         QFile file(filePath);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             QMessageBox::critical(this, "Erreur", "Impossible d'ouvrir le fichier.");
@@ -68,7 +72,6 @@ void BiblioWindow::on_ChargeBoutton_clicked()
         }
 
         QString imageDirectory = "/media/sf_PROJETC_LMLTM/Bibliotheque";
-
         ui->AffichageBiblio->clear();
         QStringList missingImages;
 
@@ -230,18 +233,24 @@ void BiblioWindow::on_RechercherPrix_clicked() {
     int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
                                            tr("Saisissez le numéro de l'image pour avoir son prix :"),
                                            0, 0, 9999, 1, &ok);
+
     if (ok) {
         Image image;
-        std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
 
-        if (image.rechercherPrix(numeroImage, cheminDescripteurs)) {
-            double prix = image.getPrix();
-            QString details = QString("Le prix de l'image numéro %1 est : %2 €")
-                                  .arg(numeroImage)
-                                  .arg(prix);
-            QMessageBox::information(this, "Résultat", details);
+        // Vérifier si le chemin de la bibliothèque a été mémorisé
+        if (!cheminBiblio.isEmpty()) {
+            // Passer le chemin mémorisé à la méthode rechercherPrix
+            if (image.rechercherPrix(numeroImage, cheminBiblio.toStdString())) {
+                double prix = image.getPrix();
+                QString details = QString("Le prix de l'image numéro %1 est : %2 €")
+                                      .arg(numeroImage)
+                                      .arg(prix);
+                QMessageBox::information(this, "Résultat", details);
+            } else {
+                QMessageBox::warning(this, "Erreur", "Aucune image avec ce numéro n'a été trouvée !");
+            }
         } else {
-            QMessageBox::warning(this, "Erreur", "Aucune image avec ce numéro n'a été trouvée !");
+            QMessageBox::warning(this, "Erreur", "Aucune bibliothèque n'a été chargée !");
         }
     } else {
         qDebug() << "L'utilisateur a annulé la saisie.";
