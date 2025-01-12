@@ -1,5 +1,17 @@
+OpenSources, Facade_gris.pgm, 17, 0, O, gris, 5, 17
+OpenSources, Cameraman_gris.pgm, 16, 0, O, gris, 5, 16
+OpenSources, Micro1_gris.png, 15, 0, O, gris, 5, 15
+OpenSources, Lena_gris.pgm, 14, 0, O, gris, 4, 14
+OpenSources, Lena_couleur.png, 13, 0, O, couleur, 5, 13
+OpenSources, ImageAerienne_gris.pgm, 12, 0, O, gris, 5, 12
+OpenSources, ImageAerienne_couleur.png, 11, 0, O, couleur, 6, 11
 Tom, Geek_gris.pgm, 10, 0, O, gris, 3, 10
+Tom, Geek_couleur.CR2, 9, 0, O, couleur, 4, 9
+Tom, EauToitPont_gris.pgm, 8, 0, O, gris, 4, 8
+Tom, EauToitPont_couleur.CR2, 7, 0, O, couleur, 5, 7
 OpenSources, Bird_gris.pgm, 6, 0, O, gris, 4, 6
 OpenSources, Bird_couleur.png, 5, 0, O, couleur, 5, 5
+OpenSources, Barbara_gris.pgm, 4, 0, O, gris, 3, 4
+OpenSources, Barbara_couleur.png, 3, 0, O, couleur, 4, 3
 OpenSources, Baboon_gris.pgm, 2, 0, O, gris, 4, 2
 OpenSources, Baboon_couleur.png, 1, 0, O, couleur, 5, 1
