@@ -69,10 +69,58 @@ void BiblioWindow::on_ChargerBiblioButton_clicked()
 
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
+    // Ouvrir la boîte de dialogue pour sélectionner le fichier .txt
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
+
     if (!filePath.isEmpty()) {
-        library.chargerDepuisFichier(filePath.toStdString());
-        QMessageBox::information(this, "Chargement", "Bibliothèque chargée depuis le fichier.");
+        QFile file(filePath);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QMessageBox::critical(this, "Erreur", "Impossible d'ouvrir le fichier.");
+            return;
+        }
+
+        // Répertoire où se trouvent les images
+        QString imageDirectory = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+
+        // Vider la QListWidget avant d'ajouter de nouveaux éléments
+        ui->AffichageBiblio->clear();
+
+        // Liste pour stocker les images non trouvées
+        QStringList missingImages;
+
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            QStringList fields = line.split(',');
+
+            // Vérifier que la ligne est bien structurée
+            if (fields.size() >= 2) {
+                QString imageName = fields[1].trimmed(); // Nom de l'image
+
+                // Construire le chemin complet de l'image
+                QString imagePath = imageDirectory + "/" + imageName;
+
+                // Vérifier si le fichier image existe dans le répertoire
+                if (QFileInfo::exists(imagePath)) {
+                    // Ajouter l'image à la QListWidget
+                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), imageName);
+                    ui->AffichageBiblio->addItem(item);
+                } else {
+                    // Ajouter l'image manquante à la liste
+                    missingImages.append(imageName);
+                }
+            }
+        }
+
+        file.close();
+
+        // Afficher un message si certaines images n'ont pas été trouvées
+        if (!missingImages.isEmpty()) {
+            QString missingMessage = "Les images suivantes n'ont pas été trouvées dans le répertoire :\n" + missingImages.join("\n");
+            QMessageBox::warning(this, "Images Manquantes", missingMessage);
+        }
+
+        QMessageBox::information(this, "Chargement", "Bibliothèque chargée et images affichées.");
     }
 }
 

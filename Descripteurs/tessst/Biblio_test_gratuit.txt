@@ -1,0 +1,5 @@
+Tom, Geek_gris.pgm, 10, 0, O, gris, 3, 10
+OpenSources, Bird_gris.pgm, 6, 0, O, gris, 4, 6
+OpenSources, Bird_couleur.png, 5, 0, O, couleur, 5, 5
+OpenSources, Baboon_gris.pgm, 2, 0, O, gris, 4, 2
+OpenSources, Baboon_couleur.png, 1, 0, O, couleur, 5, 1
