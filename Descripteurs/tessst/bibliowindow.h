@@ -31,14 +31,14 @@ protected:
     void mousePressEvent(QMouseEvent *event) override; // Gérer les clics dans la fenêtre principale
 
 private slots:
-    void on_ChargerBiblioButton_clicked(); // Charger les images
+    //void on_ChargerBiblioButton_clicked(); // Charger les images
     void on_AffichageBiblio_itemClicked(QListWidgetItem *item); // Clic sur une image
     void on_TraitementButton_clicked(); // Clic sur le bouton "Traitement"
 
     void on_DetailsButton_clicked();
 
     void on_pushButtonRechercherp_clicked();
-    void on_ChargeBoutton_clicked();
+    void on_ChargeBoutton_clicked(); // Charger la biblio .txt
     void on_SaveBoutton_clicked();
 
 private:

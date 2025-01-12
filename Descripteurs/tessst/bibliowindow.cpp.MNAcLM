@@ -53,11 +53,24 @@ BiblioWindow::~BiblioWindow()
 {
     delete ui;
 }
+/*
+void BiblioWindow::on_ChargerBiblioButton_clicked()
+{
+    QString directoryPath = QFileDialog::getExistingDirectory(this, "Sélectionnez un dossier d'images");
 
+    if (directoryPath.isEmpty()) {
+        qDebug() << "Aucun dossier sélectionné.";
+        return;
+    }
+
+    loadImagesIntoList(directoryPath);
+    ui->RechercherPrix->setVisible(true);
+}
+*/
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
-    ui->RechercherPrix->setVisible(true);
-
+    ui->RechercherPrix->setVisible(false);
+    // Ouvrir la boîte de dialogue pour sélectionner le fichier .txt
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
 
     if (!filePath.isEmpty()) {
@@ -67,9 +80,13 @@ void BiblioWindow::on_ChargeBoutton_clicked()
             return;
         }
 
+        // Répertoire où se trouvent les images
         QString imageDirectory = "/media/sf_PROJETC_LMLTM/Bibliotheque";
 
+        // Vider la QListWidget avant d'ajouter de nouveaux éléments
         ui->AffichageBiblio->clear();
+
+        // Liste pour stocker les images non trouvées
         QStringList missingImages;
 
         QTextStream in(&file);
@@ -77,15 +94,20 @@ void BiblioWindow::on_ChargeBoutton_clicked()
             QString line = in.readLine();
             QStringList fields = line.split(',');
 
+            // Vérifier que la ligne est bien structurée
             if (fields.size() >= 2) {
-                QString imageName = fields[1].trimmed();
+                QString imageName = fields[1].trimmed(); // Nom de l'image
+
+                // Construire le chemin complet de l'image
                 QString imagePath = imageDirectory + "/" + imageName;
 
+                // Vérifier si le fichier image existe dans le répertoire
                 if (QFileInfo::exists(imagePath)) {
+                    // Ajouter l'image à la QListWidget
                     QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), imageName);
-                    item->setData(Qt::UserRole, imagePath); // Enregistrer le chemin complet
                     ui->AffichageBiblio->addItem(item);
                 } else {
+                    // Ajouter l'image manquante à la liste
                     missingImages.append(imageName);
                 }
             }
@@ -93,6 +115,7 @@ void BiblioWindow::on_ChargeBoutton_clicked()
 
         file.close();
 
+        // Afficher un message si certaines images n'ont pas été trouvées
         if (!missingImages.isEmpty()) {
             QString missingMessage = "Les images suivantes n'ont pas été trouvées dans le répertoire :\n" + missingImages.join("\n");
             QMessageBox::warning(this, "Images Manquantes", missingMessage);
@@ -146,16 +169,15 @@ void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
 
 void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
 {
-    QString filePath = item->data(Qt::UserRole).toString(); // Récupérer le chemin complet
+    QString filePath = item->data(Qt::UserRole).toString();
     qDebug() << "Image cliquée : " << filePath;
 
     selectedImagePath = filePath; // Stocker le chemin de l'image sélectionnée
 
-    // Rendre les boutons visibles
+    // Rendre le bouton de traitement visible
     ui->TraitementButton->setVisible(true);
     ui->DetailsButton->setVisible(true);
 }
-
 
 void BiblioWindow::on_TraitementButton_clicked()
 {

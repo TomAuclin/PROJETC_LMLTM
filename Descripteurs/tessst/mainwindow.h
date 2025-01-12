@@ -27,7 +27,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_ChargerImage_clicked();
+    //void on_ChargerImage_clicked();
     void on_CalculerHisto_clicked();
 
     void on_Canal_R_stateChanged(int arg1);
