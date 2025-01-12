@@ -130,27 +130,25 @@ void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
     ui->DetailsButton->setVisible(true);
 }
 
-
 void BiblioWindow::on_TraitementButton_clicked()
 {
     if (!selectedImagePath.isEmpty()) {
         qDebug() << "Traitement de l'image : " << selectedImagePath;
 
-        // Créer une instance de MainWindow avec le chemin de l'image
+        // Créer une instance de MainWindow en passant `this` comme parent
         if (!mainWindow) {
-            mainWindow = std::make_unique<MainWindow>(selectedImagePath, nullptr); // Passer le chemin de l'image
+            mainWindow = std::make_unique<MainWindow>(selectedImagePath, this); // Passer l'instance actuelle
         }
 
         // Afficher MainWindow
         mainWindow->show();
 
-        // Fermer la fenêtre actuelle
-        this->close();
+        // Cacher la fenêtre actuelle
+        this->hide();
     } else {
         QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
     }
 }
-
 
 void BiblioWindow::mousePressEvent(QMouseEvent *event)
 {

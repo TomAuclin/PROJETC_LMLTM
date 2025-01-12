@@ -5,6 +5,10 @@
 #include <QGraphicsScene>
 #include <QImage>
 #include "Traitement.hpp"
+#include "bibliowindow.h"
+
+// Déclaration anticipée de la classe BiblioWindow
+class BiblioWindow;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,7 +22,7 @@ class MainWindow : public QMainWindow
 
 public:
     // Ajout d'un constructeur prenant le chemin de l'image en paramètre
-    explicit MainWindow(const QString &imagePath = QString(), QWidget *parent = nullptr);
+    explicit MainWindow(const QString &imagePath, BiblioWindow *parentBiblio = nullptr, QWidget *parent = nullptr);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -52,6 +56,10 @@ private:
     std::vector<int> getSelectedSegmentationCanaux();
 
     int seuilUtilisateur = 0.8;
+
+    //Image *imageBiblio;
+    BiblioWindow *parentBiblio;                 // Pointeur brut pour référence
+    std::unique_ptr<BiblioWindow> biblioWindow; // Gestion automatique avec unique_ptr
 
     // Méthode pour charger et afficher une image directement
     void loadAndDisplayImage(const QString &fileName);

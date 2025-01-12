@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "bibliowindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QGraphicsPixmapItem>
@@ -14,55 +15,17 @@
 
 // ----------------------------------------------------------------------------------------------
 
-/*
-MainWindow::MainWindow(QWidget *parent)
+
+MainWindow::MainWindow(const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     sceneImage(new QGraphicsScene(this)),
     sceneHisto(new QGraphicsScene(this)),
-    imageObj(nullptr) // Initialisation du pointeur image à null
+    imageObj(nullptr), // Initialisation du pointeur image à null
+    biblioWindow(parentBiblio) // Référence à la bibliothèque
 {
     ui->setupUi(this);
-    setWindowTitle("Fenetre de traitement");
-    resize(1200, 600);
-
-    // Centrer la fenêtre sur l'écran
-    QScreen *screen = QGuiApplication::primaryScreen();
-    if (screen) {
-        QRect screenGeometry = screen->geometry();
-        int x = (screenGeometry.width() - this->width()) / 2;
-        int y = (screenGeometry.height() - this->height()) / 2;
-        this->move(x, y);
-    }
-
-
-    ui->AfficherImage->setScene(sceneImage);
-    ui->AffichageResultat->setScene(sceneHisto);
-
-    // Cacher les boutons de sélection des canaux par défaut
-    ui->Canal_R->setVisible(false);
-    ui->Canal_V->setVisible(false);
-    ui->Canal_B->setVisible(false);
-
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-    delete imageObj;
-}
-
-*/
-
-MainWindow::MainWindow(const QString &imagePath, QWidget *parent)
-    : QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    sceneImage(new QGraphicsScene(this)),
-    sceneHisto(new QGraphicsScene(this)),
-    imageObj(nullptr) // Initialisation du pointeur image à null
-{
-    ui->setupUi(this);
-    setWindowTitle("Fenetre de traitement");
+    setWindowTitle("Fenêtre de traitement");
     resize(1200, 600);
 
     // Centrer la fenêtre sur l'écran
@@ -87,6 +50,11 @@ MainWindow::MainWindow(const QString &imagePath, QWidget *parent)
     if (!imagePath.isEmpty()) {
         loadAndDisplayImage(imagePath);
     }
+
+    // Ajouter un bouton "Retour" au bas de la fenêtre
+    QPushButton *retourButton = new QPushButton("Retour à la Bibliothèque", this);
+    retourButton->setGeometry(10, this->height() - 50, 200, 40); // Position du bouton
+    connect(retourButton, &QPushButton::clicked, this, &MainWindow::on_RetourVersBiblio_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -799,6 +767,11 @@ void MainWindow::on_AppliquerConvolution_clicked()
 
 void MainWindow::on_RetourVersBiblio_clicked()
 {
+    if (!biblioWindow) {
+        // Créez une nouvelle instance si elle n'existe pas
+        biblioWindow = std::make_unique<BiblioWindow>();
+    }
 
+    biblioWindow->show(); // Affiche la fenêtre Bibliothèque
+    this->close();        // Ferme la fenêtre actuelle
 }
-

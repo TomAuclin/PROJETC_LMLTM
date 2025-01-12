@@ -11,6 +11,9 @@
 #include <memory>
 
 
+// Déclaration anticipée de MainWindow
+class MainWindow;
+
 namespace Ui {
 class BiblioWindow;
 }
