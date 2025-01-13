@@ -43,7 +43,7 @@ BiblioWindow::BiblioWindow(QWidget *parent)
 
     ui->TraitementButton->setVisible(false);
     ui->DetailsButton->setVisible(false);
-    ui->pushButtonRechercherp->setVisible(true);
+    ui->pushButtonRechercherp->setVisible(false);
     ui->labelImageCount->setText("Nombre d'images : 0");
 
 
@@ -58,7 +58,7 @@ BiblioWindow::~BiblioWindow()
 
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
-    ui->RechercherPrix->setVisible(true);
+    ui->pushButtonRechercherp->setVisible(true);
 
     // Ouvrir la boîte de dialogue pour choisir un fichier .txt
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
@@ -233,7 +233,7 @@ void BiblioWindow::on_DetailsButton_clicked() {
 }
 
 
-void BiblioWindow::on_RechercherPrix_clicked() {
+void BiblioWindow::on_pushButtonRechercherp_clicked() {
 
     bool ok;
     int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
@@ -268,3 +268,4 @@ void BiblioWindow::mettreAJourCompteurImages() {
     int nombreImages = ui->AffichageBiblio->count(); // Obtenir le nombre d'images du QListWidget
     ui->labelImageCount->setText(QString("Nombre d'images : %1").arg(nombreImages));
 }
+

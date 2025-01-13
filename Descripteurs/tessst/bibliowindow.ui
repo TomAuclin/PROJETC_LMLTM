@@ -76,7 +76,7 @@
      <string>Traitement</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="RechercherPrix">
+   <widget class="QPushButton" name="pushButtonRechercherp">
     <property name="geometry">
      <rect>
       <x>810</x>

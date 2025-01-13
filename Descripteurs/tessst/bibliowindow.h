@@ -38,10 +38,10 @@ private slots:
 
     void on_DetailsButton_clicked();
 
-    void on_RechercherPrix_clicked();
+
     void on_ChargeBoutton_clicked(); // Charger la biblio .txt
     void on_SaveBoutton_clicked();
-
+    void on_pushButtonRechercherp_clicked();
 
 private:
     Ui::BiblioWindow *ui;
