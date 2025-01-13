@@ -104,6 +104,7 @@ void BiblioWindow::on_ChargeBoutton_clicked()
         }
 
         QMessageBox::information(this, "Chargement", "Bibliothèque chargée et images affichées.");
+        mettreAJourCompteurImages();
     }
 }
 
