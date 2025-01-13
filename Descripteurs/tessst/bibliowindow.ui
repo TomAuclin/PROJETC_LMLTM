@@ -76,6 +76,19 @@
      <string>Prix Image</string>
     </property>
    </widget>
+   <widget class="QLabel" name="labelImageCount">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>20</y>
+      <width>151</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Nombre d'images : 0</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

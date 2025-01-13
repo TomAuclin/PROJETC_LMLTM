@@ -21,6 +21,7 @@ BiblioWindow::BiblioWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+
     setWindowTitle("Bibliotheque");
     resize(1000, 600);
 
@@ -43,7 +44,7 @@ BiblioWindow::BiblioWindow(QWidget *parent)
     ui->TraitementButton->setVisible(false);
     ui->DetailsButton->setVisible(false);
     ui->pushButtonRechercherp->setVisible(true);
-
+    ui->labelImageCount->setText("Nombre d'images : 0");
 
 
     // Connecter le clic sur une image
@@ -76,6 +77,7 @@ void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
 
     if (imageFiles.isEmpty()) {
         QMessageBox::information(this, "Aucune image", "Le dossier sélectionné ne contient aucune image.");
+         mettreAJourCompteurImages();
         return;
     }
 
@@ -98,6 +100,9 @@ void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
     }
 
     ui->AffichageBiblio->setIconSize(iconSize);
+
+    // Mettre à jour le compteur d'images après avoir ajouté les images
+    mettreAJourCompteurImages();
 }
 
 void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
@@ -202,4 +207,10 @@ void BiblioWindow::on_pushButtonRechercherp_clicked() {
     } else {
         qDebug() << "L'utilisateur a annulé la saisie.";
     }
+}
+
+
+void BiblioWindow::mettreAJourCompteurImages() {
+    int nombreImages = ui->AffichageBiblio->count(); // Obtenir le nombre d'images du QListWidget
+    ui->labelImageCount->setText(QString("Nombre d'images : %1").arg(nombreImages));
 }

@@ -63,7 +63,9 @@ MainWindow::MainWindow(const QString &imagePath, QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Fenetre de traitement");
-    resize(1200, 600);
+   resize(1200, 600);
+    QPixmap pixmap(imagePath);
+
 
     // Centrer la fenêtre sur l'écran
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -227,8 +229,6 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
         }
     }
 }
-
-
 // ----------------------------------------------------------------------------------------------
 
 // ************************ Calucle de l'histogramme et affichage  ************************

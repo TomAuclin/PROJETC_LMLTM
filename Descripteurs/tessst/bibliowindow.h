@@ -9,6 +9,7 @@
 #include "Library.hpp"
 #include "mainwindow.h"
 #include <memory>
+#include <QVBoxLayout>
 
 
 namespace Ui {
@@ -35,6 +36,7 @@ private slots:
 
     void on_pushButtonRechercherp_clicked();
 
+
 private:
     Ui::BiblioWindow *ui;
 
@@ -43,6 +45,8 @@ private:
     int currentImageNumber;  // Pour stocker le numéro de l'image
     double currentImagePrice; // Pour stocker le prix de l'image
     std::unique_ptr<MainWindow> mainWindow; // Pointeur unique pour gérer la fenêtre MainWindow
+
+    void mettreAJourCompteurImages() ;
 
 };
 

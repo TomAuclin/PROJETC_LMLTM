@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
@@ -29,6 +30,7 @@ public:
     QListWidget *AffichageBiblio;
     QPushButton *TraitementButton;
     QPushButton *pushButtonRechercherp;
+    QLabel *labelImageCount;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -54,6 +56,9 @@ public:
         pushButtonRechercherp = new QPushButton(centralwidget);
         pushButtonRechercherp->setObjectName(QString::fromUtf8("pushButtonRechercherp"));
         pushButtonRechercherp->setGeometry(QRect(810, 0, 80, 25));
+        labelImageCount = new QLabel(centralwidget);
+        labelImageCount->setObjectName(QString::fromUtf8("labelImageCount"));
+        labelImageCount->setGeometry(QRect(470, 20, 151, 17));
         BiblioWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(BiblioWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -75,6 +80,7 @@ public:
         DetailsButton->setText(QCoreApplication::translate("BiblioWindow", "Details", nullptr));
         TraitementButton->setText(QCoreApplication::translate("BiblioWindow", "Traitement", nullptr));
         pushButtonRechercherp->setText(QCoreApplication::translate("BiblioWindow", "Prix Image", nullptr));
+        labelImageCount->setText(QCoreApplication::translate("BiblioWindow", "Nombre d'images : 0", nullptr));
     } // retranslateUi
 
 };
