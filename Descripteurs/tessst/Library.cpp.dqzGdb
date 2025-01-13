@@ -63,10 +63,25 @@ std::string Library::getCheminProjet() const {
 
 
 bool Library::sauvegarderImage(const std::string &cheminImage, double prix, const std::string &titre) {
-    // Définir le chemin de base du dossier Bibliotheque
-    std::string cheminDossier = getCheminProjet() + "/Bibliotheque";
+    // Obtenir le chemin absolu du projet
+    std::string basePath = getCheminProjet() + "/Bibliotheque";
 
-    // Créer le répertoire cible si nécessaire
+    // Déterminer le sous-dossier en fonction du prix
+    std::string sousDossier;
+    if (prix == 0) {
+        sousDossier = "Gratuites";
+    } else if (prix > 0 && prix <= 9.99) {
+        sousDossier = "_9.99";
+    } else if (prix > 9.99 && prix <= 100) {
+        sousDossier = "_99.99";
+    } else {
+        sousDossier = "_100";
+    }
+
+    // Construire le chemin complet
+    std::string cheminDossier = basePath + "/" + sousDossier;
+
+    // Vérifier ou créer le dossier si nécessaire
     try {
         if (!std::filesystem::exists(cheminDossier)) {
             std::filesystem::create_directories(cheminDossier);
@@ -76,15 +91,14 @@ bool Library::sauvegarderImage(const std::string &cheminImage, double prix, cons
         return false;
     }
 
-    // Conserver l'extension du fichier original
-    std::filesystem::path sourcePath(cheminImage);
-    std::string cheminDestination = cheminDossier + "/" + titre + sourcePath.extension().string();
+    // Construire le chemin complet pour l'image
+    std::string cheminDestination = cheminDossier + "/" + titre;
 
-    // Copier l'image
+    // Copier l'image dans le dossier correspondant
     try {
         std::filesystem::copy_file(cheminImage, cheminDestination, std::filesystem::copy_options::overwrite_existing);
 
-        // Message confirmant l'emplacement du fichier
+        // Ajouter un message pour informer où l'image a été sauvegardée
         QMessageBox::information(nullptr, "Sauvegarde réussie",
                                  QString::fromStdString("L'image a été enregistrée dans : " + cheminDestination));
     } catch (const std::exception &e) {
@@ -92,7 +106,7 @@ bool Library::sauvegarderImage(const std::string &cheminImage, double prix, cons
         return false;
     }
 
-    return true;
+    return true; // Succès
 }
 
 
@@ -110,8 +124,6 @@ void Library::ajouterDescripteurs(const Image& img) {
     nouveau->next = head; // L'ancien premier nœud devient le suivant
     head = nouveau; // La tête pointe maintenant vers le nouveau nœud
 }
-
-
 void Library::supprimerDescripteurs(int numero)
 {
     // Si la liste est vide, il n'y a rien à supprimer

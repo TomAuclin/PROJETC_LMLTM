@@ -44,6 +44,10 @@ public:
     std::string getDescripteursmoins10() const;
     std::string getDescripteursplus10() const;
 
+    //Ajouter/modifier/supprimer descripteur
+    std::string getChemin() const;
+    void setChemin(const std::string& chemin);
+
     void setNumero(int _numero);
     void setPrix(int _prix);
     void setTitre(std::string _Titre);

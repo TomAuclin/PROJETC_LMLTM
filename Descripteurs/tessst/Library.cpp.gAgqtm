@@ -110,30 +110,36 @@ void Library::ajouterDescripteurs(const Image& img) {
     nouveau->next = head; // L'ancien premier nœud devient le suivant
     head = nouveau; // La tête pointe maintenant vers le nouveau nœud
 }
-
-
-void Library::supprimerDescripteurs(int numero)
-{
+void Library::supprimerDescripteurs(int numero) {
     // Si la liste est vide, il n'y a rien à supprimer
-    // A voir
-    //int cpt = 1;
+    if (!head) {
+        QMessageBox::warning(nullptr, "Erreur", "La bibliothèque est vide !");
+        return;
+    }
+
+    // Si le nœud à supprimer est la tête de la liste
+    if (head->data.getNumero() == numero) {
+        head = head->next; // Déplace la tête au nœud suivant
+        QMessageBox::information(nullptr, "Succès", "Le descripteur a été supprimé avec succès !");
+        return;
+    }
+
+    // Parcours de la liste pour trouver le nœud à supprimer
     auto current = head;
     auto previous = head;
+
     while (current) {
-        //current->data.setNumero(cpt);
         if (current->data.getNumero() == numero) {
-            if (current == head) {
-                head = current->next;
-            }
-            else {
-                previous->next = current->next;
-            }
+            previous->next = current->next; // Relie le nœud précédent au suivant
+            QMessageBox::information(nullptr, "Succès", "Le descripteur a été supprimé avec succès !");
             return;
         }
-        //cpt++;
         previous = current;
         current = current->next;
     }
+
+    // Si le descripteur n'a pas été trouvé
+    QMessageBox::warning(nullptr, "Erreur", "Aucun descripteur trouvé avec ce numéro.");
 }
 
 /*------------------------------------------------------------------------------------------------*/
