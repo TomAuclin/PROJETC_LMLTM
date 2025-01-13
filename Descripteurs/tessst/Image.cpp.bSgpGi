@@ -7,15 +7,6 @@ Image::Image(const std::string& src, const std::string& tit, int num, double prx
     : source(src), titre(tit), numero(num), prix(prx), acces(acc), type(typ), nbTraitementPossible(nTp), identite(ide){}
 
 
-std::string Image::getChemin() const {
-    return source;
-}
-
-void Image::setChemin(const std::string& chemin) {
-    source = chemin;
-}
-
-
 std::string Image::getDescripteur() const {
     std::ostringstream descripteur;
     descripteur << "Source: " << source << "\n"

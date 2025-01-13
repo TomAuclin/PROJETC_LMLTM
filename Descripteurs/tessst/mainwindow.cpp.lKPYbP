@@ -1031,46 +1031,40 @@ void MainWindow::on_actionSupprimerDescripteur_triggered() {
     // Demander le numéro du descripteur à supprimer
     bool ok;
     int numero = QInputDialog::getInt(this, "Supprimer un descripteur",
-                                      "Entrez le numéro unique du descripteur :", 0, 0, 10000, 1, &ok);
+                                      "Entrez le numéro unique de l'image :", 0, 0, 10000, 1, &ok);
     if (!ok) {
         QMessageBox::information(this, "Annulé", "Suppression annulée.");
         return;
     }
 
-    // Parcourir la liste pour trouver le descripteur correspondant
-    auto current = library.head; // Accès à la liste chaînée depuis votre bibliothèque
-    std::shared_ptr<Library::INode> previous = nullptr; // Pour maintenir une référence au noeud précédent
+    // Chercher le descripteur correspondant
+    auto current = library.head; // Accès à la liste chaînée
+    auto previous = library.head;
     bool descripteurTrouve = false;
 
     while (current) {
         if (current->data.getNumero() == numero) {
             descripteurTrouve = true;
 
-            // Supprimer le fichier image associé
-            std::string cheminImage = current->data.getSource(); // Récupérer le chemin de l'image sauvegardée
-            try {
-                if (std::filesystem::exists(cheminImage)) {
-                    std::filesystem::remove(cheminImage);
-                } else {
-                    QMessageBox::warning(this, "Avertissement",
-                                         "L'image associée au descripteur n'existe pas ou a déjà été supprimée.");
+            // Supprimer l'image du disque
+            QString cheminImage = QString::fromStdString(current->data.getSource());
+            if (QFile::exists(cheminImage)) {
+                if (!QFile::remove(cheminImage)) {
+                    QMessageBox::warning(this, "Erreur", "Impossible de supprimer l'image du disque !");
                 }
-            } catch (const std::exception &e) {
-                QMessageBox::warning(this, "Erreur",
-                                     QString("Impossible de supprimer l'image associée : %1").arg(e.what()));
             }
 
             // Supprimer le descripteur de la liste chaînée
-            if (previous) {
-                previous->next = current->next;
-            } else {
+            if (current == library.head) {
                 library.head = current->next;
+            } else {
+                previous->next = current->next;
             }
 
-            QMessageBox::information(this, "Succès", "Le descripteur et son image associée ont été supprimés !");
+            delete current;
+            QMessageBox::information(this, "Succès", "Le descripteur et l'image associée ont été supprimés avec succès !");
             return;
         }
-
         previous = current;
         current = current->next;
     }
@@ -1079,7 +1073,6 @@ void MainWindow::on_actionSupprimerDescripteur_triggered() {
         QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce numéro !");
     }
 }
-
 
 // --------------------------------------------------------------------------------------------------
 
