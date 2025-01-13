@@ -7,6 +7,7 @@
 #include <memory>
 #include <filesystem>
 #include <string>
+#include <QMessageBox>
 
 namespace fs = std::filesystem;
 
@@ -21,11 +22,96 @@ Library::Library() : head(nullptr) {}
  * L'image est insérée au début de la liste en créant un nouveau nœud qui pointe
  * vers l'ancien premier nœud.
  */
+
+/* -------------------------------------------------------------------------
+ *
+ * ***************Pour menu descripteur ********************
+ *
+ * ----------------------------------------------------------------------------*/
+
+#include <QDir>
+
+std::string Library::getDossierParPrix(double prix) const {
+    QString basePath = QDir::currentPath(); // Récupère le répertoire courant
+    QString dossier;
+
+    if (prix == 0) {
+        dossier = basePath + "/Bibliotheque/Gratuites";
+    } else if (prix > 0 && prix <= 9.99) {
+        dossier = basePath + "/Bibliotheque/_9.99";
+    } else if (prix > 9.99 && prix <= 100) {
+        dossier = basePath + "/Bibliotheque/_99.99";
+    } else if (prix > 100) {
+        dossier = basePath + "/Bibliotheque/_100";
+    }
+
+    return dossier.toStdString();
+}
+
+#include <QCoreApplication>
+
+std::string Library::getCheminProjet() const {
+    // Récupère le chemin absolu du répertoire du projet
+    QString chemin = QCoreApplication::applicationDirPath();
+    std::filesystem::path path = chemin.toStdString();
+    // Remonte de quelques dossiers si nécessaire pour atteindre le répertoire projet
+    path = path.parent_path(); // Niveau 1
+    path = path.parent_path(); // Niveau 2
+    return path.string();
+}
+
+
+
+bool Library::sauvegarderImage(const std::string &cheminImage, double prix, const std::string &titre) {
+    // Définir le chemin de base du dossier Bibliotheque
+    std::string cheminDossier = getCheminProjet() + "/Bibliotheque";
+
+    // Créer le répertoire cible si nécessaire
+    try {
+        if (!std::filesystem::exists(cheminDossier)) {
+            std::filesystem::create_directories(cheminDossier);
+        }
+    } catch (const std::exception &e) {
+        std::cerr << "Erreur lors de la création du dossier : " << e.what() << std::endl;
+        return false;
+    }
+
+    // Conserver l'extension du fichier original
+    std::filesystem::path sourcePath(cheminImage);
+    std::string cheminDestination = cheminDossier + "/" + titre + sourcePath.extension().string();
+
+    // Copier l'image
+    try {
+        std::filesystem::copy_file(cheminImage, cheminDestination, std::filesystem::copy_options::overwrite_existing);
+
+        // Message confirmant l'emplacement du fichier
+        QMessageBox::information(nullptr, "Sauvegarde réussie",
+                                 QString::fromStdString("L'image a été enregistrée dans : " + cheminDestination));
+    } catch (const std::exception &e) {
+        std::cerr << "Erreur lors de la copie du fichier : " << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+
+
+QString Library::determineBibliotheque(double prix) const {
+    if (prix == 0) return "Gratuites";
+    else if (prix < 10) return "_9.99";
+    else if (prix < 100) return "_99.99";
+    else return "_100";
+}
+
+
 void Library::ajouterDescripteurs(const Image& img) {
     auto nouveau = std::make_shared<INode>(img); // Crée un nouveau nœud
     nouveau->next = head; // L'ancien premier nœud devient le suivant
     head = nouveau; // La tête pointe maintenant vers le nouveau nœud
 }
+
+
 void Library::supprimerDescripteurs(int numero)
 {
     // Si la liste est vide, il n'y a rien à supprimer
@@ -50,6 +136,7 @@ void Library::supprimerDescripteurs(int numero)
     }
 }
 
+/*------------------------------------------------------------------------------------------------*/
 
 void  Library::tricroissant(Library liste)
 
@@ -135,6 +222,26 @@ void Library::modifierAcces(int numero, const std::string& nomFichier) {
     }
     std::cerr << "Image non trouvée." << std::endl;
 }
+
+//void Library::modifierAcces(int numero) {
+//    auto current = head; // Commence à la tête de la liste
+//    while (current) { // Parcourt la liste chaînée
+//        if (current->data.getNumero() == numero) { // Vérifie si le numéro correspond
+//            // Bascule entre 'O' et 'L' pour l'accès
+//            if (current->data.getAccess() == 'O') {
+//                current->data.setAccess('L');
+//            } else {
+//                current->data.setAccess('O');
+//            }
+//            std::cout << "L'accès de l'image numéro " << numero << " a été modifié." << std::endl;
+//            return; // Arrête la recherche après la modification
+//        }
+//        current = current->next; // Passe au nœud suivant
+//    }
+//    std::cerr << "Image avec le numéro " << numero << " non trouvée dans la liste." << std::endl;
+//}
+
+
 
 
 void Library::afficherImagesAvecAccesO(const std::string &nomFichier) const
@@ -286,7 +393,7 @@ void Library::sousListetype(int numero)
  * les numéros des images jusqu'à trouver une correspondance ou atteindre
  * la fin de la liste.
  */
-/*Image Library::rechercherImageParNumero(int numero) const {
+std::string Library::rechercherImageParNumero(int numero) const {
     auto current = head; // Commence à la tête de la liste
     while (current) { // Parcourt la liste tant qu'il y a des nœuds
         if (current->data.getNumero() == numero) {
@@ -295,18 +402,7 @@ void Library::sousListetype(int numero)
         current = current->next; // Passe au nœud suivant
     }
     return "Image non trouvée."; // Retourne un message si aucune image ne correspond
-}*/
-
-Image Library::rechercherImageParNumero(int numero) {
-    for (const auto& img : images) {
-        if (img.getNumero() == numero) {
-            return img;  // Retourne un objet Image trouvé
-        }
-    }
-    // Si l'image n'est pas trouvée, on peut retourner une image vide ou créer un cas d'erreur
-    return Image(); // Exemple : retourne une image vide si non trouvée
 }
-
 
 void Library::modifdescripteurs(int numero, Library bibli)
 {

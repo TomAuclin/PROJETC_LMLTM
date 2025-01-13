@@ -10,7 +10,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QScreen>
-#include "Library.hpp"
+//#include "Library.hpp"
 #include <QInputDialog>
 
 
@@ -56,16 +56,64 @@ BiblioWindow::~BiblioWindow()
     delete ui;
 }
 
-void BiblioWindow::on_ChargerBiblioButton_clicked()
+void BiblioWindow::on_ChargeBoutton_clicked()
 {
-    QString directoryPath = QFileDialog::getExistingDirectory(this, "Sélectionnez un dossier d'images");
+    ui->RechercherPrix->setVisible(true);
 
-    if (directoryPath.isEmpty()) {
-        qDebug() << "Aucun dossier sélectionné.";
-        return;
+    // Ouvrir la boîte de dialogue pour choisir un fichier .txt
+    QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
+
+    if (!filePath.isEmpty()) {
+        // Mémoriser le chemin du fichier sélectionné
+        cheminBiblio = filePath;
+
+        QFile file(filePath);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QMessageBox::critical(this, "Erreur", "Impossible d'ouvrir le fichier.");
+            return;
+        }
+
+        QString imageDirectory = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+        ui->AffichageBiblio->clear();
+        QStringList missingImages;
+
+        QTextStream in(&file);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            QStringList fields = line.split(',');
+
+            if (fields.size() >= 2) {
+                QString imageName = fields[1].trimmed();
+                QString imagePath = imageDirectory + "/" + imageName;
+
+                if (QFileInfo::exists(imagePath)) {
+                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), imageName);
+                    item->setData(Qt::UserRole, imagePath); // Enregistrer le chemin complet
+                    ui->AffichageBiblio->addItem(item);
+                } else {
+                    missingImages.append(imageName);
+                }
+            }
+        }
+
+        file.close();
+
+        if (!missingImages.isEmpty()) {
+            QString missingMessage = "Les images suivantes n'ont pas été trouvées dans le répertoire :\n" + missingImages.join("\n");
+            QMessageBox::warning(this, "Images Manquantes", missingMessage);
+        }
+
+        QMessageBox::information(this, "Chargement", "Bibliothèque chargée et images affichées.");
     }
+}
 
-    loadImagesIntoList(directoryPath);
+void BiblioWindow::on_SaveBoutton_clicked()
+{
+    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer sous", "", "Text Files (*.txt);;All Files (*)");
+    if (!filePath.isEmpty()) {
+        library.sauvegarderDansFichier(filePath.toStdString());
+        QMessageBox::information(this, "Sauvegarde", "Bibliothèque sauvegardée dans le fichier.");
+    }
 }
 
 void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
@@ -107,12 +155,12 @@ void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
 
 void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
 {
-    QString filePath = item->data(Qt::UserRole).toString();
+    QString filePath = item->data(Qt::UserRole).toString(); // Récupérer le chemin complet
     qDebug() << "Image cliquée : " << filePath;
 
     selectedImagePath = filePath; // Stocker le chemin de l'image sélectionnée
 
-    // Rendre le bouton de traitement visible
+    // Rendre les boutons visibles
     ui->TraitementButton->setVisible(true);
     ui->DetailsButton->setVisible(true);
 }
@@ -123,21 +171,20 @@ void BiblioWindow::on_TraitementButton_clicked()
     if (!selectedImagePath.isEmpty()) {
         qDebug() << "Traitement de l'image : " << selectedImagePath;
 
-        // Créer une instance de MainWindow avec le chemin de l'image
+        // Créer une instance de MainWindow en passant `this` comme parent
         if (!mainWindow) {
-            mainWindow = std::make_unique<MainWindow>(selectedImagePath, nullptr); // Passer le chemin de l'image
+            mainWindow = std::make_unique<MainWindow>(selectedImagePath, this); // Passer l'instance actuelle
         }
 
         // Afficher MainWindow
         mainWindow->show();
 
-        // Fermer la fenêtre actuelle
-        this->close();
+        // Cacher la fenêtre actuelle
+        this->hide();
     } else {
         QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
     }
 }
-
 
 void BiblioWindow::mousePressEvent(QMouseEvent *event)
 {
@@ -186,23 +233,30 @@ void BiblioWindow::on_DetailsButton_clicked() {
 }
 
 
-void BiblioWindow::on_pushButtonRechercherp_clicked() {
+void BiblioWindow::on_RechercherPrix_clicked() {
+
     bool ok;
     int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
                                            tr("Saisissez le numéro de l'image pour avoir son prix :"),
                                            0, 0, 9999, 1, &ok);
+
     if (ok) {
         Image image;
-        std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
 
-        if (image.rechercherPrix(numeroImage, cheminDescripteurs)) {
-            double prix = image.getPrix();
-            QString details = QString("Le prix de l'image numéro %1 est : %2 €")
-                                  .arg(numeroImage)
-                                  .arg(prix);
-            QMessageBox::information(this, "Résultat", details);
+        // Vérifier si le chemin de la bibliothèque a été mémorisé
+        if (!cheminBiblio.isEmpty()) {
+            // Passer le chemin mémorisé à la méthode rechercherPrix
+            if (image.rechercherPrix(numeroImage, cheminBiblio.toStdString())) {
+                double prix = image.getPrix();
+                QString details = QString("Le prix de l'image numéro %1 est : %2 €")
+                                      .arg(numeroImage)
+                                      .arg(prix);
+                QMessageBox::information(this, "Résultat", details);
+            } else {
+                QMessageBox::warning(this, "Erreur", "Aucune image avec ce numéro n'a été trouvée !");
+            }
         } else {
-            QMessageBox::warning(this, "Erreur", "Aucune image avec ce numéro n'a été trouvée !");
+            QMessageBox::warning(this, "Erreur", "Aucune bibliothèque n'a été chargée !");
         }
     } else {
         qDebug() << "L'utilisateur a annulé la saisie.";

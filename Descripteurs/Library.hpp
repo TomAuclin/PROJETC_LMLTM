@@ -101,6 +101,8 @@ public:
      * pour libérer la mémoire
      *
      */
+
+    
     ~Library();
 };
 

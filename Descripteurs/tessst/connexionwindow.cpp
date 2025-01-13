@@ -13,7 +13,7 @@ ConnexionWindow::ConnexionWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Connexion");
-    resize(350, 200);
+    resize(450, 300);
 
     // Centrer la fenêtre sur l'écran
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -53,10 +53,16 @@ void ConnexionWindow::setupLogo()
     // Associer la scène au QGraphicsView
     view->setScene(scene);
 
-    // Ajuster l'image pour qu'elle s'adapte à la taille de la vue
-    QRectF pixmapRect = pixmapItem->boundingRect(); // Obtenir la taille de l'image
-    view->fitInView(pixmapRect, Qt::KeepAspectRatio);
-    view->setRenderHint(QPainter::Antialiasing);
+    // Ajuster l'image pour qu'elle remplisse toute la vue
+    view->fitInView(pixmapItem, Qt::KeepAspectRatioByExpanding);
+
+    // Supprimer les bordures pour maximiser l'espace de l'image
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // Appliquer des options de rendu pour la qualité
+    view->setRenderHint(QPainter::SmoothPixmapTransform, true);
+    view->setRenderHint(QPainter::Antialiasing, true);
 }
 
 ConnexionWindow::~ConnexionWindow()

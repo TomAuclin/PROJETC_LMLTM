@@ -14,19 +14,6 @@
    <string>Application de Traitement d'Images</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="ChargerImage">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>181</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Charger Image</string>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="AfficherImage">
     <property name="geometry">
      <rect>
@@ -203,6 +190,32 @@
      </property>
     </widget>
    </widget>
+   <widget class="QPushButton" name="RehaussementContours">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>181</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Rehaussement de Contour</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="RetourVersBiblio">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>470</y>
+      <width>80</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Retour</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -213,8 +226,38 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuDescripteurs">
+    <property name="title">
+     <string>Descripteurs</string>
+    </property>
+    <addaction name="actionAjouterDescripteur"/>
+    <addaction name="actionModifierDescripteur"/>
+    <addaction name="actionSupprimerDescripteur"/>
+    <addaction name="actionRechercherImage"/>
+   </widget>
+   <addaction name="menuDescripteurs"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAjouterDescripteur">
+   <property name="text">
+    <string>Ajouter un descripteur</string>
+   </property>
+  </action>
+  <action name="actionModifierDescripteur">
+   <property name="text">
+    <string>Modifier un descripteur</string>
+   </property>
+  </action>
+  <action name="actionSupprimerDescripteur">
+   <property name="text">
+    <string>Supprimer un descripteur</string>
+   </property>
+  </action>
+  <action name="actionRechercherImage">
+   <property name="text">
+    <string>Rechercher une image</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

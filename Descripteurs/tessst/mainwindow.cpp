@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "bibliowindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QGraphicsPixmapItem>
@@ -14,52 +15,14 @@
 
 // ----------------------------------------------------------------------------------------------
 
-/*
-MainWindow::MainWindow(QWidget *parent)
+
+MainWindow::MainWindow(const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     sceneImage(new QGraphicsScene(this)),
     sceneHisto(new QGraphicsScene(this)),
-    imageObj(nullptr) // Initialisation du pointeur image à null
-{
-    ui->setupUi(this);
-    setWindowTitle("Fenetre de traitement");
-    resize(1200, 600);
-
-    // Centrer la fenêtre sur l'écran
-    QScreen *screen = QGuiApplication::primaryScreen();
-    if (screen) {
-        QRect screenGeometry = screen->geometry();
-        int x = (screenGeometry.width() - this->width()) / 2;
-        int y = (screenGeometry.height() - this->height()) / 2;
-        this->move(x, y);
-    }
-
-
-    ui->AfficherImage->setScene(sceneImage);
-    ui->AffichageResultat->setScene(sceneHisto);
-
-    // Cacher les boutons de sélection des canaux par défaut
-    ui->Canal_R->setVisible(false);
-    ui->Canal_V->setVisible(false);
-    ui->Canal_B->setVisible(false);
-
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-    delete imageObj;
-}
-
-*/
-
-MainWindow::MainWindow(const QString &imagePath, QWidget *parent)
-    : QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    sceneImage(new QGraphicsScene(this)),
-    sceneHisto(new QGraphicsScene(this)),
-    imageObj(nullptr) // Initialisation du pointeur image à null
+    imageObj(nullptr), // Initialisation du pointeur image à null
+    biblioWindow(parentBiblio) // Référence à la bibliothèque
 {
     ui->setupUi(this);
     setWindowTitle("Fenetre de traitement");
@@ -89,6 +52,11 @@ MainWindow::MainWindow(const QString &imagePath, QWidget *parent)
     if (!imagePath.isEmpty()) {
         loadAndDisplayImage(imagePath);
     }
+
+    // Ajouter un bouton "Retour" au bas de la fenêtre
+    QPushButton *retourButton = new QPushButton("Retour à la Bibliothèque", this);
+    retourButton->setGeometry(10, this->height() - 50, 200, 40); // Position du bouton
+    connect(retourButton, &QPushButton::clicked, this, &MainWindow::on_RetourVersBiblio_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -102,7 +70,7 @@ MainWindow::~MainWindow()
 // ************************ Chargement d'un image  ************************
 
 // ----------------------------------------------------------------------------------------------
-
+/*
 void MainWindow::on_ChargerImage_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Charger une image"), "", tr("Images (*.png *.jpg *.pgm *.CR2)"));
@@ -168,7 +136,7 @@ void MainWindow::on_ChargerImage_clicked()
         }
     }
 }
-
+*/
 void MainWindow::loadAndDisplayImage(const QString &fileName)
 {
     if (!fileName.isEmpty()) {
@@ -796,8 +764,326 @@ void MainWindow::on_AppliquerConvolution_clicked()
     ui->statusbar->showMessage("Convolution appliquée.");
 }
 
+// -----------------------------------------------------------------------------------------
+
+// *************************** Ajout Menu Descripteur *************************************
+
+// -----------------------------------------------------------------------------------------
+Library library;
+
+// Ajouter
+
+void MainWindow::on_actionAjouterDescripteur_triggered() {
+    // 1. Ouvrir le QFileDialog pour sélectionner l'image d'origine
+    QString cheminImageSource = QFileDialog::getOpenFileName(this,
+                                                             "Sélectionnez une image à ajouter",
+                                                             "",
+                                                             "Images (*.png *.jpg *.jpeg *.bmp);;Tous les fichiers (*)");
+
+    if (cheminImageSource.isEmpty()) {
+        QMessageBox::warning(this, "Avertissement", "Aucun fichier sélectionné !");
+        return;
+    }
+
+    // 2. Demander les descripteurs à l'utilisateur
+    bool ok;
+    QString titre = QInputDialog::getText(
+        this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok
+        );
+    if (!ok || titre.isEmpty()) return;
+
+    int numero = QInputDialog::getInt(
+        this, "Ajouter un descripteur", "Numéro unique :",
+        0, 0, 10000, 1, &ok
+        );
+    if (!ok) return;
+
+    double prix = QInputDialog::getDouble(
+        this, "Ajouter un descripteur", "Prix :",
+        0, 0, 10000, 2, &ok
+        );
+    if (!ok) return;
+
+    QString acces = QInputDialog::getText(
+        this, "Ajouter un descripteur",
+        "Accès (O/L) :", QLineEdit::Normal, "O", &ok
+        );
+    if (!ok || acces.isEmpty()) return;
+
+    QString type = QInputDialog::getText(
+        this, "Ajouter un descripteur",
+        "Type (couleur/gris) :", QLineEdit::Normal, "couleur", &ok
+        );
+    if (!ok || type.isEmpty()) return;
+
+    int nbTraitement = QInputDialog::getInt(
+        this, "Ajouter un descripteur",
+        "Nombre de traitements possibles :", 1, 1, 100, 1, &ok
+        );
+    if (!ok) return;
+
+    // 3. Vérifier l'unicité titre / numéro
+    if (library.titrecheck(titre.toStdString()) != 0) {
+        QMessageBox::warning(this, "Erreur", "Le titre existe déjà !");
+        return;
+    }
+    if (library.numerocheck(numero) != 0) {
+        QMessageBox::warning(this, "Erreur", "Le numéro existe déjà !");
+        return;
+    }
+
+    // 4. Construire le chemin de destination dans votre Bibliotheque
+    //    NB : ici on suppose que library.getCheminProjet() vous donne
+    //    l’emplacement exact, par exemple : ".../tessst"
+    //    qu’on complète avec "/Bibliotheque".
+    QString cheminDuProjet = QString::fromStdString(library.getCheminProjet());
+    QString dossierBibliotheque = cheminDuProjet + "/Bibliotheque";
+
+    // 5. S'assurer que ce dossier existe
+    QDir dirBibli(dossierBibliotheque);
+    if (!dirBibli.exists()) {
+        dirBibli.mkpath("."); // crée le dossier s'il n'existe pas
+    }
+
+    // 6. Conserver l'extension
+    QFileInfo info(cheminImageSource);
+    QString extension = info.suffix();  // ex: "jpg", "png", etc.
+
+    // 7. Construire le *nouveau nom* de fichier (vous pouvez ajouter "_" ou "-" si vous voulez)
+    //    par exemple : "MonTitre.jpg"
+    QString nomFichierDestination = titre + "." + extension;
+
+    // 8. Chemin complet de la copie
+    QString cheminImageCopie = dossierBibliotheque + "/" + nomFichierDestination;
+
+    // 9. Copier le fichier
+    if (!QFile::copy(cheminImageSource, cheminImageCopie)) {
+        QMessageBox::warning(this, "Erreur", "La copie de l'image a échoué !");
+        return;
+    }
+    // On informe éventuellement l’utilisateur du chemin d’enregistrement
+    QMessageBox::information(this, "Succès",
+                             QString("L'image a été copiée dans : %1").arg(cheminImageCopie));
+
+    // 10. Créer l'objet Image *avec* le chemin interne (copie)
+    //     comme "source" (pour la suite).
+    //     => C'EST CETTE VALEUR qu’on veut retrouver lors des modifications
+    Image nouvelleImage(
+        cheminImageCopie.toStdString(),   // <= on met la copie
+        titre.toStdString(),
+        numero,
+        prix,
+        acces.toStdString()[0],
+        type.toStdString(),
+        nbTraitement,
+        0
+        );
+
+    // 11. Ajouter l'objet à la bibliothèque (liste chainée)
+    library.ajouterDescripteurs(nouvelleImage);
+
+    // 12. Message final
+    QMessageBox::information(this, "Succès",
+                             "Le descripteur et l'image ont été ajoutés avec succès dans la bibliothèque !");
+}
+
+// Modifier
+
+void MainWindow::on_actionModifierDescripteur_triggered() {
+    // Demander le numéro du descripteur à modifier
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Modifier un descripteur",
+                                      "Entrez le numéro unique du descripteur :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Modification annulée.");
+        return;
+    }
+
+    // Parcourir la liste pour trouver le descripteur correspondant
+    auto current = library.head; // Accès à la liste chaînée depuis votre bibliothèque
+    bool descripteurTrouve = false;
+
+    while (current) {
+        if (current->data.getNumero() == numero) {
+            descripteurTrouve = true;
+
+            // Récupérer le chemin de l'image sauvegardée
+            std::string cheminImageActuel = current->data.getSource(); // Assurez-vous que `getSource` renvoie le chemin interne
+
+            // Modifier les attributs
+            QStringList options = {"Titre", "Numéro", "Prix", "Accès", "Type", "Nombre de traitements"};
+            QString choix = QInputDialog::getItem(this, "Modifier un attribut",
+                                                  "Choisissez un attribut à modifier :", options, 0, false, &ok);
+            if (!ok) break;
+
+            if (choix == "Titre") {
+                QString nouveauTitre = QInputDialog::getText(this, "Modifier le titre",
+                                                             "Entrez le nouveau titre :", QLineEdit::Normal, "", &ok);
+                if (ok && !nouveauTitre.isEmpty()) {
+                    // Vérifiez si le titre est unique
+                    if (library.titrecheck(nouveauTitre.toStdString()) != 0) {
+                        QMessageBox::warning(this, "Erreur", "Le titre existe déjà !");
+                        return;
+                    }
+
+                    // Renommer l'image sauvegardée
+                    QFileInfo info(QString::fromStdString(cheminImageActuel));
+                    QString extension = info.suffix();
+                    QString nouveauChemin = info.absolutePath() + "/" + nouveauTitre + "." + extension;
+
+                    try {
+                        std::filesystem::rename(cheminImageActuel, nouveauChemin.toStdString());
+                        current->data.setTitre(nouveauTitre.toStdString());
+                        current->data.setSource(nouveauChemin.toStdString());
+                        QMessageBox::information(this, "Succès", "Le titre a été modifié avec succès !");
+                    } catch (const std::exception &e) {
+                        QMessageBox::warning(this, "Erreur", QString("Impossible de renommer l'image : %1").arg(e.what()));
+                    }
+                }
+            } else if (choix == "Numéro") {
+                int nouveauNumero = QInputDialog::getInt(this, "Modifier le numéro",
+                                                         "Entrez le nouveau numéro :", 0, 0, 10000, 1, &ok);
+                if (ok) {
+                    // Vérifiez si le numéro est unique
+                    if (library.numerocheck(nouveauNumero) != 0) {
+                        QMessageBox::warning(this, "Erreur", "Le numéro existe déjà !");
+                        return;
+                    }
+                    current->data.setNumero(nouveauNumero);
+                    QMessageBox::information(this, "Succès", "Le numéro a été modifié avec succès !");
+                }
+            } else if (choix == "Prix") {
+                double nouveauPrix = QInputDialog::getDouble(this, "Modifier le prix",
+                                                             "Entrez le nouveau prix :", 0, 0, 10000, 2, &ok);
+                if (ok) {
+                    current->data.setPrix(nouveauPrix);
+                    QMessageBox::information(this, "Succès", "Le prix a été modifié avec succès !");
+                }
+            } else if (choix == "Accès") {
+                QString nouvelAcces = QInputDialog::getText(this, "Modifier l'accès",
+                                                            "Entrez le nouvel accès (O ou L) :", QLineEdit::Normal, "O", &ok);
+                if (ok && (nouvelAcces == "O" || nouvelAcces == "L")) {
+                    current->data.setAccess(nouvelAcces.toStdString()[0]);
+                    QMessageBox::information(this, "Succès", "L'accès a été modifié avec succès !");
+                }
+            } else if (choix == "Type") {
+                QString nouveauType = QInputDialog::getText(this, "Modifier le type",
+                                                            "Entrez le nouveau type (couleur ou gris) :", QLineEdit::Normal, "couleur", &ok);
+                if (ok && (nouveauType == "couleur" || nouveauType == "gris")) {
+                    current->data.setType(nouveauType.toStdString());
+                    QMessageBox::information(this, "Succès", "Le type a été modifié avec succès !");
+                }
+            } else if (choix == "Nombre de traitements") {
+                int nouveauNbTraitement = QInputDialog::getInt(this, "Modifier le nombre de traitements",
+                                                               "Entrez le nouveau nombre de traitements possibles :", 1, 1, 100, 1, &ok);
+                if (ok) {
+                    current->data.setnbTraitementPossible(nouveauNbTraitement);
+                    QMessageBox::information(this, "Succès", "Le nombre de traitements a été modifié avec succès !");
+                }
+            }
+
+            break; // Modification terminée pour ce descripteur
+        }
+        current = current->next;
+    }
+
+    if (!descripteurTrouve) {
+        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce numéro !");
+    }
+}
 
 
+// Supprimer
+
+void MainWindow::on_actionSupprimerDescripteur_triggered() {
+    // Demander le numéro du descripteur à supprimer
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Supprimer un descripteur",
+                                      "Entrez le numéro unique du descripteur :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Suppression annulée.");
+        return;
+    }
+
+    // Parcourir la liste pour trouver le descripteur correspondant
+    auto current = library.head; // Accès à la liste chaînée depuis votre bibliothèque
+    std::shared_ptr<Library::INode> previous = nullptr; // Pour maintenir une référence au noeud précédent
+    bool descripteurTrouve = false;
+
+    while (current) {
+        if (current->data.getNumero() == numero) {
+            descripteurTrouve = true;
+
+            // Supprimer le fichier image associé
+            std::string cheminImage = current->data.getSource(); // Récupérer le chemin de l'image sauvegardée
+            try {
+                if (std::filesystem::exists(cheminImage)) {
+                    std::filesystem::remove(cheminImage);
+                } else {
+                    QMessageBox::warning(this, "Avertissement",
+                                         "L'image associée au descripteur n'existe pas ou a déjà été supprimée.");
+                }
+            } catch (const std::exception &e) {
+                QMessageBox::warning(this, "Erreur",
+                                     QString("Impossible de supprimer l'image associée : %1").arg(e.what()));
+            }
+
+            // Supprimer le descripteur de la liste chaînée
+            if (previous) {
+                previous->next = current->next;
+            } else {
+                library.head = current->next;
+            }
+
+            QMessageBox::information(this, "Succès", "Le descripteur et son image associée ont été supprimés !");
+            return;
+        }
+
+        previous = current;
+        current = current->next;
+    }
+
+    if (!descripteurTrouve) {
+        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce numéro !");
+    }
+}
 
 
+// --------------------------------------------------------------------------------------------------
 
+// ***************************** Afficher image **************************
+
+// ----------------------------------------------------------------
+
+void MainWindow::on_actionRechercherImage_triggered() {
+    // Demander le numéro de l'image
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Rechercher une image",
+                                      "Entrez le numéro de l'image :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Recherche annulée.");
+        return;
+    }
+
+    // Appeler la méthode de recherche dans Library
+    std::string resultat = library.rechercherImageParNumero(numero);
+
+    // Afficher le résultat
+    if (resultat == "Image non trouvée.") {
+        QMessageBox::warning(this, "Résultat", "Aucune image trouvée avec ce numéro.");
+    } else {
+        QMessageBox::information(this, "Résultat", QString::fromStdString(resultat));
+    }
+}
+
+
+void MainWindow::on_RetourVersBiblio_clicked()
+{
+    if (!biblioWindow) {
+        // Créez une nouvelle instance si elle n'existe pas
+        biblioWindow = std::make_unique<BiblioWindow>();
+    }
+
+    biblioWindow->show(); // Affiche la fenêtre Bibliothèque
+    this->close();        // Ferme la fenêtre actuelle
+}
