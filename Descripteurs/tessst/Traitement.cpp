@@ -359,6 +359,9 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     return imgDroites;
 }
 
+
+
+
 // ----------------------------------------------------------------------------------------------
 
 // ************************ Segmentation couleur ************************
@@ -412,15 +415,15 @@ cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector
 
             // Vérification pour chaque combinaison de canaux
             if (std::find(canaux.begin(), canaux.end(), 0) != canaux.end() &&
-                rouge >= seuils[0] && rouge > bleu * 1.5 && rouge > vert * 1.4) {
+                rouge >= seuils[0] && rouge > bleu * 1.3 && rouge > vert * 1.3) {
                 resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels rouges
             }
             if (std::find(canaux.begin(), canaux.end(), 1) != canaux.end() &&
-                vert >= seuils[1] && vert > rouge * 0.9 && vert > bleu * 0.9) {
+                vert >= seuils[1] && vert > rouge * 1 && vert > bleu * 1) {
                 resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels verts
             }
             if (std::find(canaux.begin(), canaux.end(), 2) != canaux.end() &&
-                bleu >= seuils[2] && bleu > rouge * 0.8 && bleu > vert * 0.8) {
+                bleu >= seuils[2] && bleu > rouge * 0.9 && bleu > vert * 0.9) {
                 resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels bleus
             }
         }
@@ -428,3 +431,4 @@ cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector
 
     return resultat;
 }
+
