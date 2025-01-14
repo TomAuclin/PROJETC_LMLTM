@@ -3,7 +3,6 @@
 
 #include "Image.hpp"
 #include <memory>
-#include <fstream>
 
 /**
  * @class ListeChainee
@@ -61,8 +60,6 @@ public:
      *
      */
     ~ListeChainee();
-
-
 };
 
 #endif

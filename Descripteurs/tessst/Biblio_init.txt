@@ -56,8 +56,8 @@ Lydia, BriqueSol02_gris.pgm, 61, 10, L, gris, 2, 61
 Lydia, BriqueSol02_couleur.CR2, 60, 15, L, couleur, 2, 60
 Tom, BriqueSol01_gris.pgm, 59, 10, L, gris, 2, 59
 Tom, BriqueSol01_couleur.CR2, 58, 22, L, couleur, 2, 58
-Tom, BeaucoupVer_griss.pgm, 57, 20, L, gris, 2, 57
-Tom, BeaucoupVer_couleurs.CR2, 56, 81, L, couleur, 3, 56
+Tom, BeaucoupVer_gris.pgm, 57, 20, L, gris, 2, 57
+Tom, BeaucoupVer_couleur.CR2, 56, 81, L, couleur, 3, 56
 Lydia, BateauEau04_gris.pgm, 55, 60, L, gris, 2, 55
 Lydia, BateauEau04_couleur.CR2, 54, 99, L, couleur, 3, 54
 Lydia, BateauEau01_gris.pgm, 53, 60, L, gris, 2, 53

@@ -359,9 +359,6 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     return imgDroites;
 }
 
-
-
-
 // ----------------------------------------------------------------------------------------------
 
 // ************************ Segmentation couleur ************************
@@ -431,4 +428,3 @@ cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector
 
     return resultat;
 }
-

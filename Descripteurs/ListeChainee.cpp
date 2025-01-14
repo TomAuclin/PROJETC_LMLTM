@@ -1,6 +1,4 @@
 #include "ListeChainee.hpp"
-#include <fstream>
-#include <iostream>
 
 /**
  *
@@ -39,7 +37,6 @@ std::string ListeChainee::rechercherImageParNumero(int numero) const {
     }
     return "Image non trouvée."; // Retourne un message si aucune image ne correspond
 }
-
 
 // Destructeur de la classe ListeChainee
 ListeChainee::~ListeChainee() {

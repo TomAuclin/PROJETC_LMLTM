@@ -13,7 +13,7 @@ ConnexionWindow::ConnexionWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Connexion");
-    resize(450, 300);
+    resize(350, 200);
 
     // Centrer la fenêtre sur l'écran
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -30,7 +30,7 @@ ConnexionWindow::ConnexionWindow(QWidget *parent)
 void ConnexionWindow::setupLogo()
 {
     // Chemin vers l'image
-    QString imagePath = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/logo_fac.png";
+    QString imagePath = "/media/sf_PROJETC_LMLTM/logo_fac.png";
 
     // Charger l'image
     QPixmap pixmap(imagePath);
@@ -53,16 +53,10 @@ void ConnexionWindow::setupLogo()
     // Associer la scène au QGraphicsView
     view->setScene(scene);
 
-    // Ajuster l'image pour qu'elle remplisse toute la vue
-    view->fitInView(pixmapItem, Qt::KeepAspectRatioByExpanding);
-
-    // Supprimer les bordures pour maximiser l'espace de l'image
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    // Appliquer des options de rendu pour la qualité
-    view->setRenderHint(QPainter::SmoothPixmapTransform, true);
-    view->setRenderHint(QPainter::Antialiasing, true);
+    // Ajuster l'image pour qu'elle s'adapte à la taille de la vue
+    QRectF pixmapRect = pixmapItem->boundingRect(); // Obtenir la taille de l'image
+    view->fitInView(pixmapRect, Qt::KeepAspectRatio);
+    view->setRenderHint(QPainter::Antialiasing);
 }
 
 ConnexionWindow::~ConnexionWindow()

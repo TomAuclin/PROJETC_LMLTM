@@ -14,6 +14,19 @@
    <string>Application de Traitement d'Images</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="ChargerImage">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>181</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Charger Image</string>
+    </property>
+   </widget>
    <widget class="QGraphicsView" name="AfficherImage">
     <property name="geometry">
      <rect>
@@ -201,19 +214,6 @@
     </property>
     <property name="text">
      <string>Rehaussement de Contour</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="RetourVersBiblio">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>470</y>
-      <width>80</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Retour</string>
     </property>
    </widget>
   </widget>

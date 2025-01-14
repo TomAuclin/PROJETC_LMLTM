@@ -17,21 +17,6 @@ std::string Image::getDescripteur() const {
     return descripteur.str();
 }
 
-std::string Image::getDescripteurSimple() const {
-    std::ostringstream descripteur;
-    descripteur << source << ", "
-                << titre << ", "
-                << numero << ", "
-                << prix << ", "
-                << acces << ", "
-                << type << ", "
-                << nbTraitementPossible << ", "
-                << identite;
-    return descripteur.str();
-}
-
-
-
 int Image::nbrcarac()
 {
     int cpt = 0;
