@@ -392,16 +392,32 @@ cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector
         Histogramme::calculerHistogramme(imageCouleur, histogramme, canal);
 
         int totalPixels = image.rows * image.cols;
-        int seuilPixels = static_cast<int>(totalPixels * 0.3); // 30% des pixels les plus intenses
-        int cumulativeSum = 0;
+        int seuilPixels = static_cast<int>(totalPixels * 0.4); // 40% des pixels
 
-        for (int i = 255; i >= 0; i--) {
-            cumulativeSum += histogramme[i];
-            if (cumulativeSum >= seuilPixels) {
-                seuils[canal] = i;
-                break;
+        // Trouver l'indice du pic maximum dans l'histogramme
+        int maxIndex = 0;
+        int maxValeur = 0;
+        for (int i = 0; i < 256; i++) {
+            if (histogramme[i] > maxValeur) {
+                maxValeur = histogramme[i];
+                maxIndex = i;
             }
         }
+
+        // Accumuler les valeurs autour du pic pour atteindre 40%
+        int SommeCumule = 0;
+        int gauche = maxIndex, droite = maxIndex;
+        while (SommeCumule < seuilPixels && (gauche >= 0 || droite <= 255)) {
+            if (gauche >= 0) {
+                SommeCumule += histogramme[gauche--];
+            }
+            if (droite <= 255 && SommeCumule < seuilPixels) {
+                SommeCumule += histogramme[droite++];
+            }
+        }
+
+        // Définir le seuil comme la limite supérieure atteinte
+        seuils[canal] = std::max(0, droite - 1);
     }
 
     // Création d'une image filtrée
