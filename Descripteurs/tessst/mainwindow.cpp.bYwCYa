@@ -23,14 +23,21 @@ MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWin
     ui(new Ui::MainWindow),
     sceneImage(new QGraphicsScene(this)),
     seceneResultat(new QGraphicsScene(this)),
-    imageObj(nullptr),
-    biblioWindow(parentBiblio),
-    LoginUtilisateur(login),
-    selectedImagePath(imagePath) // Initialisation du chemin d'image
+    imageObj(nullptr), // Initialisation du pointeur image à null
+    biblioWindow(parentBiblio), // Référence à la bibliothèque
+    LoginUtilisateur(login)
 {
     ui->setupUi(this);
-    setWindowTitle("Fenetre de traitement");
+    setWindowTitle("Fenêtre de traitement");
     resize(1200, 600);
+
+    // Initialiser les scènes
+    ui->AfficherImage->setScene(sceneImage);
+    ui->AffichageResultat->setScene(seceneResultat);
+
+    // Réinitialiser les scènes
+    sceneImage->clear();
+    seceneResultat->clear();
 
     // Centrer la fenêtre sur l'écran
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -41,13 +48,21 @@ MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWin
         this->move(x, y);
     }
 
-    // Initialiser les scènes
-    ui->AfficherImage->setScene(sceneImage);
-    ui->AffichageResultat->setScene(seceneResultat);
+    // Si un chemin d'image a été fourni, charger et afficher l'image
+    if (!imagePath.isEmpty()) {
+        loadAndDisplayImage(imagePath);
+    }
 
-    // Charger l'image au démarrage
-    if (!selectedImagePath.isEmpty()) {
-        loadAndDisplayImage(selectedImagePath);
+    // Ajouter un bouton "Retour" au bas de la fenêtre
+    QPushButton *retourButton = new QPushButton("Retour à la Bibliothèque", this);
+    retourButton->setGeometry(10, this->height() - 50, 200, 40); // Position du bouton
+    connect(retourButton, &QPushButton::clicked, this, &MainWindow::on_RetourVersBiblio_clicked);
+
+    // Gérer les permissions utilisateur
+    if (LoginUtilisateur == "us-02-al") {
+        ui->actionAjouterDescripteur->setVisible(false);
+        ui->actionModifierDescripteur->setVisible(false);
+        ui->actionSupprimerDescripteur->setVisible(false);
     }
 }
 
@@ -70,18 +85,19 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
         try {
             // Réinitialiser les scènes
             sceneImage->clear();
-            seceneResultat->clear();
+            sceneResultat->clear(); // Supprimer l'image précédente dans le résultat
+            selectedImagePath = fileName; // Mettre à jour le chemin de l'image sélectionnée
 
-            // Libérer l'objet image précédent
-            delete imageObj;
+            delete imageObj; // Libérer l'ancien objet imageObj, s'il existe
             imageObj = nullptr;
 
             QImage img(fileName);
+
             if (img.isNull()) {
                 throw std::runtime_error("L'image n'a pas pu être chargée.");
             }
 
-            // Charger et traiter l'image
+            // Vérifier si l'image est en niveaux de gris ou en couleur
             if (img.format() == QImage::Format_Grayscale8) {
                 std::vector<std::vector<uint8_t>> imageGris;
                 for (int y = 0; y < img.height(); ++y) {
@@ -105,13 +121,20 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                 imageObj = new ImageCouleur(imageCouleur); // Charger comme image couleur
             }
 
-            // Charger l'image dans sceneImage
+            // Charger l'image et l'afficher dans le QGraphicsView
             QPixmap pixmap(fileName);
+
             if (!pixmap.isNull()) {
+                // Ajouter la nouvelle image à la scène
                 sceneImage->addPixmap(pixmap);
 
-                // Adapter la vue pour afficher l'image correctement
+                // Adapter la vue pour occuper tout l'espace disponible
+                ui->AfficherImage->setScene(sceneImage);
                 ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
+
+                // Désactiver les barres de défilement
+                ui->AfficherImage->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                ui->AfficherImage->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
             }
         } catch (const std::exception &e) {
             QMessageBox::critical(this, tr("Erreur"), tr(e.what()));
@@ -992,7 +1015,7 @@ void MainWindow::on_RetourVersBiblio_clicked()
 {
     // Effacer les scènes pour préparer un nouvel affichage
     sceneImage->clear();
-    seceneResultat->clear(); // Supprimer le contenu de AfficherResultat
+    sceneResultat->clear(); // Supprimer le contenu de AfficherResultat
     delete imageObj; // Libérer la mémoire utilisée pour l'image actuelle
     imageObj = nullptr;
 

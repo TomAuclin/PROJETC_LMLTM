@@ -219,24 +219,20 @@ void BiblioWindow::on_TraitementButton_clicked()
     if (!selectedImagePath.isEmpty()) {
         qDebug() << "Traitement de l'image : " << selectedImagePath;
 
-        // Créer une instance de MainWindow et lui passer le chemin de l'image sélectionnée
+        // Créer une instance de MainWindow en passant `this` comme parent
         if (!mainWindow) {
-            mainWindow = std::make_unique<MainWindow>(LoginUtilisateur, selectedImagePath, this);
-        } else {
-            // Mettre à jour l'image dans la fenêtre existante
-            mainWindow->loadAndDisplayImage(selectedImagePath);
+            mainWindow = std::make_unique<MainWindow>(LoginUtilisateur,selectedImagePath, this); // Passer l'instance actuelle
         }
 
-        // Afficher la fenêtre de traitement
+        // Afficher MainWindow
         mainWindow->show();
 
-        // Masquer la bibliothèque
+        // Cacher la fenêtre actuelle
         this->hide();
     } else {
         QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
     }
 }
-
 
 void BiblioWindow::mousePressEvent(QMouseEvent *event)
 {
