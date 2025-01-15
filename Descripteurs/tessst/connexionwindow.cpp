@@ -83,10 +83,11 @@ void ConnexionWindow::on_connexionButton_clicked()
     if (login == "ad-01-ao" || login == "us-02-al") {
         if (!biblioWindow) {
             biblioWindow = std::make_unique<BiblioWindow>(nullptr);
+            biblioWindow->setUserLogin(login); // Définir le login utilisateur
         }
 
         biblioWindow->show();
-        biblioWindow->on_ChargeBoutton_clicked(login); // Passe le login à la méthode
+        biblioWindow->loadDefaultFile(login); // Charge le fichier par défaut avec les droits utilisateur
         this->close();
     } else {
         QMessageBox::warning(this, "Erreur", "Identification échouée, essayez encore.");

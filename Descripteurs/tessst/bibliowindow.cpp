@@ -13,6 +13,7 @@
 //#include "Library.hpp"
 #include <QInputDialog>
 
+const QString BiblioWindow::DEFAULT_FILE_PATH = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_test.txt";
 
 
 BiblioWindow::BiblioWindow(QWidget *parent)
@@ -68,7 +69,7 @@ void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
     ui->DetailsButton->setVisible(true);
 }
 
-void BiblioWindow::on_ChargeBoutton_clicked(const QString &userLogin)
+void BiblioWindow::on_ChargeBoutton_clicked()
 {
     ui->pushButtonRechercherp->setVisible(true);
 
@@ -94,7 +95,7 @@ void BiblioWindow::on_ChargeBoutton_clicked(const QString &userLogin)
             QString line = in.readLine();
             QStringList fields = line.split(',');
 
-            if (fields.size() >= 5) { // S'assurer qu'il y a assez de colonnes
+            if (fields.size() >= 5) {
                 QString imageName = fields[1].trimmed();
                 QString accessType = fields[4].trimmed();
                 QString imagePath = imageDirectory + "/" + imageName;
@@ -128,42 +129,57 @@ void BiblioWindow::on_ChargeBoutton_clicked(const QString &userLogin)
     }
 }
 
-void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
+void BiblioWindow::loadDefaultFile(const QString &userLogin)
 {
-    ui->AffichageBiblio->clear();
+    QString filePath = DEFAULT_FILE_PATH;
 
-    QDir dir(directoryPath);
-    QStringList imageFiles = dir.entryList(QStringList() << "*.png" << "*.CR2" << "*.pgm", QDir::Files);
-
-    if (imageFiles.isEmpty()) {
-        QMessageBox::information(this, "Aucune image", "Le dossier sélectionné ne contient aucune image.");
-        mettreAJourCompteurImages();
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Erreur", "Impossible d'ouvrir le fichier par défaut.");
         return;
     }
 
-    const QSize iconSize(150, 150);
-    int compteur = 1; // Remise en place du compteur
+    QString imageDirectory = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    ui->AffichageBiblio->clear();
+    QStringList missingImages;
 
-    foreach (const QString &fileName, imageFiles) {
-        QString filePath = directoryPath + "/" + fileName;
-        QPixmap pixmap(filePath);
+    QTextStream in(&file);
+    int compteur = 1;
 
-        if (!pixmap.isNull()) {
-            QString itemText = QString::number(compteur) + ". " + fileName; // Création du texte avec numéro
-            QListWidgetItem *item = new QListWidgetItem();
-            item->setIcon(QIcon(pixmap.scaled(iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
-            item->setData(Qt::UserRole, filePath);
-            item->setText(itemText); // Assigner le texte avec le numéro
-            item->setSizeHint(iconSize);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        QStringList fields = line.split(',');
 
-            ui->AffichageBiblio->addItem(item);
-            compteur++; // Incrémentation du compteur
-        } else {
-            qDebug() << "Impossible de charger l'image : " << filePath;
+        if (fields.size() >= 5) {
+            QString imageName = fields[1].trimmed();
+            QString accessType = fields[4].trimmed();
+            QString imagePath = imageDirectory + "/" + imageName;
+
+            // Vérifier l'accès en fonction du login utilisateur
+            if ((userLogin == "us-02-al" && accessType == "O") ||
+                (userLogin != "us-02-al" && accessType == "L")) {
+
+                if (QFileInfo::exists(imagePath)) {
+                    QString itemText = QString::number(compteur) + ". " + imageName;
+                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText);
+                    item->setData(Qt::UserRole, imagePath);
+                    ui->AffichageBiblio->addItem(item);
+                    compteur++;
+                } else {
+                    missingImages.append(imageName);
+                }
+            }
         }
     }
 
-    ui->AffichageBiblio->setIconSize(iconSize);
+    file.close();
+
+    if (!missingImages.isEmpty()) {
+        QString missingMessage = "Les images suivantes n'ont pas été trouvées dans le répertoire :\n" + missingImages.join("\n");
+        QMessageBox::warning(this, "Images Manquantes", missingMessage);
+    }
+
+    QMessageBox::information(this, "Chargement", "Bibliothèque chargée et images affichées.");
     mettreAJourCompteurImages();
 }
 
@@ -280,5 +296,10 @@ void BiblioWindow::on_pushButtonRechercherp_clicked() {
 void BiblioWindow::mettreAJourCompteurImages() {
     int nombreImages = ui->AffichageBiblio->count(); // Obtenir le nombre d'images du QListWidget
     ui->labelImageCount->setText(QString("Nombre d'images : %1").arg(nombreImages));
+}
+
+
+void BiblioWindow::setUserLogin(const QString &login) {
+    userLogin = login;
 }
 
