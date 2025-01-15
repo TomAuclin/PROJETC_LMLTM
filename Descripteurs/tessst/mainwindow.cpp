@@ -1,12 +1,14 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "bibliowindow.h"
+#include "connexionwindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QGraphicsPixmapItem>
 #include <stdexcept>
 #include <QInputDialog>
 #include <QScreen>
+#include <QTextStream>
 
 
 // ----------------------------------------------------------------------------------------------
@@ -16,17 +18,18 @@
 // ----------------------------------------------------------------------------------------------
 
 
-MainWindow::MainWindow(const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
+MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     sceneImage(new QGraphicsScene(this)),
     sceneHisto(new QGraphicsScene(this)),
     imageObj(nullptr), // Initialisation du pointeur image à null
-    biblioWindow(parentBiblio) // Référence à la bibliothèque
+    biblioWindow(parentBiblio), // Référence à la bibliothèque
+    LoginUtilisateur(login)
 {
     ui->setupUi(this);
     setWindowTitle("Fenetre de traitement");
-   resize(1200, 600);
+    resize(1200, 600);
     QPixmap pixmap(imagePath);
 
 
@@ -47,6 +50,14 @@ MainWindow::MainWindow(const QString &imagePath, BiblioWindow *parentBiblio, QWi
     ui->Canal_R->setVisible(false);
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
+    
+    // si le user normal est connecter il ne peut pas ajouter, modifier ou supprimer un descripteur
+    // Pour "us-02-al"
+    if (LoginUtilisateur == "us-02-al") {
+        ui->actionAjouterDescripteur->setVisible(false);
+        ui->actionModifierDescripteur->setVisible(false);
+        ui->actionSupprimerDescripteur->setVisible(false);
+    }
 
     // Si un chemin d'image a été fourni, charger et afficher l'image
     if (!imagePath.isEmpty()) {
@@ -774,11 +785,11 @@ Library library;
 // Ajouter
 
 void MainWindow::on_actionAjouterDescripteur_triggered() {
-    // 1. Ouvrir le QFileDialog pour sélectionner l'image d'origine
+    // 1. Ouvrir un QFileDialog pour sélectionner l'image d'origine
     QString cheminImageSource = QFileDialog::getOpenFileName(this,
                                                              "Sélectionnez une image à ajouter",
                                                              "",
-                                                             "Images (*.png *.jpg *.jpeg *.bmp);;Tous les fichiers (*)");
+                                                             "Images (*.png *.jpg *.jpeg *.bmp *.pgm *.CR2);;Tous les fichiers (*)");
 
     if (cheminImageSource.isEmpty()) {
         QMessageBox::warning(this, "Avertissement", "Aucun fichier sélectionné !");
@@ -787,39 +798,22 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
 
     // 2. Demander les descripteurs à l'utilisateur
     bool ok;
-    QString titre = QInputDialog::getText(
-        this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok
-        );
+    QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok);
     if (!ok || titre.isEmpty()) return;
 
-    int numero = QInputDialog::getInt(
-        this, "Ajouter un descripteur", "Numéro unique :",
-        0, 0, 10000, 1, &ok
-        );
+    int numero = QInputDialog::getInt(this, "Ajouter un descripteur", "Numéro unique :", 0, 0, 10000, 1, &ok);
     if (!ok) return;
 
-    double prix = QInputDialog::getDouble(
-        this, "Ajouter un descripteur", "Prix :",
-        0, 0, 10000, 2, &ok
-        );
+    double prix = QInputDialog::getDouble(this, "Ajouter un descripteur", "Prix :", 0, 0, 10000, 2, &ok);
     if (!ok) return;
 
-    QString acces = QInputDialog::getText(
-        this, "Ajouter un descripteur",
-        "Accès (O/L) :", QLineEdit::Normal, "O", &ok
-        );
+    QString acces = QInputDialog::getText(this, "Ajouter un descripteur", "Accès (O/L) :", QLineEdit::Normal, "O", &ok);
     if (!ok || acces.isEmpty()) return;
 
-    QString type = QInputDialog::getText(
-        this, "Ajouter un descripteur",
-        "Type (couleur/gris) :", QLineEdit::Normal, "couleur", &ok
-        );
+    QString type = QInputDialog::getText(this, "Ajouter un descripteur", "Type (couleur/gris) :", QLineEdit::Normal, "couleur", &ok);
     if (!ok || type.isEmpty()) return;
 
-    int nbTraitement = QInputDialog::getInt(
-        this, "Ajouter un descripteur",
-        "Nombre de traitements possibles :", 1, 1, 100, 1, &ok
-        );
+    int nbTraitement = QInputDialog::getInt(this, "Ajouter un descripteur", "Nombre de traitements possibles :", 1, 1, 100, 1, &ok);
     if (!ok) return;
 
     // 3. Vérifier l'unicité titre / numéro
@@ -832,164 +826,170 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
         return;
     }
 
-    // 4. Construire le chemin de destination dans votre Bibliotheque
-    //    NB : ici on suppose que library.getCheminProjet() vous donne
-    //    l’emplacement exact, par exemple : ".../tessst"
-    //    qu’on complète avec "/Bibliotheque".
-    QString cheminDuProjet = QString::fromStdString(library.getCheminProjet());
-    QString dossierBibliotheque = cheminDuProjet + "/Bibliotheque";
-
-    // 5. S'assurer que ce dossier existe
-    QDir dirBibli(dossierBibliotheque);
-    if (!dirBibli.exists()) {
-        dirBibli.mkpath("."); // crée le dossier s'il n'existe pas
-    }
-
-    // 6. Conserver l'extension
-    QFileInfo info(cheminImageSource);
-    QString extension = info.suffix();  // ex: "jpg", "png", etc.
-
-    // 7. Construire le *nouveau nom* de fichier (vous pouvez ajouter "_" ou "-" si vous voulez)
-    //    par exemple : "MonTitre.jpg"
-    QString nomFichierDestination = titre + "." + extension;
-
-    // 8. Chemin complet de la copie
-    QString cheminImageCopie = dossierBibliotheque + "/" + nomFichierDestination;
-
-    // 9. Copier le fichier
-    if (!QFile::copy(cheminImageSource, cheminImageCopie)) {
-        QMessageBox::warning(this, "Erreur", "La copie de l'image a échoué !");
+    // 4. Demander à l'utilisateur de choisir le nom du fichier de la nouvelle bibliothèque
+    QString nouveauNomFichier = QInputDialog::getText(this, "Nom de la nouvelle bibliothèque", "Entrez le nom du nouveau fichier .txt :", QLineEdit::Normal, "nouvelle_bibliotheque.txt", &ok);
+    if (!ok || nouveauNomFichier.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
         return;
     }
-    // On informe éventuellement l’utilisateur du chemin d’enregistrement
-    QMessageBox::information(this, "Succès",
-                             QString("L'image a été copiée dans : %1").arg(cheminImageCopie));
 
-    // 10. Créer l'objet Image *avec* le chemin interne (copie)
-    //     comme "source" (pour la suite).
-    //     => C'EST CETTE VALEUR qu’on veut retrouver lors des modifications
-    Image nouvelleImage(
-        cheminImageCopie.toStdString(),   // <= on met la copie
-        titre.toStdString(),
-        numero,
-        prix,
-        acces.toStdString()[0],
-        type.toStdString(),
-        nbTraitement,
-        0
-        );
+    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    QString cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
+    QString cheminNouveauFichier = cheminFichier + "/" + nouveauNomFichier;
 
-    // 11. Ajouter l'objet à la bibliothèque (liste chainée)
+    // 5. Copier le fichier texte existant pour créer une nouvelle version
+    QString cheminDescripteur = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+    if (!QFile::copy(cheminDescripteur, cheminNouveauFichier)) {
+        QMessageBox::warning(this, "Erreur", "La création de la nouvelle bibliothèque a échoué !");
+        return;
+    }
+
+    // 6. Ajouter le nouveau descripteur au fichier texte
+    QFile fichierDescripteur(cheminNouveauFichier);
+    if (fichierDescripteur.open(QIODevice::Append | QIODevice::Text)) {
+        QTextStream sortie(&fichierDescripteur);
+        sortie << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", " << numero << ", " << prix << ", "
+               << acces << ", " << type << ", " << nbTraitement << ", " << numero << "\n";
+        fichierDescripteur.close();
+    } else {
+        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier de la nouvelle bibliothèque !");
+        return;
+    }
+
+    // 7. Copier l'image dans la bibliothèque avec le même nom que le titre
+    QString extensionImage = QFileInfo(cheminImageSource).suffix();
+    QString cheminImageDestination = cheminBibliotheque + "/" + titre + "." + extensionImage;
+    if (!QFile::copy(cheminImageSource, cheminImageDestination)) {
+        QMessageBox::warning(this, "Erreur", "La copie de l'image dans la bibliothèque a échoué !");
+        return;
+    }
+
+    // 8. Ajouter l'objet Image à la bibliothèque
+    Image nouvelleImage(cheminImageDestination.toStdString(),
+                        titre.toStdString(),
+                        numero,
+                        prix,
+                        acces.toStdString()[0],
+                        type.toStdString(),
+                        nbTraitement,
+                        numero);
+
     library.ajouterDescripteurs(nouvelleImage);
 
-    // 12. Message final
-    QMessageBox::information(this, "Succès",
-                             "Le descripteur et l'image ont été ajoutés avec succès dans la bibliothèque !");
+    // 9. Confirmation
+    QMessageBox::information(this, "Succès", "Le descripteur, l'image et la nouvelle bibliothèque ont été créés avec succès !");
 }
+
+
 
 // Modifier
 
 void MainWindow::on_actionModifierDescripteur_triggered() {
-    // Demander le numéro du descripteur à modifier
-    bool ok;
-    int numero = QInputDialog::getInt(this, "Modifier un descripteur",
-                                      "Entrez le numéro unique du descripteur :", 0, 0, 10000, 1, &ok);
-    if (!ok) {
-        QMessageBox::information(this, "Annulé", "Modification annulée.");
+    // 1. Définir le chemin fixe du dossier descripteurs
+    QString cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
+
+    // 2. Demander à l'utilisateur de choisir le fichier descripteurs à modifier
+    QString cheminDescripteur = QInputDialog::getText(this, "Modifier un descripteur", "Entrez le nom du fichier descripteurs .txt :", QLineEdit::Normal, "nouvelle_bibliotheque.txt");
+    QString cheminDescripteurComplet = cheminDescripteurs + "/" + cheminDescripteur;
+
+    if (cheminDescripteur.isEmpty() || !QFile::exists(cheminDescripteurComplet)) {
+        QMessageBox::warning(this, "Erreur", "Le fichier descripteurs spécifié est introuvable !");
         return;
     }
 
-    // Parcourir la liste pour trouver le descripteur correspondant
-    auto current = library.head; // Accès à la liste chaînée depuis votre bibliothèque
-    bool descripteurTrouve = false;
+    // 3. Demander le titre du descripteur à modifier
+    bool ok;
+    QString titreRecherche = QInputDialog::getText(this, "Modifier un descripteur", "Entrez le titre du descripteur à modifier :", QLineEdit::Normal, "", &ok);
+    if (!ok || titreRecherche.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Aucun titre spécifié !");
+        return;
+    }
 
-    while (current) {
-        if (current->data.getNumero() == numero) {
-            descripteurTrouve = true;
+    // 4. Charger le fichier et rechercher le descripteur à modifier
+    QFile fichierDescripteur(cheminDescripteurComplet);
+    if (!fichierDescripteur.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier descripteurs.txt !");
+        return;
+    }
 
-            // Récupérer le chemin de l'image sauvegardée
-            std::string cheminImageActuel = current->data.getSource(); // Assurez-vous que `getSource` renvoie le chemin interne
-
-            // Modifier les attributs
-            QStringList options = {"Titre", "Numéro", "Prix", "Accès", "Type", "Nombre de traitements"};
-            QString choix = QInputDialog::getItem(this, "Modifier un attribut",
-                                                  "Choisissez un attribut à modifier :", options, 0, false, &ok);
-            if (!ok) break;
-
-            if (choix == "Titre") {
-                QString nouveauTitre = QInputDialog::getText(this, "Modifier le titre",
-                                                             "Entrez le nouveau titre :", QLineEdit::Normal, "", &ok);
-                if (ok && !nouveauTitre.isEmpty()) {
-                    // Vérifiez si le titre est unique
-                    if (library.titrecheck(nouveauTitre.toStdString()) != 0) {
-                        QMessageBox::warning(this, "Erreur", "Le titre existe déjà !");
-                        return;
-                    }
-
-                    // Renommer l'image sauvegardée
-                    QFileInfo info(QString::fromStdString(cheminImageActuel));
-                    QString extension = info.suffix();
-                    QString nouveauChemin = info.absolutePath() + "/" + nouveauTitre + "." + extension;
-
-                    try {
-                        std::filesystem::rename(cheminImageActuel, nouveauChemin.toStdString());
-                        current->data.setTitre(nouveauTitre.toStdString());
-                        current->data.setSource(nouveauChemin.toStdString());
-                        QMessageBox::information(this, "Succès", "Le titre a été modifié avec succès !");
-                    } catch (const std::exception &e) {
-                        QMessageBox::warning(this, "Erreur", QString("Impossible de renommer l'image : %1").arg(e.what()));
-                    }
-                }
-            } else if (choix == "Numéro") {
-                int nouveauNumero = QInputDialog::getInt(this, "Modifier le numéro",
-                                                         "Entrez le nouveau numéro :", 0, 0, 10000, 1, &ok);
-                if (ok) {
-                    // Vérifiez si le numéro est unique
-                    if (library.numerocheck(nouveauNumero) != 0) {
-                        QMessageBox::warning(this, "Erreur", "Le numéro existe déjà !");
-                        return;
-                    }
-                    current->data.setNumero(nouveauNumero);
-                    QMessageBox::information(this, "Succès", "Le numéro a été modifié avec succès !");
-                }
-            } else if (choix == "Prix") {
-                double nouveauPrix = QInputDialog::getDouble(this, "Modifier le prix",
-                                                             "Entrez le nouveau prix :", 0, 0, 10000, 2, &ok);
-                if (ok) {
-                    current->data.setPrix(nouveauPrix);
-                    QMessageBox::information(this, "Succès", "Le prix a été modifié avec succès !");
-                }
-            } else if (choix == "Accès") {
-                QString nouvelAcces = QInputDialog::getText(this, "Modifier l'accès",
-                                                            "Entrez le nouvel accès (O ou L) :", QLineEdit::Normal, "O", &ok);
-                if (ok && (nouvelAcces == "O" || nouvelAcces == "L")) {
-                    current->data.setAccess(nouvelAcces.toStdString()[0]);
-                    QMessageBox::information(this, "Succès", "L'accès a été modifié avec succès !");
-                }
-            } else if (choix == "Type") {
-                QString nouveauType = QInputDialog::getText(this, "Modifier le type",
-                                                            "Entrez le nouveau type (couleur ou gris) :", QLineEdit::Normal, "couleur", &ok);
-                if (ok && (nouveauType == "couleur" || nouveauType == "gris")) {
-                    current->data.setType(nouveauType.toStdString());
-                    QMessageBox::information(this, "Succès", "Le type a été modifié avec succès !");
-                }
-            } else if (choix == "Nombre de traitements") {
-                int nouveauNbTraitement = QInputDialog::getInt(this, "Modifier le nombre de traitements",
-                                                               "Entrez le nouveau nombre de traitements possibles :", 1, 1, 100, 1, &ok);
-                if (ok) {
-                    current->data.setnbTraitementPossible(nouveauNbTraitement);
-                    QMessageBox::information(this, "Succès", "Le nombre de traitements a été modifié avec succès !");
-                }
-            }
-
-            break; // Modification terminée pour ce descripteur
+    QString contenu;
+    QString ligneAModifier;
+    QTextStream fluxLecture(&fichierDescripteur);
+    while (!fluxLecture.atEnd()) {
+        QString ligne = fluxLecture.readLine();
+        if (ligne.startsWith(titreRecherche + ",")) {
+            ligneAModifier = ligne;
+        } else {
+            contenu += ligne + "\n";
         }
-        current = current->next;
+    }
+    fichierDescripteur.close();
+
+    if (ligneAModifier.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce titre !");
+        return;
     }
 
-    if (!descripteurTrouve) {
-        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce numéro !");
+    // 5. Demander les nouvelles valeurs pour le descripteur
+    QStringList elements = ligneAModifier.split(", ");
+    if (elements.size() < 8) {
+        QMessageBox::warning(this, "Erreur", "Le descripteur sélectionné est invalide !");
+        return;
     }
+
+    QString nouveauTitre = QInputDialog::getText(this, "Modifier un descripteur", "Nouveau titre :", QLineEdit::Normal, elements[0], &ok);
+    if (!ok || nouveauTitre.isEmpty()) return;
+
+    int nouveauNumero = QInputDialog::getInt(this, "Modifier un descripteur", "Nouveau numéro unique :", elements[2].toInt(), 0, 10000, 1, &ok);
+    if (!ok) return;
+
+    double nouveauPrix = QInputDialog::getDouble(this, "Modifier un descripteur", "Nouveau prix :", elements[3].toDouble(), 0, 10000, 2, &ok);
+    if (!ok) return;
+
+    QString nouvelAcces = QInputDialog::getText(this, "Modifier un descripteur", "Nouvel accès (O/L) :", QLineEdit::Normal, elements[4], &ok);
+    if (!ok || nouvelAcces.isEmpty()) return;
+
+    QString nouveauType = QInputDialog::getText(this, "Modifier un descripteur", "Nouveau type (couleur/gris) :", QLineEdit::Normal, elements[5], &ok);
+    if (!ok || nouveauType.isEmpty()) return;
+
+    int nouveauNbTraitement = QInputDialog::getInt(this, "Modifier un descripteur", "Nouveau nombre de traitements possibles :", elements[6].toInt(), 1, 100, 1, &ok);
+    if (!ok) return;
+
+    // 6. Construire la nouvelle ligne du descripteur
+    QString nouvelleLigne = nouveauTitre + ", " + elements[1] + ", " + QString::number(nouveauNumero) + ", "
+                            + QString::number(nouveauPrix) + ", " + nouvelAcces + ", " + nouveauType + ", "
+                            + QString::number(nouveauNbTraitement) + ", " + QString::number(nouveauNumero) + "\n";
+
+    contenu += nouvelleLigne;
+
+    // 7. Écrire les modifications dans le fichier
+    if (!fichierDescripteur.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Erreur", "Impossible d'écrire dans le fichier descripteurs.txt !");
+        return;
+    }
+
+    QTextStream fluxEcriture(&fichierDescripteur);
+    fluxEcriture << contenu;
+    fichierDescripteur.close();
+
+    // 8. Renommer l'image si le titre a été modifié
+    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    if (nouveauTitre != elements[0]) {
+        QString extensionImage = QFileInfo(elements[1]).suffix();
+        QString ancienCheminImage = cheminBibliotheque + "/" + elements[0] + "." + extensionImage;
+        QString nouveauCheminImage = cheminBibliotheque + "/" + nouveauTitre + "." + extensionImage;
+
+        if (QFile::exists(ancienCheminImage)) {
+            if (!QFile::rename(ancienCheminImage, nouveauCheminImage)) {
+                QMessageBox::warning(this, "Erreur", "Impossible de renommer l'image associée au descripteur !");
+            }
+        } else {
+            QMessageBox::warning(this, "Erreur", "L'image associée au descripteur est introuvable !");
+        }
+    }
+
+    // 9. Confirmation
+    QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
 }
 
 
@@ -1081,7 +1081,7 @@ void MainWindow::on_RetourVersBiblio_clicked()
 {
     if (!biblioWindow) {
         // Créez une nouvelle instance si elle n'existe pas
-        biblioWindow = std::make_unique<BiblioWindow>();
+        biblioWindow = std::make_unique<BiblioWindow>(LoginUtilisateur);
     }
 
     biblioWindow->show(); // Affiche la fenêtre Bibliothèque

@@ -23,7 +23,7 @@ class MainWindow : public QMainWindow
 
 public:
     // Ajout d'un constructeur prenant le chemin de l'image en paramètre
-    explicit MainWindow(const QString &imagePath, BiblioWindow *parentBiblio = nullptr, QWidget *parent = nullptr);
+    explicit MainWindow(const QString &login, const QString &imagePath, BiblioWindow *parentBiblio = nullptr, QWidget *parent = nullptr);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -59,6 +59,7 @@ private:
     QGraphicsScene *sceneHisto;   // Scène pour afficher l'histogramme
     QImage image;                 // Image chargée
     Image_color* imageObj;              // Pointeur vers une image (gris ou couleur)
+    QString LoginUtilisateur;
 
     void afficherHistogramme(int histogramme[256]);   // Méthode pour afficher l'histogramme
     void afficherHistogrammeCanal(int histogramme[256], int canal); // Affichage des histogrammes par canal

@@ -13,12 +13,18 @@
 //#include "Library.hpp"
 #include <QInputDialog>
 
+#include "mainwindow.h"
+#include "connexionwindow.h"
+
+#include "mainwindow.h"
+#include "connexionwindow.h"
+
 const QString BiblioWindow::DEFAULT_FILE_PATH = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_test.txt";
 
 
-BiblioWindow::BiblioWindow(QWidget *parent)
+BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::BiblioWindow)
+    , ui(new Ui::BiblioWindow), LoginUtilisateur(login)
 {
     ui->setupUi(this);
 
@@ -35,7 +41,7 @@ BiblioWindow::BiblioWindow(QWidget *parent)
         this->move(x, y);
     }
 
-
+    qDebug() << "Utilisateur connecté : " << LoginUtilisateur;
     // Configurer le QListWidget pour afficher en mosaïque
     ui->AffichageBiblio->setViewMode(QListWidget::IconMode);
     ui->AffichageBiblio->setResizeMode(QListWidget::Adjust);
@@ -50,6 +56,8 @@ BiblioWindow::BiblioWindow(QWidget *parent)
 
     // Connecter le clic sur une image
     connect(ui->AffichageBiblio, &QListWidget::itemClicked, this, &BiblioWindow::on_AffichageBiblio_itemClicked);
+    connect(ui->Deco, &QPushButton::clicked, this, &BiblioWindow::on_Deco_clicked);
+
 }
 
 BiblioWindow::~BiblioWindow()
@@ -57,17 +65,17 @@ BiblioWindow::~BiblioWindow()
     delete ui;
 }
 
-void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
+void BiblioWindow::on_Deco_clicked()
 {
-    QString filePath = item->data(Qt::UserRole).toString(); // Récupérer le chemin complet
-    qDebug() << "Image cliquée : " << filePath;
+    gestionUtilisateur.deconnexion();
 
-    selectedImagePath = filePath; // Stocker le chemin de l'image sélectionnée
+    this->close();
 
-    // Rendre les boutons visibles
-    ui->TraitementButton->setVisible(true);
-    ui->DetailsButton->setVisible(true);
+    // Ouvre la fenêtre de connexion
+    connexionWindow = std::make_unique<ConnexionWindow>();
+    connexionWindow->show();
 }
+
 
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
@@ -129,6 +137,16 @@ void BiblioWindow::on_ChargeBoutton_clicked()
     }
 }
 
+
+void BiblioWindow::on_SaveBoutton_clicked()
+{
+    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer sous", "", "Text Files (*.txt);;All Files (*)");
+    if (!filePath.isEmpty()) {
+        library.sauvegarderDansFichier(filePath.toStdString());
+        QMessageBox::information(this, "Sauvegarde", "Bibliothèque sauvegardée dans le fichier.");
+    }
+}
+
 void BiblioWindow::loadDefaultFile(const QString &userLogin)
 {
     setUserLogin(userLogin); // Assurez-vous que le login est défini ici
@@ -185,16 +203,18 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
     mettreAJourCompteurImages();
 }
 
-void BiblioWindow::on_SaveBoutton_clicked()
+
+void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
 {
-    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer sous", "", "Text Files (*.txt);;All Files (*)");
-    if (!filePath.isEmpty()) {
-        library.sauvegarderDansFichier(filePath.toStdString());
-        QMessageBox::information(this, "Sauvegarde", "Bibliothèque sauvegardée dans le fichier.");
-    }
+    QString filePath = item->data(Qt::UserRole).toString(); // Récupérer le chemin complet
+    qDebug() << "Image cliquée : " << filePath;
+
+    selectedImagePath = filePath; // Stocker le chemin de l'image sélectionnée
+
+    // Rendre les boutons visibles
+    ui->TraitementButton->setVisible(true);
+    ui->DetailsButton->setVisible(true);
 }
-
-
 
 
 void BiblioWindow::on_TraitementButton_clicked()
@@ -204,7 +224,7 @@ void BiblioWindow::on_TraitementButton_clicked()
 
         // Créer une instance de MainWindow en passant `this` comme parent
         if (!mainWindow) {
-            mainWindow = std::make_unique<MainWindow>(selectedImagePath, this); // Passer l'instance actuelle
+            mainWindow = std::make_unique<MainWindow>(LoginUtilisateur,selectedImagePath, this); // Passer l'instance actuelle
         }
 
         // Afficher MainWindow

@@ -1,4 +1,5 @@
 #include "connexionwindow.h"
+#include "bibliowindow.h"
 #include "ui_connexionwindow.h"
 #include <QMessageBox>
 #include <QDebug>
@@ -68,6 +69,11 @@ void ConnexionWindow::setupLogo()
 ConnexionWindow::~ConnexionWindow()
 {
     delete ui;
+}
+
+QString ConnexionWindow::getLogin() const
+{
+    return LoginActuel;
 }
 
 void ConnexionWindow::on_Login_cursorPositionChanged(int arg1, int arg2)
