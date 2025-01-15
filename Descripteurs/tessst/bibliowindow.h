@@ -12,6 +12,7 @@
 #include <memory>
 #include <QVBoxLayout>
 
+#include "GestionUtilisateur.hpp"
 
 // Déclaration anticipée de MainWindow
 class MainWindow;
@@ -44,6 +45,7 @@ private slots:
     void on_ChargeBoutton_clicked(); // Charger la biblio .txt
     void on_SaveBoutton_clicked();
     void on_pushButtonRechercherp_clicked();
+    void on_Deco_clicked();
 
 private:
     Ui::BiblioWindow *ui;
@@ -55,6 +57,9 @@ private:
     std::unique_ptr<MainWindow> mainWindow; // Pointeur unique pour gérer la fenêtre MainWindow
     
     QString cheminBiblio;  // Variable membre pour stocker le chemin du fichier .txt
+
+    GestionUtilisateur gestionUtilisateur; // Instance pour gérer la déconnexion
+    std::unique_ptr<ConnexionWindow> connexionWindow; // Pointeur pour rouvrir la fenêtre de connexion
 
     void mettreAJourCompteurImages() ;
 

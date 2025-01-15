@@ -52,12 +52,26 @@ BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
 
     // Connecter le clic sur une image
     connect(ui->AffichageBiblio, &QListWidget::itemClicked, this, &BiblioWindow::on_AffichageBiblio_itemClicked);
+    connect(ui->Deco, &QPushButton::clicked, this, &BiblioWindow::on_Deco_clicked);
+
 }
 
 BiblioWindow::~BiblioWindow()
 {
     delete ui;
 }
+
+void BiblioWindow::on_Deco_clicked()
+{
+    gestionUtilisateur.deconnexion();
+
+    this->close();
+
+    // Ouvre la fenêtre de connexion
+    connexionWindow = std::make_unique<ConnexionWindow>();
+    connexionWindow->show();
+}
+
 
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
