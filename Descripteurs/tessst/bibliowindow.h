@@ -28,6 +28,8 @@ class BiblioWindow : public QMainWindow
 
 public:
     explicit BiblioWindow(const QString &login, QWidget *parent = nullptr);
+    void loadDefaultFile(const QString &userLogin); // Charger les images dans la liste
+    void setUserLogin(const QString &login); // Méthode pour définir le login utilisateur
     ~BiblioWindow();
     Library library;
 
@@ -41,17 +43,15 @@ private slots:
 
     void on_DetailsButton_clicked();
 
-
-    void on_ChargeBoutton_clicked(); // Charger la biblio .txt
     void on_SaveBoutton_clicked();
     void on_pushButtonRechercherp_clicked();
     void on_Deco_clicked();
+    void on_ChargeBoutton_clicked();  // Charger la biblio .txt
 
 private:
     Ui::BiblioWindow *ui;
     QString LoginUtilisateur;
     QString selectedImagePath; // Chemin de l'image sélectionnée
-    void loadImagesIntoList(const QString &directoryPath); // Charger les images dans la liste
     int currentImageNumber;  // Pour stocker le numéro de l'image
     double currentImagePrice; // Pour stocker le prix de l'image
     std::unique_ptr<MainWindow> mainWindow; // Pointeur unique pour gérer la fenêtre MainWindow
@@ -60,6 +60,8 @@ private:
 
     GestionUtilisateur gestionUtilisateur; // Instance pour gérer la déconnexion
     std::unique_ptr<ConnexionWindow> connexionWindow; // Pointeur pour rouvrir la fenêtre de connexion
+    static const QString DEFAULT_FILE_PATH;
+    QString userLogin; // Attribut pour stocker le login utilisateur
 
     void mettreAJourCompteurImages() ;
 
