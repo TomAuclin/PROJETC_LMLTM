@@ -206,8 +206,8 @@
    <widget class="QPushButton" name="RetourVersBiblio">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>530</y>
+      <x>50</x>
+      <y>510</y>
       <width>151</width>
       <height>31</height>
      </rect>

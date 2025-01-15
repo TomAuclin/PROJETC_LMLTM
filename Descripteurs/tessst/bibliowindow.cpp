@@ -50,7 +50,7 @@ BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
 
     ui->TraitementButton->setVisible(false);
     ui->DetailsButton->setVisible(false);
-    ui->pushButtonRechercherp->setVisible(false);
+    ui->pushButtonRechercherp->setVisible(true);
     ui->labelImageCount->setText("Nombre d'images : 0");
 
 
@@ -79,8 +79,6 @@ void BiblioWindow::on_Deco_clicked()
 
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
-    ui->pushButtonRechercherp->setVisible(true);
-
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
 
     if (!filePath.isEmpty()) {
