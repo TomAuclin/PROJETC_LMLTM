@@ -749,5 +749,3 @@ Library::~Library() {
     }
 }
 
-
-

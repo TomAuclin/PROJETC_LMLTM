@@ -1,0 +1,46 @@
+#include "connexion.h"
+#include "ui_connexion.h"
+#include <QMessageBox>  // Pour afficher un message d'erreur
+#include <QDebug>       // Pour afficher des informations de débogage
+
+Connexion::Connexion(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::Connexion)
+{
+    ui->setupUi(this);
+
+    // Connecter le bouton de connexion à la méthode on_connexionButton_clicked
+    connect(ui->connexionButton, &QPushButton::clicked, this, &Connexion::on_connexionButton_clicked);
+}
+
+Connexion::~Connexion()
+{
+    delete ui;
+}
+
+void Connexion::on_connexionButton_clicked()
+{
+    QString login = ui->loginLineEdit->text();  // Récupérer le login (qui sert aussi de mot de passe)
+
+    qDebug() << "Login saisi: " << login;
+
+    // Mettre à jour le login de la classe GestionUtilisateur
+    gestionUtilisateur.setLogin(login.toStdString());
+
+    // Appeler la méthode connexion de GestionUtilisateur
+    gestionUtilisateur.connexion();
+
+    // Vérifier si le login est correct
+    if (login == "ad-01-ao") {
+        qDebug() << "Connexion réussie";
+/*
+        // Créer et afficher la fenêtre de la bibliothèque
+        BiblioWindow *biblioWindow = new BiblioWindow();
+        biblioWindow->loadImagesFromDirectory("/media/sf_PROJETC_LMLTM/Bibliotheque/Gratuites");  // Remplacez par votre répertoire d'images
+        biblioWindow->show();
+        close();  // Fermer la fenêtre de connexion*/
+    } else {
+        qDebug() << "Connexion échouée";
+        QMessageBox::warning(this, "Erreur", "Identification échouée, essayez encore.");
+    }
+}

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "bibliowindow.h"
+#include "connexionwindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QGraphicsPixmapItem>
@@ -17,17 +18,18 @@
 // ----------------------------------------------------------------------------------------------
 
 
-MainWindow::MainWindow(const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
+MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     sceneImage(new QGraphicsScene(this)),
     sceneHisto(new QGraphicsScene(this)),
     imageObj(nullptr), // Initialisation du pointeur image à null
-    biblioWindow(parentBiblio) // Référence à la bibliothèque
+    biblioWindow(parentBiblio), // Référence à la bibliothèque
+    LoginUtilisateur(login)
 {
     ui->setupUi(this);
     setWindowTitle("Fenetre de traitement");
-   resize(1200, 600);
+    resize(1200, 600);
     QPixmap pixmap(imagePath);
 
 
@@ -48,6 +50,14 @@ MainWindow::MainWindow(const QString &imagePath, BiblioWindow *parentBiblio, QWi
     ui->Canal_R->setVisible(false);
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
+    
+    // si le user normal est connecter il ne peut pas ajouter, modifier ou supprimer un descripteur
+    // Pour "us-02-al"
+    if (LoginUtilisateur == "us-02-al") {
+        ui->actionAjouterDescripteur->setVisible(false);
+        ui->actionModifierDescripteur->setVisible(false);
+        ui->actionSupprimerDescripteur->setVisible(false);
+    }
 
     // Si un chemin d'image a été fourni, charger et afficher l'image
     if (!imagePath.isEmpty()) {
@@ -1071,7 +1081,7 @@ void MainWindow::on_RetourVersBiblio_clicked()
 {
     if (!biblioWindow) {
         // Créez une nouvelle instance si elle n'existe pas
-        biblioWindow = std::make_unique<BiblioWindow>();
+        biblioWindow = std::make_unique<BiblioWindow>(LoginUtilisateur);
     }
 
     biblioWindow->show(); // Affiche la fenêtre Bibliothèque

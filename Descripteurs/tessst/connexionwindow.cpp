@@ -1,4 +1,5 @@
 #include "connexionwindow.h"
+#include "bibliowindow.h"
 #include "ui_connexionwindow.h"
 #include <QMessageBox>
 #include <QDebug>
@@ -70,6 +71,11 @@ ConnexionWindow::~ConnexionWindow()
     delete ui;
 }
 
+QString ConnexionWindow::getLogin() const
+{
+    return LoginActuel;
+}
+
 void ConnexionWindow::on_Login_cursorPositionChanged(int arg1, int arg2)
 {
     Q_UNUSED(arg1);
@@ -84,9 +90,11 @@ void ConnexionWindow::on_connexionButton_clicked()
     if (login == "ad-01-ao" || login == "us-02-al" || login == "a") {
         qDebug() << "Connexion réussie";
 
+        LoginActuel = login;
+
         // Ouvrir la fenêtre BiblioWindow
         if (!biblioWindow) {
-            biblioWindow = std::make_unique<BiblioWindow>(nullptr); // Crée une instance de BiblioWindow sans parent
+            biblioWindow = std::make_unique<BiblioWindow>(LoginActuel); // Crée une instance de BiblioWindow sans parent
             qDebug() << "BiblioWindow créée";
         }
 

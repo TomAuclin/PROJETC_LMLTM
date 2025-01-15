@@ -13,11 +13,14 @@
 //#include "Library.hpp"
 #include <QInputDialog>
 
+#include "mainwindow.h"
+#include "connexionwindow.h"
 
 
-BiblioWindow::BiblioWindow(QWidget *parent)
+
+BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::BiblioWindow)
+    , ui(new Ui::BiblioWindow), LoginUtilisateur(login)
 {
     ui->setupUi(this);
 
@@ -34,7 +37,7 @@ BiblioWindow::BiblioWindow(QWidget *parent)
         this->move(x, y);
     }
 
-
+    qDebug() << "Utilisateur connecté : " << LoginUtilisateur;
     // Configurer le QListWidget pour afficher en mosaïque
     ui->AffichageBiblio->setViewMode(QListWidget::IconMode);
     ui->AffichageBiblio->setResizeMode(QListWidget::Adjust);
@@ -49,6 +52,8 @@ BiblioWindow::BiblioWindow(QWidget *parent)
 
     // Connecter le clic sur une image
     connect(ui->AffichageBiblio, &QListWidget::itemClicked, this, &BiblioWindow::on_AffichageBiblio_itemClicked);
+    connect(ui->Deco, &QPushButton::clicked, this, &BiblioWindow::on_Deco_clicked);
+
 }
 
 BiblioWindow::~BiblioWindow()
@@ -56,15 +61,25 @@ BiblioWindow::~BiblioWindow()
     delete ui;
 }
 
+void BiblioWindow::on_Deco_clicked()
+{
+    gestionUtilisateur.deconnexion();
+
+    this->close();
+
+    // Ouvre la fenêtre de connexion
+    connexionWindow = std::make_unique<ConnexionWindow>();
+    connexionWindow->show();
+}
+
+
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
     ui->pushButtonRechercherp->setVisible(true);
 
-    // Ouvrir la boîte de dialogue pour choisir un fichier .txt
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
 
     if (!filePath.isEmpty()) {
-        // Mémoriser le chemin du fichier sélectionné
         cheminBiblio = filePath;
 
         QFile file(filePath);
@@ -78,6 +93,8 @@ void BiblioWindow::on_ChargeBoutton_clicked()
         QStringList missingImages;
 
         QTextStream in(&file);
+        int compteur = 1; // Remise en place du compteur
+
         while (!in.atEnd()) {
             QString line = in.readLine();
             QStringList fields = line.split(',');
@@ -87,9 +104,11 @@ void BiblioWindow::on_ChargeBoutton_clicked()
                 QString imagePath = imageDirectory + "/" + imageName;
 
                 if (QFileInfo::exists(imagePath)) {
-                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), imageName);
-                    item->setData(Qt::UserRole, imagePath); // Enregistrer le chemin complet
+                    QString itemText = QString::number(compteur) + ". " + imageName; // Création du texte avec numéro
+                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText); // Utilisation de itemText
+                    item->setData(Qt::UserRole, imagePath);
                     ui->AffichageBiblio->addItem(item);
+                    compteur++; // Incrémentation du compteur
                 } else {
                     missingImages.append(imageName);
                 }
@@ -107,6 +126,7 @@ void BiblioWindow::on_ChargeBoutton_clicked()
         mettreAJourCompteurImages();
     }
 }
+
 
 void BiblioWindow::on_SaveBoutton_clicked()
 {
@@ -126,31 +146,33 @@ void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
 
     if (imageFiles.isEmpty()) {
         QMessageBox::information(this, "Aucune image", "Le dossier sélectionné ne contient aucune image.");
-         mettreAJourCompteurImages();
+        mettreAJourCompteurImages();
         return;
     }
 
     const QSize iconSize(150, 150);
+    int compteur = 1; // Remise en place du compteur
 
     foreach (const QString &fileName, imageFiles) {
         QString filePath = directoryPath + "/" + fileName;
         QPixmap pixmap(filePath);
 
         if (!pixmap.isNull()) {
+            QString itemText = QString::number(compteur) + ". " + fileName; // Création du texte avec numéro
             QListWidgetItem *item = new QListWidgetItem();
             item->setIcon(QIcon(pixmap.scaled(iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
             item->setData(Qt::UserRole, filePath);
+            item->setText(itemText); // Assigner le texte avec le numéro
             item->setSizeHint(iconSize);
 
             ui->AffichageBiblio->addItem(item);
+            compteur++; // Incrémentation du compteur
         } else {
             qDebug() << "Impossible de charger l'image : " << filePath;
         }
     }
 
     ui->AffichageBiblio->setIconSize(iconSize);
-
-    // Mettre à jour le compteur d'images après avoir ajouté les images
     mettreAJourCompteurImages();
 }
 
@@ -174,7 +196,7 @@ void BiblioWindow::on_TraitementButton_clicked()
 
         // Créer une instance de MainWindow en passant `this` comme parent
         if (!mainWindow) {
-            mainWindow = std::make_unique<MainWindow>(selectedImagePath, this); // Passer l'instance actuelle
+            mainWindow = std::make_unique<MainWindow>(LoginUtilisateur,selectedImagePath, this); // Passer l'instance actuelle
         }
 
         // Afficher MainWindow

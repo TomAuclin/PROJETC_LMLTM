@@ -20,5 +20,3 @@ Tom, CotePont_gris.pgm, 97, 120, L, gris, 4, 97
 Tom, CotePont_couleur.CR2, 96, 153, L, couleur, 4, 96
 Tom, ChaussureLydia_gris.pgm, 95, 5000, L, gris, 4, 95
 Tom, ChaussureLydia_couleur.CR2, 94, 10000, L, couleur, 5, 94
-Lydia, BriqueSolLoin_gris.pgm, 93, 105, L, gris, 4, 93
-Lydia, BriqueSolLoin_couleur.CR2, 92, 110, L, couleur, 4, 92
