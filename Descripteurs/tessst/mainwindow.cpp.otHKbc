@@ -66,9 +66,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::loadAndDisplayImage(const QString &fileName)
 {
-    // Obtenir les dimensions de la fenêtre d'affichage (QGraphicsView)
-    QSize viewSize = ui->AfficherImage->viewport()->size();
-
     if (!fileName.isEmpty()) {
         try {
             // Réinitialiser les scènes
@@ -108,32 +105,24 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                 imageObj = new ImageCouleur(imageCouleur); // Charger comme image couleur
             }
 
-            // Charger l'image dans sceneImage
+            // Charger l'image dans sceneImage et redimensionner
             QPixmap pixmap(fileName);
             if (!pixmap.isNull()) {
-                // Définir la scène sur le QGraphicsView si ce n'est pas déjà fait
-                ui->AfficherImage->setScene(sceneImage);
-
-                // Redimensionner l'image pour correspondre à la taille de la fenêtre
+                // Redimensionner le QPixmap à la taille exacte du QGraphicsView
+                QSize viewSize = ui->AfficherImage->viewport()->size();
                 QPixmap scaledPixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
                 // Ajouter le pixmap redimensionné à la scène
                 sceneImage->addPixmap(scaledPixmap);
-                sceneImage->setSceneRect(scaledPixmap.rect()); // Met à jour le rectangle de la scène
 
-                // Ajuster la vue pour s'assurer qu'elle correspond à la scène
+                // Adapter la vue pour afficher l'image correctement
                 ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
-
-                // Forcer une mise à jour immédiate de l'affichage
-                ui->AfficherImage->update();
             }
         } catch (const std::exception &e) {
             QMessageBox::critical(this, tr("Erreur"), tr(e.what()));
         }
     }
 }
-
-
 
 
 // ----------------------------------------------------------------------------------------------
