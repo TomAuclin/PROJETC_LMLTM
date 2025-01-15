@@ -25,6 +25,7 @@ class BiblioWindow : public QMainWindow
 
 public:
     explicit BiblioWindow(QWidget *parent = nullptr);
+    void on_ChargeBoutton_clicked(const QString &userLogin); // Charger la biblio .txt
     ~BiblioWindow();
     Library library;
 
@@ -38,8 +39,6 @@ private slots:
 
     void on_DetailsButton_clicked();
 
-
-    void on_ChargeBoutton_clicked(); // Charger la biblio .txt
     void on_SaveBoutton_clicked();
     void on_pushButtonRechercherp_clicked();
 

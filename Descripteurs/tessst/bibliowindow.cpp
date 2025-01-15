@@ -68,7 +68,7 @@ void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
     ui->DetailsButton->setVisible(true);
 }
 
-void BiblioWindow::on_ChargeBoutton_clicked()
+void BiblioWindow::on_ChargeBoutton_clicked(const QString &userLogin)
 {
     ui->pushButtonRechercherp->setVisible(true);
 
@@ -88,24 +88,30 @@ void BiblioWindow::on_ChargeBoutton_clicked()
         QStringList missingImages;
 
         QTextStream in(&file);
-        int compteur = 1; // Remise en place du compteur
+        int compteur = 1;
 
         while (!in.atEnd()) {
             QString line = in.readLine();
             QStringList fields = line.split(',');
 
-            if (fields.size() >= 2) {
+            if (fields.size() >= 5) { // S'assurer qu'il y a assez de colonnes
                 QString imageName = fields[1].trimmed();
+                QString accessType = fields[4].trimmed();
                 QString imagePath = imageDirectory + "/" + imageName;
 
-                if (QFileInfo::exists(imagePath)) {
-                    QString itemText = QString::number(compteur) + ". " + imageName; // Création du texte avec numéro
-                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText); // Utilisation de itemText
-                    item->setData(Qt::UserRole, imagePath);
-                    ui->AffichageBiblio->addItem(item);
-                    compteur++; // Incrémentation du compteur
-                } else {
-                    missingImages.append(imageName);
+                // Vérifier l'accès en fonction du login utilisateur
+                if ((userLogin == "us-02-al" && accessType == "O") ||
+                    (userLogin != "us-02-al" && accessType == "L")) {
+
+                    if (QFileInfo::exists(imagePath)) {
+                        QString itemText = QString::number(compteur) + ". " + imageName;
+                        QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText);
+                        item->setData(Qt::UserRole, imagePath);
+                        ui->AffichageBiblio->addItem(item);
+                        compteur++;
+                    } else {
+                        missingImages.append(imageName);
+                    }
                 }
             }
         }
