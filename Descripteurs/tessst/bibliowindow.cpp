@@ -102,7 +102,7 @@ void BiblioWindow::on_ChargeBoutton_clicked()
 
                 // Vérifier l'accès en fonction du login utilisateur
                 if ((userLogin == "us-02-al" && accessType == "O") ||
-                    (userLogin != "us-02-al" && accessType == "L")) {
+                    (userLogin == "ad-01-ao" && (accessType == "O" || accessType == "L"))) {
 
                     if (QFileInfo::exists(imagePath)) {
                         QString itemText = QString::number(compteur) + ". " + imageName;
@@ -131,6 +131,8 @@ void BiblioWindow::on_ChargeBoutton_clicked()
 
 void BiblioWindow::loadDefaultFile(const QString &userLogin)
 {
+    setUserLogin(userLogin); // Assurez-vous que le login est défini ici
+
     QString filePath = DEFAULT_FILE_PATH;
 
     QFile file(filePath);
@@ -157,7 +159,7 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
 
             // Vérifier l'accès en fonction du login utilisateur
             if ((userLogin == "us-02-al" && accessType == "O") ||
-                (userLogin != "us-02-al" && accessType == "L")) {
+                (userLogin == "ad-01-ao" && (accessType == "O" || accessType == "L"))) {
 
                 if (QFileInfo::exists(imagePath)) {
                     QString itemText = QString::number(compteur) + ". " + imageName;
