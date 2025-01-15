@@ -56,15 +56,25 @@ BiblioWindow::~BiblioWindow()
     delete ui;
 }
 
+void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
+{
+    QString filePath = item->data(Qt::UserRole).toString(); // Récupérer le chemin complet
+    qDebug() << "Image cliquée : " << filePath;
+
+    selectedImagePath = filePath; // Stocker le chemin de l'image sélectionnée
+
+    // Rendre les boutons visibles
+    ui->TraitementButton->setVisible(true);
+    ui->DetailsButton->setVisible(true);
+}
+
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
     ui->pushButtonRechercherp->setVisible(true);
 
-    // Ouvrir la boîte de dialogue pour choisir un fichier .txt
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
 
     if (!filePath.isEmpty()) {
-        // Mémoriser le chemin du fichier sélectionné
         cheminBiblio = filePath;
 
         QFile file(filePath);
@@ -78,6 +88,8 @@ void BiblioWindow::on_ChargeBoutton_clicked()
         QStringList missingImages;
 
         QTextStream in(&file);
+        int compteur = 1; // Remise en place du compteur
+
         while (!in.atEnd()) {
             QString line = in.readLine();
             QStringList fields = line.split(',');
@@ -87,9 +99,11 @@ void BiblioWindow::on_ChargeBoutton_clicked()
                 QString imagePath = imageDirectory + "/" + imageName;
 
                 if (QFileInfo::exists(imagePath)) {
-                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), imageName);
-                    item->setData(Qt::UserRole, imagePath); // Enregistrer le chemin complet
+                    QString itemText = QString::number(compteur) + ". " + imageName; // Création du texte avec numéro
+                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText); // Utilisation de itemText
+                    item->setData(Qt::UserRole, imagePath);
                     ui->AffichageBiblio->addItem(item);
+                    compteur++; // Incrémentation du compteur
                 } else {
                     missingImages.append(imageName);
                 }
@@ -108,15 +122,6 @@ void BiblioWindow::on_ChargeBoutton_clicked()
     }
 }
 
-void BiblioWindow::on_SaveBoutton_clicked()
-{
-    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer sous", "", "Text Files (*.txt);;All Files (*)");
-    if (!filePath.isEmpty()) {
-        library.sauvegarderDansFichier(filePath.toStdString());
-        QMessageBox::information(this, "Sauvegarde", "Bibliothèque sauvegardée dans le fichier.");
-    }
-}
-
 void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
 {
     ui->AffichageBiblio->clear();
@@ -126,45 +131,46 @@ void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
 
     if (imageFiles.isEmpty()) {
         QMessageBox::information(this, "Aucune image", "Le dossier sélectionné ne contient aucune image.");
-         mettreAJourCompteurImages();
+        mettreAJourCompteurImages();
         return;
     }
 
     const QSize iconSize(150, 150);
+    int compteur = 1; // Remise en place du compteur
 
     foreach (const QString &fileName, imageFiles) {
         QString filePath = directoryPath + "/" + fileName;
         QPixmap pixmap(filePath);
 
         if (!pixmap.isNull()) {
+            QString itemText = QString::number(compteur) + ". " + fileName; // Création du texte avec numéro
             QListWidgetItem *item = new QListWidgetItem();
             item->setIcon(QIcon(pixmap.scaled(iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
             item->setData(Qt::UserRole, filePath);
+            item->setText(itemText); // Assigner le texte avec le numéro
             item->setSizeHint(iconSize);
 
             ui->AffichageBiblio->addItem(item);
+            compteur++; // Incrémentation du compteur
         } else {
             qDebug() << "Impossible de charger l'image : " << filePath;
         }
     }
 
     ui->AffichageBiblio->setIconSize(iconSize);
-
-    // Mettre à jour le compteur d'images après avoir ajouté les images
     mettreAJourCompteurImages();
 }
 
-void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
+void BiblioWindow::on_SaveBoutton_clicked()
 {
-    QString filePath = item->data(Qt::UserRole).toString(); // Récupérer le chemin complet
-    qDebug() << "Image cliquée : " << filePath;
-
-    selectedImagePath = filePath; // Stocker le chemin de l'image sélectionnée
-
-    // Rendre les boutons visibles
-    ui->TraitementButton->setVisible(true);
-    ui->DetailsButton->setVisible(true);
+    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer sous", "", "Text Files (*.txt);;All Files (*)");
+    if (!filePath.isEmpty()) {
+        library.sauvegarderDansFichier(filePath.toStdString());
+        QMessageBox::information(this, "Sauvegarde", "Bibliothèque sauvegardée dans le fichier.");
+    }
 }
+
+
 
 
 void BiblioWindow::on_TraitementButton_clicked()
