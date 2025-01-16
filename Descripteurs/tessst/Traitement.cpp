@@ -367,7 +367,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 // ************************ Segmentation couleur ************************
 
 // ----------------------------------------------------------------------------------------------
-cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux) {
+/*cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux) {
     if (image.empty() || image.channels() != 3) {
         std::cerr << "Image invalide ou non en couleur." << std::endl;
         return cv::Mat();
@@ -392,16 +392,36 @@ cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector
         Histogramme::calculerHistogramme(imageCouleur, histogramme, canal);
 
         int totalPixels = image.rows * image.cols;
-        int seuilPixels = static_cast<int>(totalPixels * 0.3); // 30% des pixels les plus intenses
-        int cumulativeSum = 0;
+        int seuilPixels = static_cast<int>(totalPixels * 0.4); // 40% des pixels
 
-        for (int i = 255; i >= 0; i--) {
-            cumulativeSum += histogramme[i];
-            if (cumulativeSum >= seuilPixels) {
-                seuils[canal] = i;
-                break;
+        // Trouver l'indice du pic maximum dans l'histogramme
+        int indiceMax = 0;
+        int maxValeur = 0;
+        for (int i = 0; i < 256; i++) {
+            if (histogramme[i] > maxValeur) {
+                maxValeur = histogramme[i];
+                indiceMax = i;
             }
         }
+
+        // Accumuler les valeurs autour du pic pour atteindre 40%
+        int sommeCumulee = 0;
+        int gauche = indiceMax, droite = indiceMax;
+        while (sommeCumulee < seuilPixels && (gauche >= 0 || droite <= 255)) {
+            if (gauche >= 0) {
+                sommeCumulee += histogramme[gauche--];
+            }
+            if (droite <= 255 && sommeCumulee < seuilPixels) {
+                sommeCumulee += histogramme[droite++];
+            }
+        }
+
+        // Étendre la plage manuellement
+        gauche = std::max(0, gauche - 10);   // Étendre 10 valeurs à gauche
+        droite = std::min(255, droite + 10); // Étendre 10 valeurs à droite
+
+        // Définir le seuil comme la limite supérieure atteinte
+        seuils[canal] = droite;
     }
 
     // Création d'une image filtrée
@@ -415,20 +435,60 @@ cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector
 
             // Vérification pour chaque combinaison de canaux
             if (std::find(canaux.begin(), canaux.end(), 0) != canaux.end() &&
-                rouge >= seuils[0] && rouge > bleu * 1.5 && rouge > vert * 1.4) {
+                rouge >= seuils[0] && rouge > bleu * 1.1 && rouge > vert * 1.1) {
                 resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels rouges
             }
             if (std::find(canaux.begin(), canaux.end(), 1) != canaux.end() &&
-                vert >= seuils[1] && vert > rouge * 0.9 && vert > bleu * 0.9) {
+                vert >= seuils[1] && vert > rouge * 1.1 && vert > bleu * 1.1) {
                 resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels verts
             }
             if (std::find(canaux.begin(), canaux.end(), 2) != canaux.end() &&
-                bleu >= seuils[2] && bleu > rouge * 0.8 && bleu > vert * 0.8) {
+                bleu >= seuils[2] && bleu > rouge * 1.1 && bleu > vert * 1.1) {
                 resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels bleus
             }
         }
     }
 
     return resultat;
+}*/
+
+cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux) {
+    if (image.empty() || image.channels() != 3) {
+        std::cerr << "Image invalide ou non en couleur." << std::endl;
+        return cv::Mat();
+    }
+
+    // Conversion de l'image en espace HSV
+    cv::Mat imageHSV;
+    cv::cvtColor(image, imageHSV, cv::COLOR_BGR2HSV);
+
+    // Création des masques pour chaque canal
+    cv::Mat masqueFinal = cv::Mat::zeros(image.size(), CV_8U);
+
+    for (int canal : canaux) {
+        cv::Mat masque;
+        if (canal == 2) { // Rouge
+            cv::Mat masque1, masque2;
+            cv::inRange(imageHSV, cv::Scalar(0, 15, 30), cv::Scalar(15, 255, 255), masque1);  // Rouge clair
+            cv::inRange(imageHSV, cv::Scalar(165, 15, 30), cv::Scalar(179, 255, 255), masque2); // Rouge sombre
+            masque = masque1 | masque2; // Combiner les 2 masques de rouge
+        } else if (canal == 1) { // Vert
+            cv::inRange(imageHSV, cv::Scalar(45, 15, 30), cv::Scalar(90, 255, 255), masque); // Vert
+        } else if (canal == 0) { // Bleu
+            cv::inRange(imageHSV, cv::Scalar(90, 15, 30), cv::Scalar(135, 255, 255), masque); // Bleu
+        }
+
+        masqueFinal |= masque;
+    }   
+    // Masque final sur l'image originale
+    cv::Mat resultat;
+    image.copyTo(resultat, masqueFinal);
+
+    return resultat;
 }
+
+
+
+
+
 
