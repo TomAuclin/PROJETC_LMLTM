@@ -14,16 +14,13 @@ Lydia, SolBois01_gris.pgm, 45, 2, L, gris, 4, 45
 Lydia, PontGauche01_couleur.CR2, 42, 5, L, couleur, 5, 42
 Lydia, PlanteEau01_couleur.CR2, 40, 9, L, couleur, 5, 40
 Tom, PanneauPieton_gris.pgm, 37, 1, L, gris, 4, 37
-Tom, LimaceVelo_couleur.CR2, 34, 9, L, couleur, 3, 34
 Tom, CedezPassage01_couleur.CR2, 30, 3, L, couleur, 5, 30
 Lydia, BateauCote_couleur.CR2, 26, 9, L, couleur, 5, 26
 Tom, ArbreMultiBranche_gris.pgm, 19, 7, L, gris, 4, 19
-Tom, Ville_couleur.CR2, 90, 78, L, couleur, 5, 90
 Tom, Rugby_couleur.CR2, 84, 72, L, couleur, 5, 84
 Lydia, Mario01_gris.pgm, 77, 24, L, gris, 4, 77
 Lydia, Mario01_couleur.CR2, 76, 93, L, couleur, 5, 76
 Tom, LaboPhonix_couleur.CR2, 72, 98, L, couleur, 4, 72
-Tom, GrosArbre01_couleur.CR2, 70, 83, L, couleur, 5, 70
 Lydia, Grille01_couleur.CR2, 68, 60, L, couleur, 5, 68
 Tom, DomePont_couleur.CR2, 66, 99, L, couleur, 5, 66
 Tom, BriqueSol01_gris.pgm, 59, 10, L, gris, 2, 59
