@@ -826,37 +826,40 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
         return;
     }
 
-    // 4. Demander à l'utilisateur de choisir le nom du fichier de la nouvelle bibliothèque
-    QString nouveauNomFichier = QInputDialog::getText(this, "Nom de la nouvelle bibliothèque", "Entrez le nom du nouveau fichier .txt :", QLineEdit::Normal, "nouvelle_bibliotheque.txt", &ok);
-    if (!ok || nouveauNomFichier.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
-        return;
+    // 4. Demander où enregistrer les modifications
+    bool enregistrerDansActuel = QMessageBox::question(this, "Choix de sauvegarde",
+                                                       "Souhaitez-vous enregistrer dans le fichier actuel ?",
+                                                       QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes;
+
+    QString cheminFichier;
+    if (!enregistrerDansActuel) {
+        bool ok;
+        QString nouveauNomFichier = QInputDialog::getText(this, "Nom du nouveau fichier",
+                                                          "Entrez le nom du nouveau fichier .txt :",
+                                                          QLineEdit::Normal, "nouvelle_bibliotheque.txt", &ok);
+        if (!ok || nouveauNomFichier.isEmpty()) {
+            QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
+            return;
+        }
+        cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/" + nouveauNomFichier;
+    } else {
+        cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
     }
 
-    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
-    QString cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
-    QString cheminNouveauFichier = cheminFichier + "/" + nouveauNomFichier;
-
-    // 5. Copier le fichier texte existant pour créer une nouvelle version
-    QString cheminDescripteur = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
-    if (!QFile::copy(cheminDescripteur, cheminNouveauFichier)) {
-        QMessageBox::warning(this, "Erreur", "La création de la nouvelle bibliothèque a échoué !");
-        return;
-    }
-
-    // 6. Ajouter le nouveau descripteur au fichier texte
-    QFile fichierDescripteur(cheminNouveauFichier);
+    // 5. Ajouter uniquement le nouveau descripteur au fichier choisi
+    QFile fichierDescripteur(cheminFichier);
     if (fichierDescripteur.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream sortie(&fichierDescripteur);
         sortie << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", " << numero << ", " << prix << ", "
                << acces << ", " << type << ", " << nbTraitement << ", " << numero << "\n";
         fichierDescripteur.close();
     } else {
-        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier de la nouvelle bibliothèque !");
+        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier de la bibliothèque !");
         return;
     }
 
-    // 7. Copier l'image dans la bibliothèque avec le même nom que le titre
+    // 6. Copier l'image dans la bibliothèque
+    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
     QString extensionImage = QFileInfo(cheminImageSource).suffix();
     QString cheminImageDestination = cheminBibliotheque + "/" + titre + "." + extensionImage;
     if (!QFile::copy(cheminImageSource, cheminImageDestination)) {
@@ -864,7 +867,7 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
         return;
     }
 
-    // 8. Ajouter l'objet Image à la bibliothèque
+    // 7. Ajouter l'objet Image à la bibliothèque
     Image nouvelleImage(cheminImageDestination.toStdString(),
                         titre.toStdString(),
                         numero,
@@ -876,14 +879,11 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
 
     library.ajouterDescripteurs(nouvelleImage);
 
-    // 9. Confirmation
-    QMessageBox::information(this, "Succès", "Le descripteur, l'image et la nouvelle bibliothèque ont été créés avec succès !");
+    // 8. Confirmation
+    QMessageBox::information(this, "Succès", "Le descripteur a été ajouté avec succès !");
 }
 
-
-
-// Modifier
-
+// Modifier un descripteur
 void MainWindow::on_actionModifierDescripteur_triggered() {
     // 1. Définir le chemin fixe du dossier descripteurs
     QString cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
@@ -960,19 +960,37 @@ void MainWindow::on_actionModifierDescripteur_triggered() {
                             + QString::number(nouveauPrix) + ", " + nouvelAcces + ", " + nouveauType + ", "
                             + QString::number(nouveauNbTraitement) + ", " + QString::number(nouveauNumero) + "\n";
 
-    contenu += nouvelleLigne;
+    // 7. Demander où enregistrer les modifications
+    bool enregistrerDansActuel = QMessageBox::question(this, "Choix de sauvegarde",
+                                                       "Souhaitez-vous enregistrer dans le fichier actuel ?",
+                                                       QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes;
 
-    // 7. Écrire les modifications dans le fichier
-    if (!fichierDescripteur.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, "Erreur", "Impossible d'écrire dans le fichier descripteurs.txt !");
+    QString cheminFichierFinal;
+    if (!enregistrerDansActuel) {
+        QString nouveauNomFichier = QInputDialog::getText(this, "Nom du nouveau fichier",
+                                                          "Entrez le nom du nouveau fichier .txt :",
+                                                          QLineEdit::Normal, "modifications_bibliotheque.txt", &ok);
+        if (!ok || nouveauNomFichier.isEmpty()) {
+            QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
+            return;
+        }
+        cheminFichierFinal = cheminDescripteurs + "/" + nouveauNomFichier;
+    } else {
+        cheminFichierFinal = cheminDescripteurComplet;
+    }
+
+    // 8. Ajouter uniquement la ligne modifiée au fichier choisi
+    QFile fichierFinal(cheminFichierFinal);
+    if (fichierFinal.open(QIODevice::Append | QIODevice::Text)) {
+        QTextStream fluxEcriture(&fichierFinal);
+        fluxEcriture << nouvelleLigne;
+        fichierFinal.close();
+    } else {
+        QMessageBox::warning(this, "Erreur", "Impossible d'écrire dans le fichier descripteurs !");
         return;
     }
 
-    QTextStream fluxEcriture(&fichierDescripteur);
-    fluxEcriture << contenu;
-    fichierDescripteur.close();
-
-    // 8. Renommer l'image si le titre a été modifié
+    // 9. Renommer l'image si le titre a été modifié
     QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
     if (nouveauTitre != elements[0]) {
         QString extensionImage = QFileInfo(elements[1]).suffix();
@@ -988,7 +1006,7 @@ void MainWindow::on_actionModifierDescripteur_triggered() {
         }
     }
 
-    // 9. Confirmation
+    // 10. Confirmation
     QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
 }
 
