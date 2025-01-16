@@ -12,6 +12,10 @@
 #include <QScreen>
 //#include "Library.hpp"
 #include <QInputDialog>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 
 
@@ -240,7 +244,7 @@ void BiblioWindow::on_DetailsButton_clicked() {
 }
 
 
-void BiblioWindow::on_pushButtonRechercherp_clicked() {
+/*void BiblioWindow::on_pushButtonRechercherp_clicked() {
 
     bool ok;
     int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
@@ -269,6 +273,86 @@ void BiblioWindow::on_pushButtonRechercherp_clicked() {
         qDebug() << "L'utilisateur a annulé la saisie.";
     }
 }
+*/
+/*
+void BiblioWindow::on_pushButtonRechercherp_clicked() {
+    bool ok;
+    std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+    int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
+                                           tr("Saisissez le numéro de l'image pour avoir son prix :"),
+                                           1, 1, ui->AffichageBiblio->count(), 1, &ok);  // L'index commence à 1
+    if (ok) {
+        // Récupération de l'élément correspondant au numéro
+        QListWidgetItem *item = ui->AffichageBiblio->item(numeroImage - 1);
+        if (!item) {
+            QMessageBox::warning(this, "Erreur", "Aucune image correspondant à ce numéro !");
+            return;
+        }
+
+        // Extraction du titre de l'image depuis le texte de l'élément
+        QString itemText = item->text();
+        QString titreCherche = itemText.section('.', 1).trimmed(); // Extrait le texte après le numéro et le point
+        qDebug() << "Titre extrait : " << titreCherche;
+
+        Image image;
+        image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
+
+        // Associe le descripteur de l'image et récupère son prix
+        image.associerDescripteur(cheminDescripteurs);
+
+        // Formatage du prix avec le symbole €
+        std::string prixAvecEuro = std::to_string(image.getPrix()) + " €";
+        QString prix = QString::fromStdString(prixAvecEuro);
+
+        // Affichage du prix de l'image
+        QString details = QString("Le prix de l'image numéro %1 est : %2")
+                              .arg(numeroImage)
+                              .arg(prix);
+        QMessageBox::information(this, "Résultat", details);
+    } else {
+        qDebug() << "L'utilisateur a annulé la saisie.";
+    }
+}*/
+
+void BiblioWindow::on_pushButtonRechercherp_clicked() {
+    bool ok;
+    std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+    int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
+                                           tr("Saisissez le numéro de l'image pour avoir son prix :"),
+                                           1, 1, ui->AffichageBiblio->count(), 1, &ok);  // L'index commence à 1
+    if (ok) {
+        // Récupération de l'élément correspondant au numéro
+        QListWidgetItem *item = ui->AffichageBiblio->item(numeroImage - 1);
+        if (!item) {
+            QMessageBox::warning(this, "Erreur", "Aucune image correspondant à ce numéro !");
+            return;
+        }
+
+        // Extraction du titre de l'image depuis le texte de l'élément
+        QString itemText = item->text();
+        QString titreCherche = itemText.section('.', 1).trimmed(); // Extrait le texte après le numéro et le point
+        qDebug() << "Titre extrait : " << titreCherche;
+
+        Image image;
+        image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
+
+        // Association des descripteurs pour récupérer le prix
+        image.associerDescripteur(cheminDescripteurs);
+
+        // Formatage du prix avec le symbole €
+        std::string prixAvecEuro = std::to_string(image.getPrix()) + " €";
+        QString prix = QString::fromStdString(prixAvecEuro);
+
+        // Affichage du prix de l'image
+        QString details = QString("Le prix de l'image numéro %1 est : %2")
+                              .arg(numeroImage)
+                              .arg(prix);
+        QMessageBox::information(this, "Résultat", details);
+    } else {
+        qDebug() << "L'utilisateur a annulé la saisie.";
+    }
+}
+
 
 
 void BiblioWindow::mettreAJourCompteurImages() {
