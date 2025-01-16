@@ -425,7 +425,7 @@ void MainWindow::on_DetectionDroite_clicked()
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
-
+QMessageBox::information(this, tr("Information"), tr("Attention : Cette fonctionnalité est en cours de développement. Les résultats peuvent être imprécis."));
     cv::Mat imageMat;
 
     // Si l'image est en couleur
