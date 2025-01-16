@@ -206,14 +206,14 @@
    <widget class="QPushButton" name="RetourVersBiblio">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>470</y>
-      <width>80</width>
-      <height>25</height>
+      <x>30</x>
+      <y>450</y>
+      <width>191</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Retour</string>
+     <string>Retour vers Bibliothèque</string>
     </property>
    </widget>
   </widget>

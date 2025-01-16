@@ -113,3 +113,4 @@ OpenSources, Barbara_gris.pgm, 4, 0, O, gris, 3, 4
 OpenSources, Barbara_couleur.png, 3, 0, O, couleur, 4, 3
 OpenSources, Baboon_gris.pgm, 2, 0, O, gris, 4, 2
 OpenSources, Baboon_couleur.png, 1, 0, O, couleur, 5, 1
+Logogo, logo_fac.png, 3000, 0, O, couleur, 1, 3000
