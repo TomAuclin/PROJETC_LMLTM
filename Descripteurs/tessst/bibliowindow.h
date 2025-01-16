@@ -9,6 +9,7 @@
 #include "Library.hpp"
 //#include "mainwindow.h"
 //#include "connexionwindow.h"
+#include "bibliowindow.h"
 #include <memory>
 #include <QVBoxLayout>
 
@@ -27,6 +28,7 @@ class BiblioWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    void loadImagesIntoList(const QString &directoryPath);
     explicit BiblioWindow(const QString &login, QWidget *parent = nullptr);
     void loadDefaultFile(const QString &userLogin); // Charger les images dans la liste
     void setUserLogin(const QString &login); // Méthode pour définir le login utilisateur
@@ -47,6 +49,11 @@ private slots:
     void on_pushButtonRechercherp_clicked();
     void on_Deco_clicked();
     void on_ChargeBoutton_clicked();  // Charger la biblio .txt
+
+    //menu descripteur
+    void on_actionAjouterDescripteur_triggered();
+    void on_actionModifierDescripteur_triggered();
+    void on_actionSupprimerDescripteur_triggered();
 
 private:
     Ui::BiblioWindow *ui;
