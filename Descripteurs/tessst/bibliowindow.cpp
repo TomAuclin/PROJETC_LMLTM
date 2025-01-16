@@ -23,7 +23,7 @@
 #include "mainwindow.h"
 #include "connexionwindow.h"
 
-const QString BiblioWindow::DEFAULT_FILE_PATH = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_test.txt";
+const QString BiblioWindow::DEFAULT_FILE_PATH = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
 
 
 BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
