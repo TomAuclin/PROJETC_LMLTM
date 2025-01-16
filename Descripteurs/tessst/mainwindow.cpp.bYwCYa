@@ -23,14 +23,21 @@ MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWin
     ui(new Ui::MainWindow),
     sceneImage(new QGraphicsScene(this)),
     seceneResultat(new QGraphicsScene(this)),
-    imageObj(nullptr),
-    biblioWindow(parentBiblio),
-    LoginUtilisateur(login),
-    selectedImagePath(imagePath) // Initialisation du chemin d'image
+    imageObj(nullptr), // Initialisation du pointeur image à null
+    biblioWindow(parentBiblio), // Référence à la bibliothèque
+    LoginUtilisateur(login)
 {
     ui->setupUi(this);
-    setWindowTitle("Fenetre de traitement");
+    setWindowTitle("Fenêtre de traitement");
     resize(1200, 600);
+
+    // Initialiser les scènes
+    ui->AfficherImage->setScene(sceneImage);
+    ui->AffichageResultat->setScene(seceneResultat);
+
+    // Réinitialiser les scènes
+    sceneImage->clear();
+    seceneResultat->clear();
 
     // Centrer la fenêtre sur l'écran
     QScreen *screen = QGuiApplication::primaryScreen();
@@ -41,13 +48,21 @@ MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWin
         this->move(x, y);
     }
 
-    // Initialiser les scènes
-    ui->AfficherImage->setScene(sceneImage);
-    ui->AffichageResultat->setScene(seceneResultat);
+    // Si un chemin d'image a été fourni, charger et afficher l'image
+    if (!imagePath.isEmpty()) {
+        loadAndDisplayImage(imagePath);
+    }
 
-    // Charger l'image au démarrage
-    if (!selectedImagePath.isEmpty()) {
-        loadAndDisplayImage(selectedImagePath);
+    // Ajouter un bouton "Retour" au bas de la fenêtre
+    QPushButton *retourButton = new QPushButton("Retour à la Bibliothèque", this);
+    retourButton->setGeometry(10, this->height() - 50, 200, 40); // Position du bouton
+    connect(retourButton, &QPushButton::clicked, this, &MainWindow::on_RetourVersBiblio_clicked);
+
+    // Gérer les permissions utilisateur
+    if (LoginUtilisateur == "us-02-al") {
+        ui->actionAjouterDescripteur->setVisible(false);
+        ui->actionModifierDescripteur->setVisible(false);
+        ui->actionSupprimerDescripteur->setVisible(false);
     }
 }
 
@@ -66,25 +81,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::loadAndDisplayImage(const QString &fileName)
 {
-    // Obtenir les dimensions de la fenêtre d'affichage (QGraphicsView)
-    QSize viewSize = ui->AfficherImage->viewport()->size();
-
     if (!fileName.isEmpty()) {
         try {
             // Réinitialiser les scènes
             sceneImage->clear();
-            seceneResultat->clear();
+            sceneResultat->clear(); // Supprimer l'image précédente dans le résultat
+            selectedImagePath = fileName; // Mettre à jour le chemin de l'image sélectionnée
 
-            // Libérer l'objet image précédent
-            delete imageObj;
+            delete imageObj; // Libérer l'ancien objet imageObj, s'il existe
             imageObj = nullptr;
 
             QImage img(fileName);
+
             if (img.isNull()) {
                 throw std::runtime_error("L'image n'a pas pu être chargée.");
             }
 
-            // Charger et traiter l'image
+            // Vérifier si l'image est en niveaux de gris ou en couleur
             if (img.format() == QImage::Format_Grayscale8) {
                 std::vector<std::vector<uint8_t>> imageGris;
                 for (int y = 0; y < img.height(); ++y) {
@@ -108,33 +121,26 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                 imageObj = new ImageCouleur(imageCouleur); // Charger comme image couleur
             }
 
-            // Charger l'image dans sceneImage
+            // Charger l'image et l'afficher dans le QGraphicsView
             QPixmap pixmap(fileName);
+
             if (!pixmap.isNull()) {
-                // Définir la scène sur le QGraphicsView si ce n'est pas déjà fait
+                // Ajouter la nouvelle image à la scène
+                sceneImage->addPixmap(pixmap);
+
+                // Adapter la vue pour occuper tout l'espace disponible
                 ui->AfficherImage->setScene(sceneImage);
-
-                // Redimensionner l'image pour correspondre à la taille de la fenêtre
-                QPixmap scaledPixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-                // Ajouter le pixmap redimensionné à la scène
-                sceneImage->addPixmap(scaledPixmap);
-                sceneImage->setSceneRect(scaledPixmap.rect()); // Met à jour le rectangle de la scène
-
-                // Ajuster la vue pour s'assurer qu'elle correspond à la scène
                 ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
 
-                // Forcer une mise à jour immédiate de l'affichage
-                ui->AfficherImage->update();
+                // Désactiver les barres de défilement
+                ui->AfficherImage->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                ui->AfficherImage->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
             }
         } catch (const std::exception &e) {
             QMessageBox::critical(this, tr("Erreur"), tr(e.what()));
         }
     }
 }
-
-
-
 
 // ----------------------------------------------------------------------------------------------
 
@@ -754,40 +760,37 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
         return;
     }
 
-    // 4. Demander où enregistrer les modifications
-    bool enregistrerDansActuel = QMessageBox::question(this, "Choix de sauvegarde",
-                                                       "Souhaitez-vous enregistrer dans le fichier actuel ?",
-                                                       QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes;
-
-    QString cheminFichier;
-    if (!enregistrerDansActuel) {
-        bool ok;
-        QString nouveauNomFichier = QInputDialog::getText(this, "Nom du nouveau fichier",
-                                                          "Entrez le nom du nouveau fichier .txt :",
-                                                          QLineEdit::Normal, "nouvelle_bibliotheque.txt", &ok);
-        if (!ok || nouveauNomFichier.isEmpty()) {
-            QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
-            return;
-        }
-        cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/" + nouveauNomFichier;
-    } else {
-        cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+    // 4. Demander à l'utilisateur de choisir le nom du fichier de la nouvelle bibliothèque
+    QString nouveauNomFichier = QInputDialog::getText(this, "Nom de la nouvelle bibliothèque", "Entrez le nom du nouveau fichier .txt :", QLineEdit::Normal, "nouvelle_bibliotheque.txt", &ok);
+    if (!ok || nouveauNomFichier.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
+        return;
     }
 
-    // 5. Ajouter uniquement le nouveau descripteur au fichier choisi
-    QFile fichierDescripteur(cheminFichier);
+    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    QString cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
+    QString cheminNouveauFichier = cheminFichier + "/" + nouveauNomFichier;
+
+    // 5. Copier le fichier texte existant pour créer une nouvelle version
+    QString cheminDescripteur = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+    if (!QFile::copy(cheminDescripteur, cheminNouveauFichier)) {
+        QMessageBox::warning(this, "Erreur", "La création de la nouvelle bibliothèque a échoué !");
+        return;
+    }
+
+    // 6. Ajouter le nouveau descripteur au fichier texte
+    QFile fichierDescripteur(cheminNouveauFichier);
     if (fichierDescripteur.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream sortie(&fichierDescripteur);
         sortie << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", " << numero << ", " << prix << ", "
                << acces << ", " << type << ", " << nbTraitement << ", " << numero << "\n";
         fichierDescripteur.close();
     } else {
-        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier de la bibliothèque !");
+        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier de la nouvelle bibliothèque !");
         return;
     }
 
-    // 6. Copier l'image dans la bibliothèque
-    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    // 7. Copier l'image dans la bibliothèque avec le même nom que le titre
     QString extensionImage = QFileInfo(cheminImageSource).suffix();
     QString cheminImageDestination = cheminBibliotheque + "/" + titre + "." + extensionImage;
     if (!QFile::copy(cheminImageSource, cheminImageDestination)) {
@@ -795,7 +798,7 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
         return;
     }
 
-    // 7. Ajouter l'objet Image à la bibliothèque
+    // 8. Ajouter l'objet Image à la bibliothèque
     Image nouvelleImage(cheminImageDestination.toStdString(),
                         titre.toStdString(),
                         numero,
@@ -807,11 +810,14 @@ void MainWindow::on_actionAjouterDescripteur_triggered() {
 
     library.ajouterDescripteurs(nouvelleImage);
 
-    // 8. Confirmation
-    QMessageBox::information(this, "Succès", "Le descripteur a été ajouté avec succès !");
+    // 9. Confirmation
+    QMessageBox::information(this, "Succès", "Le descripteur, l'image et la nouvelle bibliothèque ont été créés avec succès !");
 }
 
-// Modifier un descripteur
+
+
+// Modifier
+
 void MainWindow::on_actionModifierDescripteur_triggered() {
     // 1. Définir le chemin fixe du dossier descripteurs
     QString cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
@@ -888,37 +894,19 @@ void MainWindow::on_actionModifierDescripteur_triggered() {
                             + QString::number(nouveauPrix) + ", " + nouvelAcces + ", " + nouveauType + ", "
                             + QString::number(nouveauNbTraitement) + ", " + QString::number(nouveauNumero) + "\n";
 
-    // 7. Demander où enregistrer les modifications
-    bool enregistrerDansActuel = QMessageBox::question(this, "Choix de sauvegarde",
-                                                       "Souhaitez-vous enregistrer dans le fichier actuel ?",
-                                                       QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes;
+    contenu += nouvelleLigne;
 
-    QString cheminFichierFinal;
-    if (!enregistrerDansActuel) {
-        QString nouveauNomFichier = QInputDialog::getText(this, "Nom du nouveau fichier",
-                                                          "Entrez le nom du nouveau fichier .txt :",
-                                                          QLineEdit::Normal, "modifications_bibliotheque.txt", &ok);
-        if (!ok || nouveauNomFichier.isEmpty()) {
-            QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
-            return;
-        }
-        cheminFichierFinal = cheminDescripteurs + "/" + nouveauNomFichier;
-    } else {
-        cheminFichierFinal = cheminDescripteurComplet;
-    }
-
-    // 8. Ajouter uniquement la ligne modifiée au fichier choisi
-    QFile fichierFinal(cheminFichierFinal);
-    if (fichierFinal.open(QIODevice::Append | QIODevice::Text)) {
-        QTextStream fluxEcriture(&fichierFinal);
-        fluxEcriture << nouvelleLigne;
-        fichierFinal.close();
-    } else {
-        QMessageBox::warning(this, "Erreur", "Impossible d'écrire dans le fichier descripteurs !");
+    // 7. Écrire les modifications dans le fichier
+    if (!fichierDescripteur.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Erreur", "Impossible d'écrire dans le fichier descripteurs.txt !");
         return;
     }
 
-    // 9. Renommer l'image si le titre a été modifié
+    QTextStream fluxEcriture(&fichierDescripteur);
+    fluxEcriture << contenu;
+    fichierDescripteur.close();
+
+    // 8. Renommer l'image si le titre a été modifié
     QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
     if (nouveauTitre != elements[0]) {
         QString extensionImage = QFileInfo(elements[1]).suffix();
@@ -934,7 +922,7 @@ void MainWindow::on_actionModifierDescripteur_triggered() {
         }
     }
 
-    // 10. Confirmation
+    // 9. Confirmation
     QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
 }
 
@@ -1027,7 +1015,7 @@ void MainWindow::on_RetourVersBiblio_clicked()
 {
     // Effacer les scènes pour préparer un nouvel affichage
     sceneImage->clear();
-    seceneResultat->clear(); // Supprimer le contenu de AfficherResultat
+    sceneResultat->clear(); // Supprimer le contenu de AfficherResultat
     delete imageObj; // Libérer la mémoire utilisée pour l'image actuelle
     imageObj = nullptr;
 

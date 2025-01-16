@@ -24,6 +24,9 @@ class MainWindow : public QMainWindow
 public:
     // Ajout d'un constructeur prenant le chemin de l'image en paramètre
     explicit MainWindow(const QString &login, const QString &imagePath, BiblioWindow *parentBiblio = nullptr, QWidget *parent = nullptr);
+
+    // Méthode pour charger et afficher une image directement
+    void loadAndDisplayImage(const QString &fileName);
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -56,10 +59,11 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *sceneImage;   // Scène pour afficher l'image
-    QGraphicsScene *sceneHisto;   // Scène pour afficher l'histogramme
+    QGraphicsScene *seceneResultat;   // Scène pour afficher l'histogramme
     QImage image;                 // Image chargée
     Image_color* imageObj;              // Pointeur vers une image (gris ou couleur)
     QString LoginUtilisateur;
+    QString selectedImagePath; // Chemin de l'image sélectionnée
 
     void afficherHistogramme(int histogramme[256]);   // Méthode pour afficher l'histogramme
     void afficherHistogrammeCanal(int histogramme[256], int canal); // Affichage des histogrammes par canal
@@ -71,8 +75,7 @@ private:
     BiblioWindow *parentBiblio;                 // Pointeur brut pour référence
     std::unique_ptr<BiblioWindow> biblioWindow; // Gestion automatique avec unique_ptr
 
-    // Méthode pour charger et afficher une image directement
-    void loadAndDisplayImage(const QString &fileName);
+
 };
 
 #endif // MAINWINDOW_H
