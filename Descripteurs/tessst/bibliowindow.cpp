@@ -17,6 +17,8 @@
 #include <QGraphicsPixmapItem>
 #include <stdexcept>
 #include <QTextStream>
+#include <QtConcurrent/QtConcurrent>
+#include <QTimer>
 
 #include <fstream>
 #include <sstream>
@@ -152,13 +154,15 @@ void BiblioWindow::on_SaveBoutton_clicked()
     }
 }
 
+
+
 void BiblioWindow::loadDefaultFile(const QString &userLogin)
 {
     setUserLogin(userLogin);
 
     QString filePath = DEFAULT_FILE_PATH;
-    QFile file(filePath);
 
+    QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::critical(this, "Erreur", "Impossible d'ouvrir le fichier par défaut.");
         return;
@@ -166,57 +170,65 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
 
     QString imageDirectory = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque";
     ui->AffichageBiblio->clear();
-    QStringList missingImages;
 
     QTextStream in(&file);
-    int compteur = 1;
+    QStringList missingImages;
+    QList<QPair<QString, QString>> validImages; // Liste des images valides à charger
 
+    // Lire et préparer les images valides
     while (!in.atEnd()) {
-        QString line = in.readLine().trimmed();
-
-        // Ignorer les lignes vides
-        if (line.isEmpty()) {
-            continue;
-        }
-
+        QString line = in.readLine();
         QStringList fields = line.split(',');
-        if (fields.size() < 5) {
-            continue; // Ignorer les lignes mal formatées
-        }
 
-        QString imageName = fields[1].trimmed();
-        QString accessType = fields[4].trimmed();
-        QString imagePath = imageDirectory + "/" + imageName;
+        if (fields.size() >= 5) {
+            QString imageName = fields[1].trimmed();
+            QString accessType = fields[4].trimmed();
+            QString imagePath = imageDirectory + "/" + imageName;
 
-        // Vérifier l'accès en fonction du login utilisateur
-        bool hasAccess = false;
-        if (userLogin == "us-02-al" && accessType == "O") {
-            hasAccess = true;
-        } else if (userLogin == "ad-01-ao" && (accessType == "O" || accessType == "L")) {
-            hasAccess = true;
-        }
-
-        if (hasAccess) {
-            if (QFileInfo::exists(imagePath)) {
-                QString itemText = QString::number(compteur) + ". " + imageName;
-                QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText);
-                item->setData(Qt::UserRole, imagePath);
-                ui->AffichageBiblio->addItem(item);
-                compteur++;
-            } else {
-                missingImages.append(imageName);
+            // Vérifier l'accès en fonction du login utilisateur
+            if (userLogin == "ad-01-ao" || (userLogin == "us-02-al" && accessType == "O")) {
+                if (QFileInfo::exists(imagePath)) {
+                    QString itemText = QString::number(validImages.size() + 1) + ". " + imageName;
+                    validImages.append(qMakePair(imagePath, itemText));
+                } else {
+                    missingImages.append(imageName);
+                }
             }
         }
     }
-
     file.close();
 
+    // Configurer un timer pour charger les images petit à petit
+    QTimer *timer = new QTimer(this);
+    int index = 0;
+
+    connect(timer, &QTimer::timeout, [this, &index, &validImages, timer]() {
+        if (index < validImages.size()) {
+            const auto &pair = validImages[index];
+            QString imagePath = pair.first;
+            QString itemText = pair.second;
+
+            QListWidgetItem *item = new QListWidgetItem(QIcon(imagePath), itemText);
+            item->setData(Qt::UserRole, imagePath);
+            ui->AffichageBiblio->addItem(item);
+
+            index++;
+        } else {
+            timer->stop();
+            timer->deleteLater();
+        }
+    });
+
+    // Démarrer le chargement progressif
+    timer->start(500); // Charger une image toutes les 500 ms
+
+    // Gérer les images manquantes
     if (!missingImages.isEmpty()) {
         QString missingMessage = "Les images suivantes n'ont pas été trouvées dans le répertoire :\n" + missingImages.join("\n");
         QMessageBox::warning(this, "Images Manquantes", missingMessage);
     }
 
-    QMessageBox::information(this, "Chargement", "Bibliothèque chargée et images affichées.");
+    QMessageBox::information(this, "Chargement", "Chargement de la bibliothèque en cours.");
     mettreAJourCompteurImages();
 }
 
