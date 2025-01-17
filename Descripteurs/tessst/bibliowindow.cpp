@@ -97,7 +97,7 @@ void BiblioWindow::on_ChargeBoutton_clicked()
             return;
         }
 
-        QString imageDirectory = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+        QString imageDirectory = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque";
         ui->AffichageBiblio->clear();
         QStringList missingImages;
 
@@ -164,7 +164,7 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
         return;
     }
 
-    QString imageDirectory = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    QString imageDirectory = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque";
     ui->AffichageBiblio->clear();
     QStringList missingImages;
 
@@ -470,7 +470,7 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered() {
         return;
     }
 
-    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque";
     QString cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
     QString cheminNouveauFichier = cheminFichier + "/" + nouveauNomFichier;
 
@@ -610,7 +610,7 @@ void BiblioWindow::on_actionModifierDescripteur_triggered() {
     fichierDescripteur.close();
 
     // 8. Renommer l'image si le titre a été modifié
-    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
     if (nouveauTitre != elements[0]) {
         QString extensionImage = QFileInfo(elements[1]).suffix();
         QString ancienCheminImage = cheminBibliotheque + "/" + elements[0] + "." + extensionImage;
