@@ -84,19 +84,26 @@ void ConnexionWindow::on_Login_cursorPositionChanged(int arg1, int arg2)
 
 void ConnexionWindow::on_connexionButton_clicked()
 {
-    QString login = ui->Login->text();
+    QString login = ui->Login->text(); // Assurez-vous que "Login" est défini dans l'interface
+    qDebug() << "Login saisi: " << login;
 
-    if (login == "ad-01-ao" || login == "us-02-al") {
+    if (login == "ad-01-ao" || login == "us-02-al" || login == "a") {
+        qDebug() << "Connexion réussie";
+
+        LoginActuel = login;
+
+        // Ouvrir la fenêtre BiblioWindow
         if (!biblioWindow) {
-            biblioWindow = std::make_unique<BiblioWindow>(nullptr);
-            biblioWindow->setUserLogin(login); // Définir le login utilisateur
+            biblioWindow = std::make_unique<BiblioWindow>(LoginActuel); // Crée une instance de BiblioWindow sans parent
+            qDebug() << "BiblioWindow créée";
         }
 
-        biblioWindow->show();
-        biblioWindow->loadDefaultFile(login); // Charge le fichier par défaut avec les droits utilisateur
-        this->close();
+        biblioWindow->show(); // Affiche la fenêtre
+        biblioWindow->loadDefaultFile(login);
+        this->close();        // Ferme la fenêtre de connexion
     } else {
+        qDebug() << "Connexion échouée";
         QMessageBox::warning(this, "Erreur", "Identification échouée, essayez encore.");
-        ui->Login->clear();
+        ui->Login->clear(); // Permet de saisir un nouveau mot de passe
     }
 }
