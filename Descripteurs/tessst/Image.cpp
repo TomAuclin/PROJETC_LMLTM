@@ -1,8 +1,7 @@
-// Inclusion du fichier d'en-tête "Image.hpp" pour utiliser la classe Image
+// Inclusion des fichiers d'en-tête
 #include "Image.hpp"
 
-// Inclusion des bibliothèques standard nécessaires à la gestion des entrées/sorties,
-// de la manipulation de chaînes, et de certaines fonctionnalités spécifiques.
+// Inclusion des fichiers nécessaires pour gérer l'interface, les images et la bibliothèque.
 #include <iostream>  // Pour l'affichage sur la console
 #include <fstream>   // Pour la gestion des fichiers
 #include <algorithm> // Pour des fonctions d'algorithmes

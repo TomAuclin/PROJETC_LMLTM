@@ -1,10 +1,12 @@
+// Inclusion des fichiers d'en-tête
 #include "Traitement.hpp"
+
+// Inclusion des fichiers nécessaires pour gérer l'interface, les images et la bibliothèque.
 #include <opencv2/opencv.hpp>
 
 
-Traitement ::Traitement (){}
-
-
+// Constructeur par défaut de la classe Traitement.
+Traitement::Traitement() {}
 
 // ----------------------------------------------------------------------------------------------
 
@@ -16,21 +18,21 @@ Traitement ::Traitement (){}
 void ImageGris::calculerHistogramme(int histogramme[256], int canal) const {
     // Initialiser les bins de l'histogramme à zéro
     for (int i = 0; i < 256; ++i) {
-        histogramme[i] = 0;
+        histogramme[i] = 0; // On initialise chaque valeur de l'histogramme à zéro
     }
 
     // Parcourir chaque pixel de l'image en niveaux de gris
     for (size_t ligne = 0; ligne < m_imageGris.size(); ++ligne) {
         for (size_t colonne = 0; colonne < m_imageGris[ligne].size(); ++colonne) {
-            uint8_t valeurPixel = m_imageGris[ligne][colonne];
-            histogramme[valeurPixel]++;
+            uint8_t valeurPixel = m_imageGris[ligne][colonne]; // Récupère la valeur du pixel à la position donnée
+            histogramme[valeurPixel]++; // Incrémente le bin correspondant à la valeur du pixel
         }
     }
 }
 
-// Calcul de lhistogramme d'une image couleur
+// Calcul de l'histogramme d'une image couleur
 void ImageCouleur::calculerHistogramme(int histogramme[256], int canal) const {
-    // Initialiser les bins des trois canaux à zéro
+    // Initialiser les bins des trois canaux (Rouge, Vert, Bleu) à zéro
     int histogrammeRouge[256] = {0};
     int histogrammeVert[256] = {0};
     int histogrammeBleu[256] = {0};
@@ -38,39 +40,39 @@ void ImageCouleur::calculerHistogramme(int histogramme[256], int canal) const {
     // Parcourir chaque pixel de l'image couleur
     for (size_t ligne = 0; ligne < m_imageCouleur.size(); ++ligne) {
         for (size_t colonne = 0; colonne < m_imageCouleur[ligne].size(); ++colonne) {
-            uint8_t rouge = m_imageCouleur[ligne][colonne][0];
-            uint8_t vert = m_imageCouleur[ligne][colonne][1];
-            uint8_t bleu = m_imageCouleur[ligne][colonne][2];
+            uint8_t rouge = m_imageCouleur[ligne][colonne][0]; // Récupère la valeur du composant Rouge du pixel
+            uint8_t vert = m_imageCouleur[ligne][colonne][1];  // Récupère la valeur du composant Vert du pixel
+            uint8_t bleu = m_imageCouleur[ligne][colonne][2];  // Récupère la valeur du composant Bleu du pixel
 
-            histogrammeRouge[rouge]++;
-            histogrammeVert[vert]++;
-            histogrammeBleu[bleu]++;
+            histogrammeRouge[rouge]++; // Incrémente le bin correspondant à la valeur du composant Rouge
+            histogrammeVert[vert]++;   // Incrémente le bin correspondant à la valeur du composant Vert
+            histogrammeBleu[bleu]++;   // Incrémente le bin correspondant à la valeur du composant Bleu
         }
     }
 
     // Si un canal spécifique est demandé, on l'affiche
     if (canal == 0) { // Canal Rouge
         for (int i = 0; i < 256; ++i) {
-            histogramme[i] = histogrammeRouge[i];
+            histogramme[i] = histogrammeRouge[i]; // Remplir l'histogramme avec les valeurs du canal Rouge
         }
     } else if (canal == 1) { // Canal Vert
         for (int i = 0; i < 256; ++i) {
-            histogramme[i] = histogrammeVert[i];
+            histogramme[i] = histogrammeVert[i]; // Remplir l'histogramme avec les valeurs du canal Vert
         }
     } else if (canal == 2) { // Canal Bleu
         for (int i = 0; i < 256; ++i) {
-            histogramme[i] = histogrammeBleu[i];
+            histogramme[i] = histogrammeBleu[i]; // Remplir l'histogramme avec les valeurs du canal Bleu
         }
     } else { // Afficher l'histogramme combiné de tous les canaux
         for (int i = 0; i < 256; ++i) {
-            histogramme[i] = histogrammeRouge[i] + histogrammeVert[i] + histogrammeBleu[i];
+            histogramme[i] = histogrammeRouge[i] + histogrammeVert[i] + histogrammeBleu[i]; // Somme des valeurs des trois canaux
         }
     }
 }
 
 // Fonction qui permet de calculer l'histogramme d'une image, qu'elle soit en gris ou en couleur
 void Histogramme::calculerHistogramme(const Image_color& image, int histogramme[256], int canal) {
-    image.calculerHistogramme(histogramme, canal);
+    image.calculerHistogramme(histogramme, canal); // Appelle la méthode de l'objet Image_color pour calculer l'histogramme
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -236,9 +238,6 @@ cv::Mat Traitement::rehaussementContours(const cv::Mat &image) {
     return imgRehaussee;
 }
 
-
-
-
 // ----------------------------------------------------------------------------------------------
 
 // ************************ Détection de Droite ************************
@@ -358,9 +357,6 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     return imgDroites;
 }
-
-
-
 
 // ----------------------------------------------------------------------------------------------
 

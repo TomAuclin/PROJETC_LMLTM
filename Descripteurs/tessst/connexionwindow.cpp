@@ -1,7 +1,9 @@
-// Inclusion des fichiers nécessaires pour l'interface graphique et la gestion des fenêtres.
+// Inclusion des fichiers d'en-tête
 #include "connexionwindow.h"
 #include "bibliowindow.h"
 #include "ui_connexionwindow.h"
+
+// Inclusion des fichiers nécessaires pour l'interface graphique et la gestion des fenêtres.
 #include <QMessageBox> // Pour afficher des boîtes de message
 #include <QDebug>      // Pour les messages de débogage
 #include <QScreen>     // Pour récupérer les informations de l'écran

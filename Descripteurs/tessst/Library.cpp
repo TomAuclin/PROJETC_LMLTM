@@ -1,5 +1,8 @@
+// Inclusion des fichiers d'en-tête
 #include "Library.hpp"
 #include "GestionUtilisateur.hpp"
+
+// Inclusion des fichiers nécessaires pour gérer l'interface, les images et la bibliothèque.
 #include <iostream>
 #include <fstream>
 #include <sstream>

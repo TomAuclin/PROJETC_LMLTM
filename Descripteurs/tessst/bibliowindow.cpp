@@ -1,4 +1,4 @@
-// Inclusion du fichier d'en-tête "Image.hpp" pour utiliser la classe Image
+// Inclusion des fichiers d'en-tête
 #include "mainwindow.h" // Inclut la fenêtre principale
 #include "connexionwindow.h" // Inclut la fenêtre de connexion
 
