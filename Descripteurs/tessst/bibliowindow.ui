@@ -115,6 +115,58 @@
      <string>Nombre d'images : 0</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButtonSousListePrix">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>200</y>
+      <width>121</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SousListePrix</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="souslistetype">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>230</y>
+      <width>121</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sous liste type</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="triprix">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>260</y>
+      <width>80</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tri prix</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="trinbtraitements">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>290</y>
+      <width>121</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tri nb traitement</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

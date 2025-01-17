@@ -55,6 +55,14 @@ private slots:
     void on_actionModifierDescripteur_triggered();
     void on_actionSupprimerDescripteur_triggered();
 
+    void on_pushButtonSousListePrix_clicked();
+    void on_triprix_clicked();
+
+    void on_trinbtraitements_clicked();
+
+
+    void on_souslistetype_clicked();
+
 private:
     Ui::BiblioWindow *ui;
     QString LoginUtilisateur;
