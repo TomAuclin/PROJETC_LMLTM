@@ -1,41 +1,45 @@
+// Inclusion du fichier d'en-tête "Image.hpp" pour utiliser la classe Image
+#include "mainwindow.h" // Inclut la fenêtre principale
+#include "connexionwindow.h" // Inclut la fenêtre de connexion
+
+// Inclusion des fichiers nécessaires pour gérer l'interface, les images et la bibliothèque.
 #include "bibliowindow.h"
 #include "ui_bibliowindow.h"
-#include "Image.hpp"
-#include <QFileDialog>
-#include <QListWidgetItem>
-#include <QPixmap>
-#include <QIcon>
-#include <QMessageBox>
-#include <QDir>
-#include <QDebug>
-#include <QMouseEvent>
-#include <QScreen>
-#include "Library.hpp"
-#include <QInputDialog>
+#include "Image.hpp" // Inclut la classe Image pour gérer les images
+#include <QFileDialog> // Pour ouvrir des dialogues de fichier
+#include <QListWidgetItem> // Pour les éléments de la liste dans la fenêtre
+#include <QPixmap> // Pour charger et afficher des images
+#include <QIcon> // Pour gérer les icônes dans l'interface
+#include <QMessageBox> // Pour afficher des boîtes de message
+#include <QDir> // Pour manipuler les répertoires et fichiers
+#include <QDebug> // Pour afficher des messages de débogage
+#include <QMouseEvent> // Pour gérer les événements de la souris
+#include <QScreen> // Pour obtenir des informations sur l'écran
+#include "Library.hpp" // Inclut la classe Library pour la gestion des images
+#include <QInputDialog> // Pour afficher des boîtes de dialogue d'entrée
 
-#include <QMessageBox>
-#include <QGraphicsPixmapItem>
-#include <stdexcept>
-#include <QTextStream>
+#include <QMessageBox> // Pour afficher des boîtes de message
+#include <QGraphicsPixmapItem> // Pour afficher des images dans une scène graphique
+#include <stdexcept> // Pour gérer les exceptions
+#include <QTextStream> // Pour gérer le flux de texte pour les fichiers
 
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
+#include <fstream> // Pour manipuler les fichiers
+#include <sstream> // Pour convertir des chaînes de caractères
+#include <string> // Pour manipuler des chaînes
+#include <vector> // Pour utiliser des vecteurs
 
-#include "mainwindow.h"
-#include "connexionwindow.h"
-
+// Déclaration de la constante représentant le chemin du fichier par défaut
 const QString BiblioWindow::DEFAULT_FILE_PATH = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
 
-
+// Constructeur de la classe BiblioWindow
 BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::BiblioWindow), LoginUtilisateur(login)
 {
+    // Initialisation de l'interface utilisateur
     ui->setupUi(this);
 
-
+    // Paramétrage de la fenêtre principale
     setWindowTitle("Bibliotheque");
     resize(1000, 600);
 
@@ -48,44 +52,43 @@ BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
         this->move(x, y);
     }
 
+    // Afficher le login de l'utilisateur connecté dans les logs
     qDebug() << "Utilisateur connecté : " << LoginUtilisateur;
-    // Configurer le QListWidget pour afficher en mosaïque
+
+    // Configuration du QListWidget pour afficher les images en mode mosaïque
     ui->AffichageBiblio->setViewMode(QListWidget::IconMode);
     ui->AffichageBiblio->setResizeMode(QListWidget::Adjust);
     ui->AffichageBiblio->setMovement(QListWidget::Static);
     ui->AffichageBiblio->setSpacing(10);
 
+    // Rendre certains boutons invisibles
     ui->TraitementButton->setVisible(false);
     ui->DetailsButton->setVisible(false);
     ui->pushButtonRechercherp->setVisible(true);
+
+    // Initialisation du texte pour le nombre d'images
     ui->labelImageCount->setText("Nombre d'images : 0");
 
-
-    // Connecter le clic sur une image
+    // Connexions des slots aux signaux des widgets
     connect(ui->AffichageBiblio, &QListWidget::itemClicked, this, &BiblioWindow::on_AffichageBiblio_itemClicked);
-
     connect(ui->actionSupprimer_un_descripteur, &QAction::triggered, this, &BiblioWindow::on_actionSupprimerDescripteur_triggered);
-    
     connect(ui->Deco, &QPushButton::clicked, this, &BiblioWindow::on_Deco_clicked);
-
     connect(ui->pushButtonSousListePrix, &QPushButton::clicked, this, &BiblioWindow::on_pushButtonSousListePrix_clicked);
     connect(ui->souslistetype, &QPushButton::clicked, this, &BiblioWindow::on_souslistetype_clicked);
     connect(ui->triprix, &QPushButton::clicked, this, &BiblioWindow::on_triprix_clicked);
     connect(ui->trinbtraitements, &QPushButton::clicked, this, &BiblioWindow::on_trinbtraitements_clicked);
-
-
-
 }
 
+// Destructeur de la classe
 BiblioWindow::~BiblioWindow()
 {
     delete ui;
 }
 
+// Fonction pour gérer la déconnexion de l'utilisateur
 void BiblioWindow::on_Deco_clicked()
 {
     gestionUtilisateur.deconnexion();
-
     this->close();
 
     // Ouvre la fenêtre de connexion
@@ -93,9 +96,10 @@ void BiblioWindow::on_Deco_clicked()
     connexionWindow->show();
 }
 
-
+// Fonction pour charger la bibliothèque d'images à partir d'un fichier
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
+    // Ouvre une boîte de dialogue pour sélectionner un fichier
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
 
     if (!filePath.isEmpty()) {
@@ -107,6 +111,7 @@ void BiblioWindow::on_ChargeBoutton_clicked()
             return;
         }
 
+        // Répertoire des images
         QString imageDirectory = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque";
         ui->AffichageBiblio->clear();
         QStringList missingImages;
@@ -114,10 +119,12 @@ void BiblioWindow::on_ChargeBoutton_clicked()
         QTextStream in(&file);
         int compteur = 1;
 
+        // Lire chaque ligne du fichier
         while (!in.atEnd()) {
             QString line = in.readLine();
             QStringList fields = line.split(',');
 
+            // Vérifier qu'il y a assez de données
             if (fields.size() >= 5) {
                 QString imageName = fields[1].trimmed();
                 QString accessType = fields[4].trimmed();
@@ -140,18 +147,20 @@ void BiblioWindow::on_ChargeBoutton_clicked()
             }
         }
 
+        // Fermeture du fichier
         file.close();
 
+        // Affichage d'un message si certaines images sont manquantes
         if (!missingImages.isEmpty()) {
             QString missingMessage = "Les images suivantes n'ont pas été trouvées dans le répertoire :\n" + missingImages.join("\n");
             QMessageBox::warning(this, "Images Manquantes", missingMessage);
         }
 
+        // Message de confirmation après le chargement
         QMessageBox::information(this, "Chargement", "Bibliothèque chargée et images affichées.");
         mettreAJourCompteurImages();
     }
 }
-
 
 void BiblioWindow::on_SaveBoutton_clicked()
 {
@@ -162,18 +171,23 @@ void BiblioWindow::on_SaveBoutton_clicked()
     }
 }
 
+// Fonction pour charger le fichier par défaut
 void BiblioWindow::loadDefaultFile(const QString &userLogin)
 {
+    // Définir le login de l'utilisateur
     setUserLogin(userLogin);
 
+    // Chemin du fichier par défaut
     QString filePath = DEFAULT_FILE_PATH;
     QFile file(filePath);
 
+    // Vérifier si le fichier s'ouvre correctement
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::critical(this, "Erreur", "Impossible d'ouvrir le fichier par défaut.");
         return;
     }
 
+    // Répertoire des images
     QString imageDirectory = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque";
     ui->AffichageBiblio->clear();
     QStringList missingImages;
@@ -181,6 +195,7 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
     QTextStream in(&file);
     int compteur = 1;
 
+    // Lire chaque ligne du fichier
     while (!in.atEnd()) {
         QString line = in.readLine().trimmed();
 
@@ -194,20 +209,18 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
             continue; // Ignorer les lignes mal formatées
         }
 
+        // Extraire les informations de l'image
         QString imageName = fields[1].trimmed();
         QString accessType = fields[4].trimmed();
         QString imagePath = imageDirectory + "/" + imageName;
 
-        // Vérifier l'accès en fonction du login utilisateur
-        bool hasAccess = false;
-        if (userLogin == "us-02-al" && accessType == "O") {
-            hasAccess = true;
-        } else if (userLogin == "ad-01-ao" && (accessType == "O" || accessType == "L")) {
-            hasAccess = true;
-        }
+        // Vérifier les droits d'accès en fonction du login
+        bool hasAccess = (userLogin == "us-02-al" && accessType == "O") ||
+                         (userLogin == "ad-01-ao" && (accessType == "O" || accessType == "L"));
 
         if (hasAccess) {
             if (QFileInfo::exists(imagePath)) {
+                // Ajouter l'image à la liste
                 QString itemText = QString::number(compteur) + ". " + imageName;
                 QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText);
                 item->setData(Qt::UserRole, imagePath);
@@ -221,46 +234,45 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
 
     file.close();
 
+    // Affichage d'un message si des images sont manquantes
     if (!missingImages.isEmpty()) {
         QString missingMessage = "Les images suivantes n'ont pas été trouvées dans le répertoire :\n" + missingImages.join("\n");
         QMessageBox::warning(this, "Images Manquantes", missingMessage);
     }
 
+    // Affichage d'une confirmation après chargement
     QMessageBox::information(this, "Chargement", "Bibliothèque chargée et images affichées.");
     mettreAJourCompteurImages();
 }
 
+// Fonction pour gérer le clic sur un élément de la bibliothèque
 void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
 {
-    QString filePath = item->data(Qt::UserRole).toString(); // Récupérer le chemin complet
+    // Récupérer le chemin de l'image sélectionnée
+    QString filePath = item->data(Qt::UserRole).toString();
     qDebug() << "Image cliquée : " << filePath;
 
-    selectedImagePath = filePath; // Mettre à jour le chemin de l'image sélectionnée
+    selectedImagePath = filePath;
 
-    // Rendre les boutons visibles
+    // Afficher les boutons de traitement et détails
     ui->TraitementButton->setVisible(true);
     ui->DetailsButton->setVisible(true);
 }
 
-
+// Fonction pour gérer le clic sur le bouton de traitement
 void BiblioWindow::on_TraitementButton_clicked()
 {
     if (!selectedImagePath.isEmpty()) {
         qDebug() << "Traitement de l'image : " << selectedImagePath;
 
-        // Créer une instance de MainWindow et lui passer le chemin de l'image sélectionnée
+        // Créer et afficher une fenêtre de traitement pour l'image
         if (!mainWindow) {
             mainWindow = std::make_unique<MainWindow>(LoginUtilisateur, selectedImagePath, this);
-
-            // Afficher la fenêtre de traitement avant de charger l'image
             mainWindow->show();
-            mainWindow->raise(); // Assure que la fenêtre est au premier plan
+            mainWindow->raise();
             mainWindow->activateWindow();
-
-            // Charger l'image après l'affichage
             mainWindow->loadAndDisplayImage(selectedImagePath);
         } else {
-            // Mettre à jour l'image dans la fenêtre existante
             mainWindow->loadAndDisplayImage(selectedImagePath);
             mainWindow->show();
         }
@@ -272,15 +284,15 @@ void BiblioWindow::on_TraitementButton_clicked()
     }
 }
 
-
+// Fonction pour gérer les événements de clic souris
 void BiblioWindow::mousePressEvent(QMouseEvent *event)
 {
-    // Si le clic est en dehors de QListWidget, désélectionner l'image
+    // Désélectionner l'image si le clic est en dehors de la bibliothèque
     if (!ui->AffichageBiblio->geometry().contains(event->pos())) {
         ui->AffichageBiblio->clearSelection();
         selectedImagePath.clear();
-        ui->TraitementButton->setVisible(false); // Masquer le bouton traitement
-        ui->DetailsButton->setVisible(false); // Masquer le bouton details
+        ui->TraitementButton->setVisible(false);
+        ui->DetailsButton->setVisible(false);
     }
 
     QMainWindow::mousePressEvent(event);
@@ -366,9 +378,11 @@ void BiblioWindow::mettreAJourCompteurImages() {
 }
 
 
+// Fonction pour définir le login de l'utilisateur
 void BiblioWindow::setUserLogin(const QString &login) {
-    userLogin = login;
+    userLogin = login;  // Attribuer la valeur du login à la variable membre userLogin
 }
+
 
 // -----------------------------------------------------------------------------------------
 

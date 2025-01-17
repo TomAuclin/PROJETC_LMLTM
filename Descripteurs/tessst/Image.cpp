@@ -1,26 +1,32 @@
+// Inclusion du fichier d'en-tête "Image.hpp" pour utiliser la classe Image
 #include "Image.hpp"
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
-#include <string>
-#include <sstream>
-#include <QDebug>
+
+// Inclusion des bibliothèques standard nécessaires à la gestion des entrées/sorties,
+// de la manipulation de chaînes, et de certaines fonctionnalités spécifiques.
+#include <iostream>  // Pour l'affichage sur la console
+#include <fstream>   // Pour la gestion des fichiers
+#include <algorithm> // Pour des fonctions d'algorithmes
+#include <cctype>    // Pour les fonctions de manipulation de caractères
+#include <string>    // Pour la gestion des chaînes de caractères
+#include <sstream>   // Pour la manipulation de flux de chaînes
+#include <QDebug>    // Pour l'affichage de débogage dans Qt
 
 
+// Constructeur initialisant les attributs de la classe Image
 Image::Image(const std::string& src, const std::string& tit, int num, double prx, char acc, const std::string& typ, int nTp, int ide)
-    : source(src), titre(tit), numero(num), prix(prx), acces(acc), type(typ), nbTraitementPossible(nTp), identite(ide){}
+    : source(src), titre(tit), numero(num), prix(prx), acces(acc), type(typ), nbTraitementPossible(nTp), identite(ide) {}
 
-
+// Getter pour récupérer le chemin de l'image
 std::string Image::getChemin() const {
     return source;
 }
 
+// Setter pour définir un nouveau chemin de l'image
 void Image::setChemin(const std::string& chemin) {
     source = chemin;
 }
 
-
+// Retourne un descripteur détaillé de l'image
 std::string Image::getDescripteur() const {
     std::ostringstream descripteur;
     descripteur << "Source: " << source << "\n"
@@ -33,22 +39,21 @@ std::string Image::getDescripteur() const {
     return descripteur.str();
 }
 
-int Image::nbrcarac()
-{
+// Compte le nombre de lignes dans le descripteur d'une image
+int Image::nbrcarac() {
     int cpt = 0;
     Image image("Tom", "EauToitPont_couleur.CR2", 7, 0, 'O', "couleur", 5, 7);
-    std::string nbrc;
-    nbrc = image.getDescripteur();
-    for (int i = 0; i < nbrc.size();i++){
-        if (nbrc[i] == '\n'){
+    std::string nbrc = image.getDescripteur();
+
+    for (int i = 0; i < nbrc.size(); i++) {
+        if (nbrc[i] == '\n') {
             cpt++;
         }
-
     }
     return cpt;
-
 }
 
+// Retourne un descripteur simple de l'image
 std::string Image::getDescripteurSimple() const {
     std::ostringstream descripteur;
     descripteur << source << ", "
@@ -62,104 +67,50 @@ std::string Image::getDescripteurSimple() const {
     return descripteur.str();
 }
 
-std::string Image::getDescripteursmoins10() const
-{
+// Retourne un descripteur limité pour les images avec moins de 10 traitements possibles
+std::string Image::getDescripteursmoins10() const {
     std::ostringstream descripteur;
     descripteur << source << ", "
                 << titre << ", "
                 << type;
-               
     return descripteur.str();
 }
 
-std::string Image::getDescripteursplus10() const
-{
+// Retourne un descripteur pour les images avec plus de 10 traitements possibles
+std::string Image::getDescripteursplus10() const {
     std::ostringstream descripteur;
     descripteur << source << ", "
                 << titre << ", "
                 << type << " , "
                 << nbTraitementPossible;
-               
     return descripteur.str();
 }
 
-std::string Image::getDescripteurGratuit() const
-{
+// Retourne un descripteur limité aux images gratuites
+std::string Image::getDescripteurGratuit() const {
     std::ostringstream descripteur;
     descripteur << source << ", "
-                << titre ;
-               
+                << titre;
     return descripteur.str();
 }
 
-int Image::getNumero() const {
-    return numero;
-}
+// Getters pour accéder aux autres attributs
+int Image::getNumero() const { return numero; }
+int Image::getPrix() const { return prix; }
+std::string Image::getSource() const { return source; }
+std::string Image::getTitre() const { return titre; }
+char Image::getAccess() const { return acces; }
+std::string Image::getType() const { return type; }
+int Image::getnbTraitementPossible() const { return nbTraitementPossible; }
 
-int Image::getPrix() const {
-    return prix;
-}
-
-std::string Image::getSource() const
-{
-    return source;
-}
-
-std::string Image::getTitre() const
-{
-    return titre;
-}
-
-char Image::getAccess() const
-{
-    return acces;
-}
-
-std::string Image::getType() const
-{
-    return type;
-}
-
-int Image::getnbTraitementPossible() const
-{
-    return nbTraitementPossible;
-}
-
-void Image::setNumero(int num)
-{
-    numero = num;
-    
-}
-
-void Image::setPrix(int _prix)
-{
-    prix = _prix;
-}
-
-void Image::setTitre(std::string _Titre)
-{
-    titre = _Titre;
-}
-
-void Image::setAccess(char _Access)
-{
-    acces = _Access;
-}
-
-void Image::setType(std::string _Type)
-{
-    type = _Type;
-}
-
-void Image::setnbTraitementPossible(int _nbTraitementPossible)
-{
-    nbTraitementPossible = _nbTraitementPossible;
-}
-
-void Image::setSource(const std::string& src) {
-    source = src;
-}
-
+// Setters pour modifier les attributs de l'image
+void Image::setNumero(int num) { numero = num; }
+void Image::setPrix(int _prix) { prix = _prix; }
+void Image::setTitre(std::string _Titre) { titre = _Titre; }
+void Image::setAccess(char _Access) { acces = _Access; }
+void Image::setType(std::string _Type) { type = _Type; }
+void Image::setnbTraitementPossible(int _nbTraitementPossible) { nbTraitementPossible = _nbTraitementPossible; }
+void Image::setSource(const std::string& src) { source = src; }
 
 // Fonction pour supprimer les espaces en début et fin de chaîne
 std::string trim(const std::string& str) {
@@ -178,6 +129,7 @@ std::string toLowerCase(const std::string& str) {
     return result;
 }
 
+// Associe un descripteur à l'image en lisant un fichier
 void Image::associerDescripteur(const std::string& fichierDescripteurs) {
     std::ifstream fichier(fichierDescripteurs);
     if (!fichier.is_open()) {
@@ -190,45 +142,17 @@ void Image::associerDescripteur(const std::string& fichierDescripteurs) {
         std::stringstream ss(ligne);
         std::string champ;
 
-        std::getline(ss, champ, ',');
-        std::string fichierSource = champ;
+        // Extraction des champs
+        std::getline(ss, champ, ','); std::string fichierSource = champ;
+        std::getline(ss, champ, ','); std::string fichierTitre = champ;
+        std::getline(ss, champ, ','); int fichierNumero = std::stoi(champ);
+        std::getline(ss, champ, ','); double fichierPrix = std::stod(champ);
+        std::getline(ss, champ, ','); std::string fichierAcces = trim(champ);
+        std::getline(ss, champ, ','); std::string fichierType = champ;
+        std::getline(ss, champ, ','); int fichierNbTraitement = std::stoi(champ);
 
-        std::getline(ss, champ, ',');
-        std::string fichierTitre = champ;
-
-        std::getline(ss, champ, ',');
-        int fichierNumero = std::stoi(champ);
-
-        std::getline(ss, champ, ',');
-        double fichierPrix = std::stod(champ);
-
-        std::getline(ss, champ, ',');
-        std::string fichierAcces = champ;
-
-        // Vérification de la valeur d'accès
-        fichierAcces = trim(fichierAcces); // Applique trim ici pour enlever les espaces
-        if (fichierAcces.empty() || (fichierAcces != "O" && fichierAcces != "L")) {
-            std::cerr << "Avertissement : valeur d'accès invalide '" << fichierAcces << "' dans le fichier descripteur." << std::endl;
-            continue;  // Passe à la ligne suivante si l'accès est incorrect
-        }
-
-        std::getline(ss, champ, ',');
-        std::string fichierType = champ;
-
-        std::getline(ss, champ, ',');
-        int fichierNbTraitement = std::stoi(champ);
-
-        std::cout << "Titre fichier : " << fichierTitre << std::endl;
-        std::cout << "Titre image : " << this->getTitre() << std::endl;
-
-        // Comparaison en supprimant les espaces et en ignorant la casse
-        std::string trimmedFichierTitre = toLowerCase(trim(fichierTitre));
-        std::string trimmedImageTitre = toLowerCase(trim(this->getTitre()));
-
-        std::cout << "Titre fichier (modifié) : " << trimmedFichierTitre << std::endl;
-        std::cout << "Titre image (modifié) : " << trimmedImageTitre << std::endl;
-
-        if (trimmedFichierTitre == trimmedImageTitre) {
+        // Vérification des titres en supprimant les espaces et en ignorant la casse
+        if (toLowerCase(trim(fichierTitre)) == toLowerCase(trim(this->getTitre()))) {
             this->setSource(fichierSource);
             this->setTitre(fichierTitre);
             this->setNumero(fichierNumero);
@@ -236,23 +160,13 @@ void Image::associerDescripteur(const std::string& fichierDescripteurs) {
             this->setAccess(fichierAcces[0]);
             this->setType(fichierType);
             this->setnbTraitementPossible(fichierNbTraitement);
-
-            // Affichage des attributs mis à jour
-            std::cout << "Descripteur mis à jour :\n";
-            std::cout << "Source : " << this->getSource() << std::endl;
-            std::cout << "Titre : " << this->getTitre() << std::endl;
-            std::cout << "Numéro : " << this->getNumero() << std::endl;
-            std::cout << "Prix : " << this->getPrix() << std::endl;
-            std::cout << "Accès (caractère) : " << this->getAccess() << std::endl;
-            std::cout << "Type : " << this->getType() << std::endl;
-            std::cout << "Nb Traitements : " << this->getnbTraitementPossible() << std::endl;
         }
     }
 
     fichier.close();
 }
 
-
+// Recherche le prix d'une image par numéro dans un fichier
 bool Image::rechercherPrix(int numeroImage, const std::string& fichierDescripteurs) {
     std::ifstream fichier(fichierDescripteurs);
     if (!fichier.is_open()) {
@@ -265,33 +179,24 @@ bool Image::rechercherPrix(int numeroImage, const std::string& fichierDescripteu
         std::stringstream ss(ligne);
         std::string champ;
 
-        // Lecture des champs dans l'ordre attendu
+        // Extraction des champs
         std::getline(ss, champ, ','); // Source
         std::getline(ss, champ, ','); // Titre
-        std::getline(ss, champ, ',');
-        int fichierNumero = std::stoi(champ); // Numéro
+        std::getline(ss, champ, ','); int fichierNumero = std::stoi(champ);
+        std::getline(ss, champ, ','); double fichierPrix = std::stod(champ);
 
-        std::getline(ss, champ, ',');
-        double fichierPrix = std::stod(champ); // Prix
-
-        // Comparaison avec le numéro recherché
+        // Comparaison
         if (fichierNumero == numeroImage) {
-            // Mise à jour des attributs pertinents
             this->setNumero(fichierNumero);
             this->setPrix(fichierPrix);
-
-            // Facultatif : afficher les détails trouvés
-            std::cout << "Numéro trouvé : " << fichierNumero << ", Prix : " << fichierPrix << std::endl;
-
             fichier.close();
             return true;
         }
     }
 
     fichier.close();
-    std::cerr << "Aucune image trouvée avec le numéro : " << numeroImage << std::endl;
     return false;
 }
 
-
+// Destructeur
 Image::~Image() {}

@@ -522,53 +522,68 @@ void Library::modifdescripteurs(int numero, Library bibli)
 }
 
 void Library::sauvegarderDansFichier(const std::string& nomFichier) const {
+    // Ouvre un fichier en mode écriture
     std::ofstream fichier(nomFichier);
 
+    // Vérifie si le fichier a été correctement ouvert
     if (!fichier) {
         std::cerr << "Erreur d'ouverture du fichier " << nomFichier << std::endl;
-        return;
+        return; // Sort de la fonction si l'ouverture échoue
     }
 
+    // Pointeur vers le début de la liste chaînée
     auto current = head;
     if (!current) {
+        // Si la liste est vide, afficher un message et quitter
         std::cerr << "La liste est vide, rien à sauvegarder." << std::endl;
         return;
     }
 
+    // Parcourt chaque élément de la liste chaînée
     while (current) {
+        // Récupère le descripteur sous forme de chaîne de caractères
         std::string descripteur = current->data.getDescripteurSimple();
+
+        // Si le descripteur n'est pas vide, l'écrit dans le fichier
         if (!descripteur.empty()) {
-            fichier << descripteur << "\n"; // Enregistrement ligne par ligne
+            fichier << descripteur << "\n"; // Ajoute un descripteur par ligne
         }
+
+        // Passe à l'élément suivant de la liste chaînée
         current = current->next;
     }
 
+    // Ferme le fichier après avoir terminé l'écriture
     fichier.close();
     std::cout << "Les descripteurs ont été sauvegardés dans " << nomFichier << std::endl;
 }
 
 
 void Library::chargerDepuisFichier(const std::string& nomFichier) {
+    // Ouvre un fichier en mode lecture
     std::ifstream fichier(nomFichier);
 
+    // Vérifie si le fichier a été correctement ouvert
     if (!fichier) {
         std::cerr << "Erreur d'ouverture du fichier " << nomFichier << std::endl;
-        return;
+        return; // Sort de la fonction si l'ouverture échoue
     }
 
     std::string ligne;
+
+    // Parcourt chaque ligne du fichier
     while (std::getline(fichier, ligne)) {
-        std::istringstream iss(ligne);
+        std::istringstream iss(ligne); // Permet de découper la ligne en champs
         std::string source, titre, type;
         int numero, nbTraitementPossible, identite;
         double prix;
         char acces;
 
-        // Lire chaque champ séparé par une virgule
+        // Découpe la ligne en différents champs séparés par des virgules
         if (std::getline(iss, source, ',') &&
             std::getline(iss, titre, ',') &&
             iss >> numero &&
-            iss.ignore(1) && // Ignorer la virgule
+            iss.ignore(1) && // Ignore la virgule suivante
             iss >> prix &&
             iss.ignore(1) &&
             iss >> acces &&
@@ -578,13 +593,16 @@ void Library::chargerDepuisFichier(const std::string& nomFichier) {
             iss.ignore(1) &&
             iss >> identite) {
 
-            // Ajouter le descripteur sans modification des espaces
+            // Crée un nouvel objet Image avec les données extraites
+            // et l'ajoute à la liste des descripteurs
             ajouterDescripteurs(Image(source, titre, numero, prix, acces, type, nbTraitementPossible, identite));
         } else {
+            // Si une erreur survient lors du traitement de la ligne, affiche un message
             std::cerr << "Erreur lors du traitement de la ligne : " << ligne << std::endl;
         }
     }
 
+    // Ferme le fichier après avoir terminé la lecture
     fichier.close();
     std::cout << "Les descripteurs ont été chargés depuis " << nomFichier << std::endl;
 }
