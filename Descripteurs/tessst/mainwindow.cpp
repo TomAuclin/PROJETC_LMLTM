@@ -9,6 +9,8 @@
 #include <QInputDialog>
 #include <QScreen>
 #include <QTextStream>
+#include <QDebug>
+
 
 
 // ----------------------------------------------------------------------------------------------
@@ -63,19 +65,18 @@ MainWindow::~MainWindow()
 // ************************ Chargement d'un image  ************************
 
 // ----------------------------------------------------------------------------------------------
-
 void MainWindow::loadAndDisplayImage(const QString &fileName)
 {
-    // Obtenir les dimensions de la fenêtre d'affichage (QGraphicsView)
+
     QSize viewSize = ui->AfficherImage->viewport()->size();
 
     if (!fileName.isEmpty()) {
         try {
-            // Réinitialiser les scènes
-            sceneImage->clear();
-            seceneResultat->clear();
 
-            // Libérer l'objet image précédent
+            sceneImage->clear();
+            delete seceneResultat;
+            seceneResultat = new QGraphicsScene(this);
+            ui->AffichageResultat->setScene(seceneResultat);
             delete imageObj;
             imageObj = nullptr;
 
@@ -84,7 +85,6 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                 throw std::runtime_error("L'image n'a pas pu être chargée.");
             }
 
-            // Charger et traiter l'image
             if (img.format() == QImage::Format_Grayscale8) {
                 std::vector<std::vector<uint8_t>> imageGris;
                 for (int y = 0; y < img.height(); ++y) {
@@ -94,7 +94,7 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                     }
                     imageGris.push_back(row);
                 }
-                imageObj = new ImageGris(imageGris); // Charger comme image en niveaux de gris
+                imageObj = new ImageGris(imageGris);
             } else {
                 std::vector<std::vector<std::array<uint8_t, 3>>> imageCouleur;
                 for (int y = 0; y < img.height(); ++y) {
@@ -105,26 +105,21 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                     }
                     imageCouleur.push_back(row);
                 }
-                imageObj = new ImageCouleur(imageCouleur); // Charger comme image couleur
+                imageObj = new ImageCouleur(imageCouleur);
             }
 
-            // Charger l'image dans sceneImage
+
             QPixmap pixmap(fileName);
             if (!pixmap.isNull()) {
-                // Définir la scène sur le QGraphicsView si ce n'est pas déjà fait
-                ui->AfficherImage->setScene(sceneImage);
 
-                // Redimensionner l'image pour correspondre à la taille de la fenêtre
+                ui->AfficherImage->setScene(sceneImage);
+                sceneImage->clear();
                 QPixmap scaledPixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-                // Ajouter le pixmap redimensionné à la scène
-                sceneImage->addPixmap(scaledPixmap);
-                sceneImage->setSceneRect(scaledPixmap.rect()); // Met à jour le rectangle de la scène
-
-                // Ajuster la vue pour s'assurer qu'elle correspond à la scène
+                QGraphicsPixmapItem *item = sceneImage->addPixmap(scaledPixmap);
+                item->setPos(0, 0);
+                sceneImage->setSceneRect(scaledPixmap.rect());
                 ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
-
-                // Forcer une mise à jour immédiate de l'affichage
                 ui->AfficherImage->update();
             }
         } catch (const std::exception &e) {
@@ -132,9 +127,6 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
         }
     }
 }
-
-
-
 
 // ----------------------------------------------------------------------------------------------
 
