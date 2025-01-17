@@ -64,7 +64,7 @@ public:
 
 // ************************ Traitement ************************
 // ******
-// ********* Détection de contour, Hough *************
+// ********* Détection de contour, Hough, segmentation couleur , rehaussementContours  *************
 // ******
 
 // ----------------------------------------------------------------------------------------------
@@ -78,16 +78,13 @@ public:
     Traitement();
 
     cv::Mat detectionContours(const cv::Mat &image);
-    void setImageOriginale(const cv::Mat &image);
     cv::Mat HoughDroite(const cv::Mat &image);
-
     cv::Mat rehaussementContours(const cv::Mat &image);
-// Méthode mise à jour pour gérer plusieurs canaux
     cv::Mat separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux);
     cv::Mat convolution(const cv::Mat& image);
 
 
 };
 
-#endif // TRAITEMENT_HPP
+#endif
 
