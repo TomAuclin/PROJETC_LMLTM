@@ -1,0 +1,3 @@
+banc, Banc02_gris.pgm, 812, 0, O, gris, 3, 812
+logogo, logo_fac.png, 0, 0, L, couleur, 1, 0
+lena, Lena_couleur.png, 0, 0, O, couleur, 1, 0

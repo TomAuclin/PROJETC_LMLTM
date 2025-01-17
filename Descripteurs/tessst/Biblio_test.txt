@@ -7,7 +7,6 @@ Tom, Ville_couleur.CR2, 90, 78, L, couleur, 5, 90
 Lydia, Mario01_gris.pgm, 77, 24, L, gris, 3, 77
 Tom, MagnifiquePontPret_couleur.CR2, 74, 72, L, couleur, 4, 74
 Tom, LaboPhonix_gris.pgm, 73, 43, L, gris, 4, 73
-Tom, LaboPhonix_couleur.CR2, 72, 98, L, couleur, 5, 72
 Tom, DessousPont01_couleur.CR2, 64, 90, L, couleur, 4, 64
 Tom, CedezPassage02_couleur.CR2, 62, 41, L, couleur, 6, 62
 Lydia, Ver_couleur.CR2, 48, 9, L, couleur, 5, 48
@@ -22,3 +21,4 @@ OpenSources, Barbara_gris.pgm, 4, 0, O, gris, 3, 4
 OpenSources, Barbara_couleur.png, 3, 0, O, couleur, 4, 3
 OpenSources, Baboon_gris.pgm, 2, 0, O, gris, 4, 2
 OpenSources, Baboon_couleur.png, 1, 0, O, couleur, 5, 1
+Tom, LaboPhonix_couleur.CR2, 72, 98, O, couleur, 5, 72
