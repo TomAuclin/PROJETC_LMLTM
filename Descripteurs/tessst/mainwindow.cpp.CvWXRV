@@ -47,10 +47,6 @@ MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWin
     ui->AfficherImage->setScene(sceneImage);
     ui->AffichageResultat->setScene(seceneResultat);
 
-    // Ajuster la vue pour garantir un bon affichage
-    sceneImage->setSceneRect(ui->AfficherImage->viewport()->rect());
-    ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
-
     ui->Canal_R->setVisible(false);
     ui->Canal_V->setVisible(false);
     ui->Canal_B->setVisible(false);
@@ -58,9 +54,6 @@ MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWin
     // Charger l'image au démarrage
     if (!selectedImagePath.isEmpty()) {
         loadAndDisplayImage(selectedImagePath);
-
-        // Réajuster la vue après le chargement de la première image
-        ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
     }
 }
 
