@@ -164,11 +164,11 @@ void BiblioWindow::on_SaveBoutton_clicked()
 
 void BiblioWindow::loadDefaultFile(const QString &userLogin)
 {
-    setUserLogin(userLogin); // Assurez-vous que le login est défini ici
+    setUserLogin(userLogin);
 
     QString filePath = DEFAULT_FILE_PATH;
-
     QFile file(filePath);
+
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::critical(this, "Erreur", "Impossible d'ouvrir le fichier par défaut.");
         return;
@@ -182,27 +182,39 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
     int compteur = 1;
 
     while (!in.atEnd()) {
-        QString line = in.readLine();
+        QString line = in.readLine().trimmed();
+
+        // Ignorer les lignes vides
+        if (line.isEmpty()) {
+            continue;
+        }
+
         QStringList fields = line.split(',');
+        if (fields.size() < 5) {
+            continue; // Ignorer les lignes mal formatées
+        }
 
-        if (fields.size() >= 5) {
-            QString imageName = fields[1].trimmed();
-            QString accessType = fields[4].trimmed();
-            QString imagePath = imageDirectory + "/" + imageName;
+        QString imageName = fields[1].trimmed();
+        QString accessType = fields[4].trimmed();
+        QString imagePath = imageDirectory + "/" + imageName;
 
-            // Vérifier l'accès en fonction du login utilisateur
-            if ((userLogin == "us-02-al" && accessType == "O") ||
-                (userLogin == "ad-01-ao" && (accessType == "O" || accessType == "L"))) {
+        // Vérifier l'accès en fonction du login utilisateur
+        bool hasAccess = false;
+        if (userLogin == "us-02-al" && accessType == "O") {
+            hasAccess = true;
+        } else if (userLogin == "ad-01-ao" && (accessType == "O" || accessType == "L")) {
+            hasAccess = true;
+        }
 
-                if (QFileInfo::exists(imagePath)) {
-                    QString itemText = QString::number(compteur) + ". " + imageName;
-                    QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText);
-                    item->setData(Qt::UserRole, imagePath);
-                    ui->AffichageBiblio->addItem(item);
-                    compteur++;
-                } else {
-                    missingImages.append(imageName);
-                }
+        if (hasAccess) {
+            if (QFileInfo::exists(imagePath)) {
+                QString itemText = QString::number(compteur) + ". " + imageName;
+                QListWidgetItem* item = new QListWidgetItem(QIcon(imagePath), itemText);
+                item->setData(Qt::UserRole, imagePath);
+                ui->AffichageBiblio->addItem(item);
+                compteur++;
+            } else {
+                missingImages.append(imageName);
             }
         }
     }

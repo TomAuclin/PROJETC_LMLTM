@@ -47,6 +47,10 @@ MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWin
     ui->AfficherImage->setScene(sceneImage);
     ui->AffichageResultat->setScene(seceneResultat);
 
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
+
     // Charger l'image au démarrage
     if (!selectedImagePath.isEmpty()) {
         loadAndDisplayImage(selectedImagePath);
