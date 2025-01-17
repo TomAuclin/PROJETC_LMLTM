@@ -115,56 +115,56 @@
      <string>Nombre d'images : 0</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="triprix">
+   <widget class="QPushButton" name="pushButtonSousListePrix">
     <property name="geometry">
      <rect>
       <x>810</x>
-      <y>170</y>
-      <width>80</width>
+      <y>200</y>
+      <width>121</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>triprix</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="trinbtraitements">
-    <property name="geometry">
-     <rect>
-      <x>810</x>
-      <y>220</y>
-      <width>80</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>trinbtrait</string>
+     <string>SousListePrix</string>
     </property>
    </widget>
    <widget class="QPushButton" name="souslistetype">
     <property name="geometry">
      <rect>
       <x>810</x>
-      <y>270</y>
-      <width>80</width>
+      <y>230</y>
+      <width>121</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>souslistetype</string>
+     <string>Sous liste type</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonSousListePrix">
+   <widget class="QPushButton" name="triprix">
     <property name="geometry">
      <rect>
       <x>810</x>
-      <y>320</y>
+      <y>260</y>
       <width>80</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>souslisteprix</string>
+     <string>Tri prix</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="trinbtraitements">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>290</y>
+      <width>121</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tri nb traitement</string>
     </property>
    </widget>
   </widget>
@@ -177,8 +177,6 @@
      <height>22</height>
     </rect>
    </property>
-    </widget>
-    <widget class="QStatusBar" name="statusbar"/> 
    <widget class="QMenu" name="menuDescripteurs">
     <property name="title">
      <string>Descripteurs</string>

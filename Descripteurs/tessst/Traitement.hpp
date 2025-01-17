@@ -1,4 +1,4 @@
-ucide#ifndef TRAITEMENT_HPP
+#ifndef TRAITEMENT_HPP
 #define TRAITEMENT_HPP
 
 #include <opencv2/opencv.hpp>
