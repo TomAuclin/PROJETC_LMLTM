@@ -876,9 +876,10 @@ void BiblioWindow::on_triprix_clicked()
     const QSize iconSize(150, 150);
 
     // Réafficher les images dans l'ordre trié
-    for (int i = 0; i < titres.size(); ++i) {
+
+     for (int i = 0; i < titres.size(); ++i) {
         QString imagePath = cheminsImages[i];
-        QString title = QString::fromStdString(titres[i]);
+        QString title = QString("%1. %2").arg(i + 1).arg(QString::fromStdString(titres[i]));
 
         // Créer un nouvel item avec le titre de l'image
         QListWidgetItem* newItem = new QListWidgetItem(title);
@@ -1001,9 +1002,11 @@ void BiblioWindow::on_trinbtraitements_clicked()
     const QSize iconSize(150, 150);
 
     // Réafficher les images dans l'ordre trié
+
     for (int i = 0; i < titres.size(); ++i) {
         QString imagePath = cheminsImages[i];
-        QString title = QString::fromStdString(titres[i]);
+        QString title = QString("%1. %2").arg(i + 1).arg(QString::fromStdString(titres[i]));
+
 
         // Créer un nouvel item avec le titre de l'image
         QListWidgetItem* newItem = new QListWidgetItem(title);
