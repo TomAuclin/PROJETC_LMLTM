@@ -226,26 +226,6 @@ void Library::modifierAcces(int numero, const std::string& nomFichier) {
     std::cerr << "Image non trouvée." << std::endl;
 }
 
-//void Library::modifierAcces(int numero) {
-//    auto current = head; // Commence à la tête de la liste
-//    while (current) { // Parcourt la liste chaînée
-//        if (current->data.getNumero() == numero) { // Vérifie si le numéro correspond
-//            // Bascule entre 'O' et 'L' pour l'accès
-//            if (current->data.getAccess() == 'O') {
-//                current->data.setAccess('L');
-//            } else {
-//                current->data.setAccess('O');
-//            }
-//            std::cout << "L'accès de l'image numéro " << numero << " a été modifié." << std::endl;
-//            return; // Arrête la recherche après la modification
-//        }
-//        current = current->next; // Passe au nœud suivant
-//    }
-//    std::cerr << "Image avec le numéro " << numero << " non trouvée dans la liste." << std::endl;
-//}
-
-
-
 
 void Library::afficherImagesAvecAccesO(const std::string &nomFichier) const
 {
@@ -610,53 +590,6 @@ void Library::chargerDepuisFichier(const std::string& nomFichier) {
     std::cout << "Les descripteurs ont été chargés depuis " << nomFichier << std::endl;
 }
 
-/*
-// Fonction pour ouvrir une boîte de dialogue et sélectionner un fichier
-std::string openFileDialog() {
-    char fileName[MAX_PATH] = "";
-    OPENFILENAME ofn = {0};
-
-    ofn.lStructSize = sizeof(OPENFILENAME);
-    ofn.hwndOwner = nullptr; // Pas de fenêtre parent
-    ofn.lpstrFilter = "Images\0*.png;*.jpg;*.jpeg;*.bmp;*.gif\0Tous les fichiers\0*.*\0";
-    ofn.lpstrFile = fileName;
-    ofn.nMaxFile = MAX_PATH;
-    ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
-
-    if (GetOpenFileName(&ofn)) {
-        return std::string(fileName); // Retourne le chemin du fichier sélectionné
-    }
-
-    return ""; // Si l'utilisateur annule, retourne une chaîne vide
-}
-
-// Fonction pour copier un fichier dans un dossier de destination
-void copyFile(const std::string& sourcePath, const std::string& destinationFolder) {
-    fs::path sourceFile(sourcePath);
-
-    // Vérifier si le fichier source existe
-    if (!fs::exists(sourceFile)) {
-        std::cerr << "Erreur : le fichier n'existe pas." << std::endl;
-        return;
-    }
-
-    // Créer le dossier de destination s'il n'existe pas
-    if (!fs::exists(destinationFolder)) {
-        fs::create_directories(destinationFolder);
-    }
-
-    // Construire le chemin de destination
-    fs::path destinationFile = fs::path(destinationFolder) / sourceFile.filename();
-
-    // Copier le fichier
-    try {
-        fs::copy(sourceFile, destinationFile, fs::copy_options::overwrite_existing);
-        std::cout << "Fichier copié dans : " << destinationFile << std::endl;
-    } catch (const fs::filesystem_error& e) {
-        std::cerr << "Erreur lors de la copie du fichier : " << e.what() << std::endl;
-    }
-}
-*/
 
 /**
  * Permet de permuter deux images dans la bibliothèque en se basant sur leurs numéros (ils sont uniques)
@@ -801,7 +734,6 @@ void Library::save() {
 
     fichier.close();
 
-    //(jsp si c'est utile de dire le nom mais pour tester si la fonction marche c'est pratique)
     std::cout << "La nouvelle bibliothèque a été sauvegardée sous le nom : " << nomBibliotheque << std::endl;
 
 }void Library::fusion(Library liste2)
