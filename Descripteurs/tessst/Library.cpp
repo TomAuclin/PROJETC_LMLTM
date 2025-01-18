@@ -11,6 +11,8 @@
 #include <filesystem>
 #include <string>
 #include <QMessageBox>
+#include <QDir>
+#include <QCoreApplication>
 
 namespace fs = std::filesystem;
 
@@ -32,7 +34,7 @@ Library::Library() : head(nullptr) {}
  *
  * ----------------------------------------------------------------------------*/
 
-#include <QDir>
+
 
 std::string Library::getDossierParPrix(double prix) const {
     QString basePath = QDir::currentPath(); // Récupère le répertoire courant
@@ -51,7 +53,7 @@ std::string Library::getDossierParPrix(double prix) const {
     return dossier.toStdString();
 }
 
-#include <QCoreApplication>
+
 
 std::string Library::getCheminProjet() const {
     // Récupère le chemin absolu du répertoire du projet
@@ -118,8 +120,7 @@ void Library::ajouterDescripteurs(const Image& img) {
 void Library::supprimerDescripteurs(int numero)
 {
     // Si la liste est vide, il n'y a rien à supprimer
-    // A voir
-    //int cpt = 1;
+    
     auto current = head;
     auto previous = head;
     while (current) {
@@ -133,7 +134,7 @@ void Library::supprimerDescripteurs(int numero)
             }
             return;
         }
-        //cpt++;
+        
         previous = current;
         current = current->next;
     }
@@ -148,13 +149,12 @@ void  Library::tricroissant(Library liste)
     
     for (int i = 0; i <liste.tailleListe()-1; i ++ )
     {current = head;
-    //std::cout << current->data.getDescripteur() << std::endl;
+    
         for (int j = 0; j <liste.tailleListe()-1; j ++ )   
         {          
             if (current->data.getPrix() > current->next->data.getPrix())
             {
-                //std::cout << "Prix 1 : " << current->data.getPrix() << std::endl;
-                //std::cout << "Prix 2 : " << current->next->data.getPrix() << std::endl;
+               
                 auto temp = current->data;
                 current->data = current->next->data;
                 current->next->data = temp;
@@ -276,7 +276,7 @@ int Library::tailleListe()
         taille++;
         current = current->next;
     }
-    //std::cout << "La taille de la liste est de : " << taille << std::endl;
+   
     return taille;
 }
 
@@ -640,13 +640,7 @@ void Library::save() {
     int numero, nbTraitementPossible, identite;
     double prix;
     char acces;
-    /*
-    std::cout << "Entrez le chemin complet de l'image à ajouter : ";
-    std::cin.ignore();
-    std::getline(std::cin, cheminImage);
-
-    if (cheminImage.empty()){
-        std::cerr << "chemin introuvable " << std::endl;    }*/
+   
 
     std::cout << "Sélectionnez une image à ajouter.\n";
 
