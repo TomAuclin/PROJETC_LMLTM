@@ -351,8 +351,8 @@ void BiblioWindow::on_pushButtonRechercherp_clicked() {
         qDebug() << "Titre extrait : " << titreCherche;
 
         Image image;
-        image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
 
+        image.titre = titreCherche.toStdString();
         // Association des descripteurs pour récupérer le prix
         image.associerDescripteur(cheminDescripteurs);
 
