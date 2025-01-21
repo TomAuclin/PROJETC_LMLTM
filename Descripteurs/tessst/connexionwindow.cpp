@@ -96,7 +96,7 @@ void ConnexionWindow::on_connexionButton_clicked()
     // Vérifie si le login est l'un des identifiants valides
     if (login == "ad-01-ao" || login == "us-02-al") {
         if (!biblioWindow) { // Si la fenêtre bibliothèque n'est pas déjà ouverte
-            biblioWindow = std::make_unique<BiblioWindow>(nullptr); // Créer une nouvelle instance de BiblioWindow
+            biblioWindow = std::make_unique<BiblioWindow>(login,nullptr); // Créer une nouvelle instance de BiblioWindow
             biblioWindow->setUserLogin(login); // Définir le login de l'utilisateur dans la fenêtre de la bibliothèque
         }
 

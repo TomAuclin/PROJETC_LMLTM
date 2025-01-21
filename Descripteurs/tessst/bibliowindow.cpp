@@ -69,6 +69,14 @@ BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
     // Initialisation du texte pour le nombre d'images
     ui->labelImageCount->setText("Nombre d'images : 0");
 
+    // si le user normal est connecter il ne peut pas ajouter, modifier ou supprimer un descripteur
+    // Pour "us-02-al"
+    if (LoginUtilisateur == "us-02-al") {
+        ui->actionAjouterDescripteur->setVisible(false);
+        ui->actionModifierDescripteur->setVisible(false);
+        ui->actionSupprimer_un_descripteur->setVisible(false);
+    }
+
     // Connexions des slots aux signaux des widgets
     connect(ui->AffichageBiblio, &QListWidget::itemClicked, this, &BiblioWindow::on_AffichageBiblio_itemClicked);
     connect(ui->actionSupprimer_un_descripteur, &QAction::triggered, this, &BiblioWindow::on_actionSupprimerDescripteur_triggered);
