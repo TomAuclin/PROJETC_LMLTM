@@ -1,0 +1,1 @@
+image1, LimaceVelo_couleur.CR2, 250, 0, O, couleur, 6, 250
