@@ -1,7 +1,10 @@
+// Inclusion des fichiers d'en-tête
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "bibliowindow.h"
 #include "connexionwindow.h"
+
+// Inclusion des fichiers nécessaires pour gérer l'interface, les images et la bibliothèque.
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QGraphicsPixmapItem>
@@ -9,7 +12,7 @@
 #include <QInputDialog>
 #include <QScreen>
 #include <QTextStream>
-
+#include <QDebug>
 
 // ----------------------------------------------------------------------------------------------
 
@@ -21,19 +24,19 @@ cv::Mat g_imageAvecBruit;
 
 MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
     : QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    sceneImage(new QGraphicsScene(this)),
-    seceneResultat(new QGraphicsScene(this)),
-    imageObj(nullptr),
-    biblioWindow(parentBiblio),
-    LoginUtilisateur(login),
-    selectedImagePath(imagePath) // Initialisation du chemin d'image
+    ui(new Ui::MainWindow),                          // Initialisation de l'interface utilisateur
+    sceneImage(new QGraphicsScene(this)),            // Création de la scène pour afficher l'image
+    seceneResultat(new QGraphicsScene(this)),        // Création de la scène pour afficher les résultats du traitement
+    imageObj(nullptr),                               // Initialisation du pointeur vers l'objet image (aucune image pour l'instant)
+    biblioWindow(parentBiblio),                      // Initialisation du pointeur vers la fenêtre bibliothèque
+    LoginUtilisateur(login),                        // Initialisation du login utilisateur
+    selectedImagePath(imagePath)                     // Initialisation du chemin de l'image à afficher
 {
-    ui->setupUi(this);
-    setWindowTitle("Fenetre de traitement");
-    resize(1200, 600);
+    ui->setupUi(this);  // Setup de l'interface utilisateur avec le fichier .ui
+    setWindowTitle("Fenetre de traitement");  // Définir le titre de la fenêtre
+    resize(1200, 600);  // Définir la taille de la fenêtre principale
 
-    // Centrer la fenêtre sur l'écran
+    // Centrage de la fenêtre sur l'écran
     QScreen *screen = QGuiApplication::primaryScreen();
     if (screen) {
         QRect screenGeometry = screen->geometry();
@@ -42,21 +45,33 @@ MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWin
         this->move(x, y);
     }
 
-    // Initialiser les scènes
+    // Initialisation des scènes pour afficher l'image et les résultats du traitement
     ui->AfficherImage->setScene(sceneImage);
     ui->AffichageResultat->setScene(seceneResultat);
 
-    // Charger l'image au démarrage
+    // Ajustement de la vue pour garantir une bonne mise en page de l'image
+    sceneImage->setSceneRect(ui->AfficherImage->viewport()->rect());
+    ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
+
+    // Initialiser les canaux (R/V/B) comme invisibles au démarrage
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
+
+    // Si un chemin d'image a été fourni, charger et afficher l'image
     if (!selectedImagePath.isEmpty()) {
         loadAndDisplayImage(selectedImagePath);
+
+        // Réajuster la vue après le chargement de la première image
+        ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
     }
 }
 
-
+// Destructeur de la classe MainWindow. Il libère les ressources allouées pour l'interface et l'image.
 MainWindow::~MainWindow()
 {
-    delete ui;
-    delete imageObj;
+    delete ui;           // Supprime l'interface utilisateur
+    delete imageObj;     // Supprime l'objet image si nécessaire
 }
 
 // ----------------------------------------------------------------------------------------------
@@ -65,72 +80,82 @@ MainWindow::~MainWindow()
 
 // ----------------------------------------------------------------------------------------------
 
+// Fonction pour charger et afficher une image à partir d'un chemin de fichier donné.
 void MainWindow::loadAndDisplayImage(const QString &fileName)
 {
-    // Obtenir les dimensions de la fenêtre d'affichage (QGraphicsView)
-    QSize viewSize = ui->AfficherImage->viewport()->size();
+    // Si le nom de fichier est vide, ne rien faire et sortir de la fonction
+    if (fileName.isEmpty()) {
+        return;
+    }
 
-    if (!fileName.isEmpty()) {
-        try {
-            // Réinitialiser les scènes
-            sceneImage->clear();
-            seceneResultat->clear();
-
-            // Libérer l'objet image précédent
-            delete imageObj;
-            imageObj = nullptr;
-
-            QImage img(fileName);
-            if (img.isNull()) {
-                throw std::runtime_error("L'image n'a pas pu être chargée.");
-            }
-
-            // Charger et traiter l'image
-            if (img.format() == QImage::Format_Grayscale8) {
-                std::vector<std::vector<uint8_t>> imageGris;
-                for (int y = 0; y < img.height(); ++y) {
-                    std::vector<uint8_t> row;
-                    for (int x = 0; x < img.width(); ++x) {
-                        row.push_back(qGray(img.pixel(x, y)));
-                    }
-                    imageGris.push_back(row);
-                }
-                imageObj = new ImageGris(imageGris); // Charger comme image en niveaux de gris
-            } else {
-                std::vector<std::vector<std::array<uint8_t, 3>>> imageCouleur;
-                for (int y = 0; y < img.height(); ++y) {
-                    std::vector<std::array<uint8_t, 3>> row;
-                    for (int x = 0; x < img.width(); ++x) {
-                        QRgb pixel = img.pixel(x, y);
-                        row.push_back({static_cast<uint8_t>(qRed(pixel)), static_cast<uint8_t>(qGreen(pixel)), static_cast<uint8_t>(qBlue(pixel))});
-                    }
-                    imageCouleur.push_back(row);
-                }
-                imageObj = new ImageCouleur(imageCouleur); // Charger comme image couleur
-            }
-
-            // Charger l'image dans sceneImage
-            QPixmap pixmap(fileName);
-            if (!pixmap.isNull()) {
-                // Définir la scène sur le QGraphicsView si ce n'est pas déjà fait
-                ui->AfficherImage->setScene(sceneImage);
-
-                // Redimensionner l'image pour correspondre à la taille de la fenêtre
-                QPixmap scaledPixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-                // Ajouter le pixmap redimensionné à la scène
-                sceneImage->addPixmap(scaledPixmap);
-                sceneImage->setSceneRect(scaledPixmap.rect()); // Met à jour le rectangle de la scène
-
-                // Ajuster la vue pour s'assurer qu'elle correspond à la scène
-                ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
-
-                // Forcer une mise à jour immédiate de l'affichage
-                ui->AfficherImage->update();
-            }
-        } catch (const std::exception &e) {
-            QMessageBox::critical(this, tr("Erreur"), tr(e.what()));
+    try {
+        // Nettoyage des scènes et objets existants pour préparer le nouvel affichage
+        sceneImage->clear(); // Efface la scène d'image actuelle
+        if (seceneResultat) {
+            delete seceneResultat; // Libère l'ancienne scène de résultats
+            seceneResultat = nullptr; // Assure que le pointeur est nul
         }
+        seceneResultat = new QGraphicsScene(this); // Crée une nouvelle scène pour les résultats
+        ui->AffichageResultat->setScene(seceneResultat); // Associe la nouvelle scène aux résultats
+
+        if (imageObj) {
+            delete imageObj; // Libère l'ancien objet image
+            imageObj = nullptr; // Assure que le pointeur est nul
+        }
+
+        // Charger l'image à partir du fichier
+        QImage img(fileName);
+        if (img.isNull()) { // Si l'image ne peut pas être chargée, lever une exception
+            throw std::runtime_error("L'image n'a pas pu être chargée.");
+        }
+
+        // Convertir l'image en fonction de son format
+        if (img.format() == QImage::Format_Grayscale8) { // Si l'image est en niveaux de gris
+            // Créer un vecteur bidimensionnel pour stocker l'image en niveaux de gris
+            std::vector<std::vector<uint8_t>> imageGris;
+            for (int y = 0; y < img.height(); ++y) {
+                std::vector<uint8_t> row;
+                for (int x = 0; x < img.width(); ++x) {
+                    row.push_back(qGray(img.pixel(x, y))); // Récupérer la valeur en niveaux de gris du pixel
+                }
+                imageGris.push_back(row); // Ajouter la ligne à l'image en niveaux de gris
+            }
+            imageObj = new ImageGris(imageGris); // Créer un objet ImageGris
+        } else { // Si l'image est en couleur
+            // Créer un vecteur bidimensionnel pour stocker l'image couleur
+            std::vector<std::vector<std::array<uint8_t, 3>>> imageCouleur;
+            for (int y = 0; y < img.height(); ++y) {
+                std::vector<std::array<uint8_t, 3>> row;
+                for (int x = 0; x < img.width(); ++x) {
+                    QRgb pixel = img.pixel(x, y);
+                    row.push_back({static_cast<uint8_t>(qRed(pixel)), static_cast<uint8_t>(qGreen(pixel)), static_cast<uint8_t>(qBlue(pixel))}); // Extraire les composantes RGB
+                }
+                imageCouleur.push_back(row); // Ajouter la ligne de pixels à l'image couleur
+            }
+            imageObj = new ImageCouleur(imageCouleur); // Créer un objet ImageCouleur
+        }
+
+        // Charger le pixmap et ajuster la vue
+        QPixmap pixmap(fileName);
+        if (!pixmap.isNull()) { // Si le pixmap a bien été chargé
+            ui->AfficherImage->setScene(sceneImage); // Associer la scène d'image à la vue
+            sceneImage->clear(); // Effacer la scène d'image actuelle
+
+            // Obtenir la taille de la vue et ajuster l'image en conséquence
+            QSize viewSize = ui->AfficherImage->viewport()->size();
+            QPixmap scaledPixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation); // Mettre à l'échelle l'image pour s'ajuster à la vue
+
+            // Ajouter l'image à la scène
+            QGraphicsPixmapItem *item = sceneImage->addPixmap(scaledPixmap);
+            item->setPos(0, 0); // Positionner l'image dans la scène
+            sceneImage->setSceneRect(scaledPixmap.rect()); // Définir le rectangle de la scène
+
+            // Ajuster la vue pour afficher l'image correctement
+            ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
+            ui->AfficherImage->update(); // Mettre à jour la vue
+        }
+    } catch (const std::exception &e) { // Si une exception est levée pendant le chargement
+        QMessageBox::critical(this, tr("Erreur"), tr(e.what())); // Afficher un message d'erreur
     }
 }
 
@@ -145,7 +170,9 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
 
 void MainWindow::on_CalculerHisto_clicked()
 {
+    // Vérification de l'existence d'une image chargée
     if (!imageObj) {
+        // Affichage d'un message d'erreur si aucune image n'est chargée
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
@@ -153,63 +180,75 @@ void MainWindow::on_CalculerHisto_clicked()
     // Vérification si l'image est en niveaux de gris
     bool isGrayscale = dynamic_cast<ImageGris*>(imageObj) != nullptr;
 
-    // Calculer l'histogramme
     try {
+        // Initialisation d'un tableau pour l'histogramme
         int histogramme[256] = {0};
+
+        // Calcul de l'histogramme de l'image
         Histogramme::calculerHistogramme(*imageObj, histogramme);
 
-        afficherHistogramme(histogramme); // Afficher l'histogramme combiné
+        // Affichage de l'histogramme combiné
+        afficherHistogramme(histogramme);
 
+        // Si l'image est en niveaux de gris, désactivation des boutons pour les canaux
         if (isGrayscale) {
-            // Désactiver et masquer les boutons pour les canaux
             ui->Canal_R->setVisible(false);
             ui->Canal_V->setVisible(false);
             ui->Canal_B->setVisible(false);
         } else {
-            // Activer et afficher les boutons pour les canaux
+            // Sinon, on rend les boutons pour les canaux visibles
             ui->Canal_R->setVisible(true);
             ui->Canal_V->setVisible(true);
             ui->Canal_B->setVisible(true);
         }
-
     } catch (const std::exception& e) {
+        // En cas d'exception, affichage d'un message d'erreur
         QMessageBox::critical(this, tr("Erreur"), tr(e.what()));
     }
 }
 
-
 void MainWindow::afficherHistogramme(int histogramme[256])
 {
+    // Efface la scène avant de redessiner
     seceneResultat->clear();
+
+    // Obtention de la taille de la vue pour l'affichage
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     int width = viewSize.width();
     int height = viewSize.height();
 
     int margin = 30;
     int maxVal = 0;
+
+    // Recherche de la valeur maximale dans l'histogramme pour ajuster la taille des barres
     for (int i = 0; i < 256; ++i) {
         if (histogramme[i] > maxVal) {
             maxVal = histogramme[i];
         }
     }
 
+    // Largeur des barres de l'histogramme
     int barWidth = width / 256;
     if (barWidth < 1) {
         barWidth = 1;
     }
 
+    // Calcul du facteur d'échelle pour les hauteurs des barres
     int maxBarHeight = height - 2 * margin;
     double scaleFactor = static_cast<double>(maxBarHeight) / maxVal;
 
-    seceneResultat->addLine(margin, height - margin, width, height - margin, QPen(Qt::black));
-    seceneResultat->addLine(margin, 0, margin, height - margin, QPen(Qt::black));
+    // Ajout des axes à la scène
+    seceneResultat->addLine(margin, height - margin, width, height - margin, QPen(Qt::black)); // Axe X
+    seceneResultat->addLine(margin, 0, margin, height - margin, QPen(Qt::black));             // Axe Y
 
+    // Affichage des graduations sur l'axe X
     for (int i = 0; i < 256; i += 32) {
         seceneResultat->addLine(i * barWidth + margin, height - margin, i * barWidth + margin, height - margin - 5, QPen(Qt::black));
         QGraphicsTextItem* textItem = seceneResultat->addText(QString::number(i));
         textItem->setPos(i * barWidth + margin - 10, height - margin + 5);
     }
 
+    // Affichage des graduations sur l'axe Y
     int tickInterval = maxVal / 5;
     for (int i = 0; i <= 5; ++i) {
         int yPos = height - margin - (i * (height - 2 * margin) / 5);
@@ -218,15 +257,16 @@ void MainWindow::afficherHistogramme(int histogramme[256])
         textItem->setPos(margin - 30, yPos - 5);
     }
 
+    // Dessin des barres de l'histogramme
     for (int i = 0; i < 256; ++i) {
         int barHeight = static_cast<int>(histogramme[i] * scaleFactor);
         seceneResultat->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(Qt::black));
     }
 
+    // Affichage de la scène avec l'histogramme
     ui->AffichageResultat->setScene(seceneResultat);
 }
 
-// Afichage d'une couleur pour chaque canneau
 void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
 {
     seceneResultat->clear();
@@ -237,26 +277,28 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     int margin = 30;
     int maxVal = 0;
 
-    // valeur maximale dans l'histogramme pour le redimensionnement
+    // Recherche de la valeur maximale dans l'histogramme pour le redimensionnement
     for (int i = 0; i < 256; ++i) {
         if (histogramme[i] > maxVal) {
             maxVal = histogramme[i];
         }
     }
 
+    // Largeur des barres de l'histogramme
     int barWidth = width / 256;
     if (barWidth < 1) {
         barWidth = 1;
     }
 
+    // Calcul du facteur d'échelle pour les hauteurs des barres
     int maxBarHeight = height - 2 * margin;
     double scaleFactor = static_cast<double>(maxBarHeight) / maxVal;
 
-    // axes de l'histogramme
+    // Ajout des axes
     seceneResultat->addLine(margin, height - margin, width, height - margin, QPen(Qt::black)); // Axe X
     seceneResultat->addLine(margin, 0, margin, height - margin, QPen(Qt::black));             // Axe Y
 
-    // graduations pour les axes
+    // Affichage des graduations
     for (int i = 0; i < 256; i += 32) {
         seceneResultat->addLine(i * barWidth + margin, height - margin, i * barWidth + margin, height - margin - 5, QPen(Qt::black));
         QGraphicsTextItem* textItem = seceneResultat->addText(QString::number(i));
@@ -271,7 +313,7 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         textItem->setPos(margin - 30, yPos - 5);
     }
 
-    //  les histogrammes pour chaque canal en fonction des cases cochées
+    // Affichage des barres de l'histogramme pour chaque canal
     if (ui->Canal_R->isChecked()) {
         int histoRouge[256] = {0};
         Histogramme::calculerHistogramme(*imageObj, histoRouge, 0); // Canal rouge
@@ -302,38 +344,53 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         }
     }
 
-
     ui->AffichageResultat->setScene(seceneResultat);
 }
 
 void MainWindow::on_Canal_R_stateChanged(int arg1)
 {
+    // Vérification si une image est chargée
     if (imageObj) {
+        // Initialisation d'un tableau pour stocker l'histogramme
         int histogramme[256] = {0};
+
+        // Calcul de l'histogramme pour le canal rouge (0 pour le rouge)
         Histogramme::calculerHistogramme(*imageObj, histogramme, 0);
+
+        // Affichage de l'histogramme du canal rouge
         afficherHistogrammeCanal(histogramme, 0);
     }
 }
 
 void MainWindow::on_Canal_V_stateChanged(int arg1)
 {
+    // Vérification si une image est chargée
     if (imageObj) {
+        // Initialisation d'un tableau pour stocker l'histogramme
         int histogramme[256] = {0};
+
+        // Calcul de l'histogramme pour le canal vert (1 pour le vert)
         Histogramme::calculerHistogramme(*imageObj, histogramme, 1);
+
+        // Affichage de l'histogramme du canal vert
         afficherHistogrammeCanal(histogramme, 1);
     }
 }
 
 void MainWindow::on_Canal_B_stateChanged(int arg1)
 {
+    // Vérification si une image est chargée
     if (imageObj) {
+        // Initialisation d'un tableau pour stocker l'histogramme
         int histogramme[256] = {0};
+
+        // Calcul de l'histogramme pour le canal bleu (2 pour le bleu)
         Histogramme::calculerHistogramme(*imageObj, histogramme, 2);
+
+        // Affichage de l'histogramme du canal bleu
         afficherHistogrammeCanal(histogramme, 2);
     }
 }
-
-
 
 // ----------------------------------------------------------------------------------------------
 

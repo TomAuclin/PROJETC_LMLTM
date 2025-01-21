@@ -1,5 +1,8 @@
+// Inclusion des fichiers d'en-tête
 #include "Library.hpp"
 #include "GestionUtilisateur.hpp"
+
+// Inclusion des fichiers nécessaires pour gérer l'interface, les images et la bibliothèque.
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -8,6 +11,8 @@
 #include <filesystem>
 #include <string>
 #include <QMessageBox>
+#include <QDir>
+#include <QCoreApplication>
 
 namespace fs = std::filesystem;
 
@@ -29,7 +34,7 @@ Library::Library() : head(nullptr) {}
  *
  * ----------------------------------------------------------------------------*/
 
-#include <QDir>
+
 
 std::string Library::getDossierParPrix(double prix) const {
     QString basePath = QDir::currentPath(); // Récupère le répertoire courant
@@ -48,7 +53,7 @@ std::string Library::getDossierParPrix(double prix) const {
     return dossier.toStdString();
 }
 
-#include <QCoreApplication>
+
 
 std::string Library::getCheminProjet() const {
     // Récupère le chemin absolu du répertoire du projet
@@ -115,8 +120,7 @@ void Library::ajouterDescripteurs(const Image& img) {
 void Library::supprimerDescripteurs(int numero)
 {
     // Si la liste est vide, il n'y a rien à supprimer
-    // A voir
-    //int cpt = 1;
+    
     auto current = head;
     auto previous = head;
     while (current) {
@@ -130,7 +134,7 @@ void Library::supprimerDescripteurs(int numero)
             }
             return;
         }
-        //cpt++;
+        
         previous = current;
         current = current->next;
     }
@@ -145,13 +149,12 @@ void  Library::tricroissant(Library liste)
     
     for (int i = 0; i <liste.tailleListe()-1; i ++ )
     {current = head;
-    //std::cout << current->data.getDescripteur() << std::endl;
+    
         for (int j = 0; j <liste.tailleListe()-1; j ++ )   
         {          
             if (current->data.getPrix() > current->next->data.getPrix())
             {
-                //std::cout << "Prix 1 : " << current->data.getPrix() << std::endl;
-                //std::cout << "Prix 2 : " << current->next->data.getPrix() << std::endl;
+               
                 auto temp = current->data;
                 current->data = current->next->data;
                 current->next->data = temp;
@@ -223,26 +226,6 @@ void Library::modifierAcces(int numero, const std::string& nomFichier) {
     std::cerr << "Image non trouvée." << std::endl;
 }
 
-//void Library::modifierAcces(int numero) {
-//    auto current = head; // Commence à la tête de la liste
-//    while (current) { // Parcourt la liste chaînée
-//        if (current->data.getNumero() == numero) { // Vérifie si le numéro correspond
-//            // Bascule entre 'O' et 'L' pour l'accès
-//            if (current->data.getAccess() == 'O') {
-//                current->data.setAccess('L');
-//            } else {
-//                current->data.setAccess('O');
-//            }
-//            std::cout << "L'accès de l'image numéro " << numero << " a été modifié." << std::endl;
-//            return; // Arrête la recherche après la modification
-//        }
-//        current = current->next; // Passe au nœud suivant
-//    }
-//    std::cerr << "Image avec le numéro " << numero << " non trouvée dans la liste." << std::endl;
-//}
-
-
-
 
 void Library::afficherImagesAvecAccesO(const std::string &nomFichier) const
 {
@@ -293,7 +276,7 @@ int Library::tailleListe()
         taille++;
         current = current->next;
     }
-    //std::cout << "La taille de la liste est de : " << taille << std::endl;
+   
     return taille;
 }
 
@@ -522,53 +505,68 @@ void Library::modifdescripteurs(int numero, Library bibli)
 }
 
 void Library::sauvegarderDansFichier(const std::string& nomFichier) const {
+    // Ouvre un fichier en mode écriture
     std::ofstream fichier(nomFichier);
 
+    // Vérifie si le fichier a été correctement ouvert
     if (!fichier) {
         std::cerr << "Erreur d'ouverture du fichier " << nomFichier << std::endl;
-        return;
+        return; // Sort de la fonction si l'ouverture échoue
     }
 
+    // Pointeur vers le début de la liste chaînée
     auto current = head;
     if (!current) {
+        // Si la liste est vide, afficher un message et quitter
         std::cerr << "La liste est vide, rien à sauvegarder." << std::endl;
         return;
     }
 
+    // Parcourt chaque élément de la liste chaînée
     while (current) {
+        // Récupère le descripteur sous forme de chaîne de caractères
         std::string descripteur = current->data.getDescripteurSimple();
+
+        // Si le descripteur n'est pas vide, l'écrit dans le fichier
         if (!descripteur.empty()) {
-            fichier << descripteur << "\n"; // Enregistrement ligne par ligne
+            fichier << descripteur << "\n"; // Ajoute un descripteur par ligne
         }
+
+        // Passe à l'élément suivant de la liste chaînée
         current = current->next;
     }
 
+    // Ferme le fichier après avoir terminé l'écriture
     fichier.close();
     std::cout << "Les descripteurs ont été sauvegardés dans " << nomFichier << std::endl;
 }
 
 
 void Library::chargerDepuisFichier(const std::string& nomFichier) {
+    // Ouvre un fichier en mode lecture
     std::ifstream fichier(nomFichier);
 
+    // Vérifie si le fichier a été correctement ouvert
     if (!fichier) {
         std::cerr << "Erreur d'ouverture du fichier " << nomFichier << std::endl;
-        return;
+        return; // Sort de la fonction si l'ouverture échoue
     }
 
     std::string ligne;
+
+    // Parcourt chaque ligne du fichier
     while (std::getline(fichier, ligne)) {
-        std::istringstream iss(ligne);
+        std::istringstream iss(ligne); // Permet de découper la ligne en champs
         std::string source, titre, type;
         int numero, nbTraitementPossible, identite;
         double prix;
         char acces;
 
-        // Lire chaque champ séparé par une virgule
+        // Découpe la ligne en différents champs séparés par des virgules
         if (std::getline(iss, source, ',') &&
             std::getline(iss, titre, ',') &&
             iss >> numero &&
-            iss.ignore(1) && // Ignorer la virgule
+            iss.ignore(1) && // Ignore la virgule suivante
             iss >> prix &&
             iss.ignore(1) &&
             iss >> acces &&
@@ -578,64 +576,20 @@ void Library::chargerDepuisFichier(const std::string& nomFichier) {
             iss.ignore(1) &&
             iss >> identite) {
 
-            // Ajouter le descripteur sans modification des espaces
+            // Crée un nouvel objet Image avec les données extraites
+            // et l'ajoute à la liste des descripteurs
             ajouterDescripteurs(Image(source, titre, numero, prix, acces, type, nbTraitementPossible, identite));
         } else {
+            // Si une erreur survient lors du traitement de la ligne, affiche un message
             std::cerr << "Erreur lors du traitement de la ligne : " << ligne << std::endl;
         }
     }
 
+    // Ferme le fichier après avoir terminé la lecture
     fichier.close();
     std::cout << "Les descripteurs ont été chargés depuis " << nomFichier << std::endl;
 }
 
-/*
-// Fonction pour ouvrir une boîte de dialogue et sélectionner un fichier
-std::string openFileDialog() {
-    char fileName[MAX_PATH] = "";
-    OPENFILENAME ofn = {0};
-
-    ofn.lStructSize = sizeof(OPENFILENAME);
-    ofn.hwndOwner = nullptr; // Pas de fenêtre parent
-    ofn.lpstrFilter = "Images\0*.png;*.jpg;*.jpeg;*.bmp;*.gif\0Tous les fichiers\0*.*\0";
-    ofn.lpstrFile = fileName;
-    ofn.nMaxFile = MAX_PATH;
-    ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
-
-    if (GetOpenFileName(&ofn)) {
-        return std::string(fileName); // Retourne le chemin du fichier sélectionné
-    }
-
-    return ""; // Si l'utilisateur annule, retourne une chaîne vide
-}
-
-// Fonction pour copier un fichier dans un dossier de destination
-void copyFile(const std::string& sourcePath, const std::string& destinationFolder) {
-    fs::path sourceFile(sourcePath);
-
-    // Vérifier si le fichier source existe
-    if (!fs::exists(sourceFile)) {
-        std::cerr << "Erreur : le fichier n'existe pas." << std::endl;
-        return;
-    }
-
-    // Créer le dossier de destination s'il n'existe pas
-    if (!fs::exists(destinationFolder)) {
-        fs::create_directories(destinationFolder);
-    }
-
-    // Construire le chemin de destination
-    fs::path destinationFile = fs::path(destinationFolder) / sourceFile.filename();
-
-    // Copier le fichier
-    try {
-        fs::copy(sourceFile, destinationFile, fs::copy_options::overwrite_existing);
-        std::cout << "Fichier copié dans : " << destinationFile << std::endl;
-    } catch (const fs::filesystem_error& e) {
-        std::cerr << "Erreur lors de la copie du fichier : " << e.what() << std::endl;
-    }
-}
-*/
 
 /**
  * Permet de permuter deux images dans la bibliothèque en se basant sur leurs numéros (ils sont uniques)
@@ -686,13 +640,7 @@ void Library::save() {
     int numero, nbTraitementPossible, identite;
     double prix;
     char acces;
-    /*
-    std::cout << "Entrez le chemin complet de l'image à ajouter : ";
-    std::cin.ignore();
-    std::getline(std::cin, cheminImage);
-
-    if (cheminImage.empty()){
-        std::cerr << "chemin introuvable " << std::endl;    }*/
+   
 
     std::cout << "Sélectionnez une image à ajouter.\n";
 
@@ -780,7 +728,6 @@ void Library::save() {
 
     fichier.close();
 
-    //(jsp si c'est utile de dire le nom mais pour tester si la fonction marche c'est pratique)
     std::cout << "La nouvelle bibliothèque a été sauvegardée sous le nom : " << nomBibliotheque << std::endl;
 
 }void Library::fusion(Library liste2)

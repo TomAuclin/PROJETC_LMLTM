@@ -1,6 +1,10 @@
+// Inclusion des fichiers d'en-tête
+#include "GestionUtilisateur.hpp"
+
+// Inclusion des fichiers nécessaires pour gérer l'interface, les images et la bibliothèque.
 #include <iostream>
 #include <string>
-#include "GestionUtilisateur.hpp"
+
 
 GestionUtilisateur::GestionUtilisateur() : login("") {}
 

@@ -50,9 +50,9 @@
    <widget class="QCheckBox" name="Canal_R">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>700</x>
       <y>430</y>
-      <width>100</width>
+      <width>121</width>
       <height>23</height>
      </rect>
     </property>
@@ -63,9 +63,9 @@
    <widget class="QCheckBox" name="Canal_V">
     <property name="geometry">
      <rect>
-      <x>880</x>
+      <x>840</x>
       <y>430</y>
-      <width>100</width>
+      <width>111</width>
       <height>23</height>
      </rect>
     </property>
@@ -76,9 +76,9 @@
    <widget class="QCheckBox" name="Canal_B">
     <property name="geometry">
      <rect>
-      <x>1010</x>
+      <x>960</x>
       <y>430</y>
-      <width>100</width>
+      <width>121</width>
       <height>23</height>
      </rect>
     </property>
