@@ -720,93 +720,176 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
 // Supprimer
 void BiblioWindow::on_actionSupprimerDescripteur_triggered()
 {
-    // 1) Vérifier s’il y a des éléments dans la liste (sinon, rien à supprimer)
-    int nbItems = ui->AffichageBiblio->count();
-    if (nbItems == 0) {
-        QMessageBox::information(this, "Information", "Aucun descripteur à supprimer.");
-        return;
-    }
-
-    // 2) Vérifier si le fichier chargé est Biblio_init.txt
-    //    - Si cheminBiblio est vide, on considère qu’il s’agit de Biblio_init.txt,
-    //      et on n’autorise pas la suppression.
-    QString nomFichier;
+    // 1) Récupérer le chemin actuel du fichier chargé
     if (cheminBiblio.isEmpty()) {
-        nomFichier = "Biblio_init.txt";
-    } else {
-        nomFichier = QFileInfo(cheminBiblio).fileName();
+        QMessageBox::warning(this, "Erreur", 
+                             "Aucun fichier n'a été chargé. Impossible de supprimer.");
+        return;
     }
+    QString fileToModify = cheminBiblio; 
 
-    if (nomFichier == "Biblio_init.txt") {
-        QMessageBox::warning(
-            this,
-            "Accès refusé",
-            "Vous n'avez pas le droit de supprimer un descripteur directement dans Biblio_init.txt.\n"
-            "Aucune suppression n'a été effectuée."
-        );
+    // 2) Récupérer tous les items du QListWidget
+    QList<QListWidgetItem*> items = ui->AffichageBiblio->findItems("*", Qt::MatchWildcard);
+    if (items.isEmpty()) {
+        QMessageBox::information(this, "Information", 
+                                 "Aucun élément trouvé dans la bibliothèque.");
         return;
     }
 
-    // 3) Demander à l’utilisateur quel numéro (1..nbItems) il veut supprimer
+    // 3) Construire un vecteur d'objets Image depuis l'affichage
+    std::vector<Image> images;           
+    std::vector<QString> cheminsImages;  
+
+    for (QListWidgetItem* item : items) {
+        // Récupère le chemin de l'image depuis le UserRole
+        QVariant userData = item->data(Qt::UserRole);
+        QString selectedImagePath = userData.toString();
+
+        // Vérifier si l'image existe
+        if (selectedImagePath.isEmpty() || !QFile::exists(selectedImagePath)) {
+            qDebug() << "Chemin invalide ou inexistant : " << selectedImagePath;
+            continue;
+        }
+
+        // Créer un objet Image et définir son titre (nom de fichier)
+        Image image;
+        image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
+
+        // Associer les descripteurs (pour remplir getNumero(), getPrix(), etc.)
+        try {
+            image.associerDescripteur(fileToModify.toStdString());
+        } catch (const std::exception& e) {
+            qDebug() << "Erreur lors de l'association des descripteurs : " << e.what();
+            continue;
+        }
+
+        images.push_back(image);
+        cheminsImages.push_back(selectedImagePath);
+    }
+
+    // 4) Vérifier qu'on a bien des images en mémoire
+    if (images.empty()) {
+        QMessageBox::information(this, "Information", 
+                                 "Aucune image exploitable n'a été détectée.");
+        return;
+    }
+
+    // 5) Demander à l'utilisateur le numéro à supprimer (1..images.size())
     bool ok;
-    int numASupprimer = QInputDialog::getInt(
-                this,
-                "Supprimer un descripteur",
-                QString("Entrez le numéro de l'image à supprimer (1 à %1) :").arg(nbItems),
-                1,       // Valeur par défaut
-                1,       // Min
-                nbItems, // Max
-                1,       // Pas
-                &ok
-    );
+    int nbImages = (int)images.size();
+    int numeroSup = QInputDialog::getInt(
+                        this,
+                        "Supprimer un descripteur",
+                        QString("Entrez le numéro (1 à %1) de l'image à supprimer :")
+                                .arg(nbImages),
+                        1,   // Valeur par défaut
+                        1,   // Min
+                        nbImages,  // Max
+                        1,   // Step
+                        &ok
+                    );
     if (!ok) {
         QMessageBox::information(this, "Annulé", "Suppression annulée.");
         return;
     }
 
-    // 4) L’indice dans notre vecteur en mémoire
-    int index = numASupprimer - 1;
-    if (index < 0 || index >= (int)listeDescripteurs.size()) {
-        QMessageBox::warning(this, "Erreur", "Index invalide (incohérence).");
+    // 6) Récupérer l'image correspondante (index = numeroSup-1)
+    int index = numeroSup - 1;   // entre 0 et nbImages-1
+    Image &imgASupprimer = images[index];
+    QString cheminImage = cheminsImages[index];
+
+     if (QFileInfo(fileToModify).fileName() == "Biblio_init.txt") {
+         QMessageBox::warning(this, "Interdit",
+                              "Vous n'avez pas le droit de supprimer directement dans Biblio_init.txt !");
+         return;
+    }
+
+    // 8) Supprimer la ligne correspondante dans le fichier .txt
+    //    - On lit toutes les lignes
+    //    - On compare titre & numéro au descripteur qu'on veut supprimer
+    //    - On recopie toutes les autres lignes
+    QFile fichierDescripteur(fileToModify);
+    if (!fichierDescripteur.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Erreur",
+                             "Impossible d'ouvrir le fichier pour la suppression :\n"
+                             + fileToModify);
         return;
     }
 
-    // 5) Récupérer le descripteur à supprimer
-    DescripteurData &descASupprimer = listeDescripteurs[index];
+    QString contenuFinal;
+    QTextStream fluxLecture(&fichierDescripteur);
 
-    // 6) Supprimer l’image associée
-    QString cheminImage = QString("/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque/%1")
-            .arg(descASupprimer.nomImage);
+    QString titreASupprimer  = QString::fromStdString(imgASupprimer.titre).trimmed();
+    int numeroASupprimer     = imgASupprimer.getNumero();
 
+    // Lecture ligne à ligne
+    while (!fluxLecture.atEnd()) {
+        QString line = fluxLecture.readLine();
+        QStringList fields = line.split(",");
+        if (fields.size() < 3) {
+            contenuFinal += line + "\n";
+            continue;
+        }
+
+        QString titre  = fields[0].trimmed();
+        int numero     = fields[2].trimmed().toInt();
+
+        // Comparaison : si titre & numéro correspondent, on ne recopie pas
+        if (titre == titreASupprimer && numero == numeroASupprimer) {
+            // => C'est la ligne à supprimer => on la skip
+            qDebug() << "Suppression de la ligne :" << line;
+            // Ne rien ajouter à contenuFinal
+        } else {
+            // Sinon, on recopie
+            contenuFinal += line + "\n";
+        }
+    }
+    fichierDescripteur.close();
+
+    // On réécrit le fichier
+    if (!fichierDescripteur.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Erreur",
+                             "Impossible de rouvrir le fichier en écriture :\n"
+                             + fileToModify);
+        return;
+    }
+    QTextStream fluxEcriture(&fichierDescripteur);
+    fluxEcriture << contenuFinal;
+    fichierDescripteur.close();
+
+    // 9) Supprimer l'image dans le dossier s'il existe
     if (QFile::exists(cheminImage)) {
         if (!QFile::remove(cheminImage)) {
-            QMessageBox::warning(this,
-                                 "Erreur",
-                                 "Impossible de supprimer l'image associée :\n" + cheminImage);
+            QMessageBox::warning(this, "Erreur", 
+                                 "Impossible de supprimer le fichier image :\n" + cheminImage);
         }
     }
 
-    // 7) Retirer ce descripteur du vecteur
-    listeDescripteurs.erase(listeDescripteurs.begin() + index);
+    // 10) Mettre à jour l'affichage => on enlève l'élément supprimé
+    // On vide la liste
+    ui->AffichageBiblio->clear();
+    // On enlève l'image du vecteur
+    images.erase(images.begin() + index);
+    cheminsImages.erase(cheminsImages.begin() + index);
 
-    // 8) Réécrire le fichier (puisqu’on a mis à jour le vecteur)
-    //    -> On suppose que vous avez déjà une fonction reecrireFichier(...)
-    QString dossierDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
-    QString cheminComplet = dossierDescripteurs + "/" + nomFichier;
+    int compteur = 1;
+    for (size_t i = 0; i < images.size(); ++i) {
+        QString path = cheminsImages[i];
+        QString itemText = QString::number(compteur) + ". " +
+                           QString::fromStdString(images[i].titre);
 
-    if (!reecrireFichier(cheminComplet)) {
-        QMessageBox::warning(this, "Erreur", "La réécriture du fichier a échoué !");
-        return;
+        QListWidgetItem* newItem = new QListWidgetItem(QIcon(path), itemText);
+        newItem->setData(Qt::UserRole, path);
+
+        ui->AffichageBiblio->addItem(newItem);
+        compteur++;
     }
 
-    // 9) Retirer l’item de la liste graphique
-    delete ui->AffichageBiblio->takeItem(index);
-
-    // 10) Mettre à jour le compteur
-    mettreAJourCompteurImages();
-
-    QMessageBox::information(this, "Succès", "Le descripteur et son image associée ont été supprimés avec succès !");
+    QMessageBox::information(this, "Succès",
+                             "Le descripteur et l'image associée ont été supprimés avec succès !");
 }
+
+
 
 
 
