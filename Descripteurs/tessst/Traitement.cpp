@@ -80,7 +80,8 @@ void Histogramme::calculerHistogramme(const Image_color& image, int histogramme[
 // ----------------------------------------------------------------------------------------------
 
 cv::Mat Traitement::convolution(const cv::Mat& image) {
-
+   // Creation du filtre (gaussien ou moyenneur )
+    //image.convertTo(image, CV_32F);
     cv::Mat filter = (cv::Mat_<float>(3, 3) << 
         1.0f/16, 2.0f/16, 1.0f/16, 
         2.0f/16, 4.0f/16, 2.0f/16, 
@@ -89,8 +90,9 @@ cv::Mat Traitement::convolution(const cv::Mat& image) {
     int rows = image.rows;
     int cols = image.cols;
     int filterSize = filter.rows; 
-    int pad = filterSize/2;   
-
+    int pad = filterSize/2;
+    //image.convertTo(image, CV_32F);
+    // On differencie les images couleurs des images en nuances de gris
     cv::Mat result;
     if (image.channels() == 3) {
    
@@ -110,7 +112,9 @@ cv::Mat Traitement::convolution(const cv::Mat& image) {
                     temp.at<float>(i, j) = sum;
                 }
             }
-            temp.convertTo(channels[c], CV_8U); 
+            cv::normalize(channels[c], channels[c], 0, 255, cv::NORM_MINMAX);
+            temp.convertTo(channels[c], CV_8U);
+
         }
 
         cv::merge(channels, result); 
@@ -127,6 +131,7 @@ cv::Mat Traitement::convolution(const cv::Mat& image) {
                 result.at<float>(i, j) = sum;
             }
         }
+        cv::normalize(result, result, 0, 255, cv::NORM_MINMAX);
         result.convertTo(result, CV_8U);
     } else {
         std::cerr << "Erreur : Type d'image non pris en charge." << std::endl;
@@ -367,6 +372,90 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 // ************************ Segmentation couleur ************************
 
 // ----------------------------------------------------------------------------------------------
+/*cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux) {
+    if (image.empty() || image.channels() != 3) {
+        std::cerr << "Image invalide ou non en couleur." << std::endl;
+        return cv::Mat();
+    }
+
+    // Conversion de l'image OpenCV en ImageCouleur
+    std::vector<std::vector<std::array<uint8_t, 3>>> pixels(image.rows, std::vector<std::array<uint8_t, 3>>(image.cols));
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            cv::Vec3b pixel = image.at<cv::Vec3b>(y, x);
+            pixels[y][x] = {pixel[0], pixel[1], pixel[2]}; // Rouge, Vert, Bleu
+        }
+    }
+    ImageCouleur imageCouleur(pixels);
+
+    // Initialisation des histogrammes pour chaque canal
+    int histogramme[256] = {0};
+    int seuils[3] = {0};
+
+    // Calcul des seuils pour chaque canal sélectionné
+    for (int canal : canaux) {
+        Histogramme::calculerHistogramme(imageCouleur, histogramme, canal);
+
+        int totalPixels = image.rows * image.cols;
+        int seuilPixels = static_cast<int>(totalPixels * 0.4); // 40% des pixels
+
+        // Trouver l'indice du pic maximum dans l'histogramme
+        int indiceMax = 0;
+        int maxValeur = 0;
+        for (int i = 0; i < 256; i++) {
+            if (histogramme[i] > maxValeur) {
+                maxValeur = histogramme[i];
+                indiceMax = i;
+            }
+        }
+
+        // Accumuler les valeurs autour du pic pour atteindre 40%
+        int sommeCumulee = 0;
+        int gauche = indiceMax, droite = indiceMax;
+        while (sommeCumulee < seuilPixels && (gauche >= 0 || droite <= 255)) {
+            if (gauche >= 0) {
+                sommeCumulee += histogramme[gauche--];
+            }
+            if (droite <= 255 && sommeCumulee < seuilPixels) {
+                sommeCumulee += histogramme[droite++];
+            }
+        }
+
+        // Étendre la plage manuellement
+        gauche = std::max(0, gauche - 10);   // Étendre 10 valeurs à gauche
+        droite = std::min(255, droite + 10); // Étendre 10 valeurs à droite
+
+        // Définir le seuil comme la limite supérieure atteinte
+        seuils[canal] = droite;
+    }
+
+    // Création d'une image filtrée
+    cv::Mat resultat = cv::Mat::zeros(image.size(), image.type());
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            const cv::Vec3b& pixel = image.at<cv::Vec3b>(y, x);
+            uint8_t rouge = pixel[0];
+            uint8_t vert = pixel[1];
+            uint8_t bleu = pixel[2];
+
+            // Vérification pour chaque combinaison de canaux
+            if (std::find(canaux.begin(), canaux.end(), 0) != canaux.end() &&
+                rouge >= seuils[0] && rouge > bleu * 1.1 && rouge > vert * 1.1) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels rouges
+            }
+            if (std::find(canaux.begin(), canaux.end(), 1) != canaux.end() &&
+                vert >= seuils[1] && vert > rouge * 1.1 && vert > bleu * 1.1) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels verts
+            }
+            if (std::find(canaux.begin(), canaux.end(), 2) != canaux.end() &&
+                bleu >= seuils[2] && bleu > rouge * 1.1 && bleu > vert * 1.1) {
+                resultat.at<cv::Vec3b>(y, x) = pixel; // Conserver les pixels bleus
+            }
+        }
+    }
+
+    return resultat;
+}*/
 
 cv::Mat Traitement::separationParCouleur(const cv::Mat& image, const std::vector<int>& canaux) {
     if (image.empty() || image.channels() != 3) {

@@ -45,7 +45,18 @@ private slots:
     void on_SegmenterCouleur_clicked();
     void on_AppliquerConvolution_clicked();
 
+    //Ajout du menu Descripteur
+    void on_actionAjouterDescripteur_triggered();
+    void on_actionModifierDescripteur_triggered();
+    void on_actionSupprimerDescripteur_triggered();
+
+    //Afficher l'image
+    void on_actionRechercherImage_triggered();
+
+
     void on_RetourVersBiblio_clicked();
+
+    cv::Mat  on_BruiterImage_clicked();
 
 private:
     Ui::MainWindow *ui;

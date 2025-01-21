@@ -10,18 +10,15 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QScreen>
-#include "Library.hpp"
+//#include "Library.hpp"
 #include <QInputDialog>
-
-#include <QMessageBox>
-#include <QGraphicsPixmapItem>
-#include <stdexcept>
-#include <QTextStream>
-
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "mainwindow.h"
+#include "connexionwindow.h"
 
 #include "mainwindow.h"
 #include "connexionwindow.h"
@@ -59,8 +56,9 @@ BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
     ui->DetailsButton->setVisible(false);
     ui->pushButtonRechercherp->setVisible(true);
     ui->labelImageCount->setText("Nombre d'images : 0");
-
-
+    ui->SousListes->hide();
+    ui->Tris->hide();
+    ui->SousListesButton->hide();
     // Connecter le clic sur une image
     connect(ui->AffichageBiblio, &QListWidget::itemClicked, this, &BiblioWindow::on_AffichageBiblio_itemClicked);
     connect(ui->Deco, &QPushButton::clicked, this, &BiblioWindow::on_Deco_clicked);
@@ -225,6 +223,7 @@ void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
     // Rendre les boutons visibles
     ui->TraitementButton->setVisible(true);
     ui->DetailsButton->setVisible(true);
+    ui->SousListesButton->show();
 }
 
 
@@ -260,6 +259,7 @@ void BiblioWindow::mousePressEvent(QMouseEvent *event)
         selectedImagePath.clear();
         ui->TraitementButton->setVisible(false); // Masquer le bouton traitement
         ui->DetailsButton->setVisible(false); // Masquer le bouton details
+        ui->SousListesButton->hide();
     }
 
     QMainWindow::mousePressEvent(event);
@@ -420,278 +420,6 @@ void BiblioWindow::setUserLogin(const QString &login) {
     userLogin = login;
 }
 
-// -----------------------------------------------------------------------------------------
-
-// *************************** Ajout Menu Descripteur *************************************
-
-// -----------------------------------------------------------------------------------------
-
-// Ajouter
-
-void BiblioWindow::on_actionAjouterDescripteur_triggered() {
-    // 1. Ouvrir un QFileDialog pour sélectionner l'image d'origine
-    QString cheminImageSource = QFileDialog::getOpenFileName(this,
-                                                             "Sélectionnez une image à ajouter",
-                                                             "",
-                                                             "Images (*.png *.jpg *.jpeg *.bmp *.pgm *.CR2);;Tous les fichiers (*)");
-
-    if (cheminImageSource.isEmpty()) {
-        QMessageBox::warning(this, "Avertissement", "Aucun fichier sélectionné !");
-        return;
-    }
-
-    // 2. Demander les descripteurs à l'utilisateur
-    bool ok;
-    QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok);
-    if (!ok || titre.isEmpty()) return;
-
-    int numero = QInputDialog::getInt(this, "Ajouter un descripteur", "Numéro unique :", 0, 0, 10000, 1, &ok);
-    if (!ok) return;
-
-    double prix = QInputDialog::getDouble(this, "Ajouter un descripteur", "Prix :", 0, 0, 10000, 2, &ok);
-    if (!ok) return;
-
-    QString acces = QInputDialog::getText(this, "Ajouter un descripteur", "Accès (O/L) :", QLineEdit::Normal, "O", &ok);
-    if (!ok || acces.isEmpty()) return;
-
-    QString type = QInputDialog::getText(this, "Ajouter un descripteur", "Type (couleur/gris) :", QLineEdit::Normal, "couleur", &ok);
-    if (!ok || type.isEmpty()) return;
-
-    int nbTraitement = QInputDialog::getInt(this, "Ajouter un descripteur", "Nombre de traitements possibles :", 1, 1, 100, 1, &ok);
-    if (!ok) return;
-
-    // 3. Vérifier l'unicité titre / numéro
-    if (library.titrecheck(titre.toStdString()) != 0) {
-        QMessageBox::warning(this, "Erreur", "Le titre existe déjà !");
-        return;
-    }
-    if (library.numerocheck(numero) != 0) {
-        QMessageBox::warning(this, "Erreur", "Le numéro existe déjà !");
-        return;
-    }
-
-    // 4. Demander à l'utilisateur de choisir le nom du fichier de la nouvelle bibliothèque
-    QString nouveauNomFichier = QInputDialog::getText(this, "Nom de la nouvelle bibliothèque", "Entrez le nom du nouveau fichier .txt :", QLineEdit::Normal, "nouvelle_bibliotheque.txt", &ok);
-    if (!ok || nouveauNomFichier.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
-        return;
-    }
-
-    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
-    QString cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
-    QString cheminNouveauFichier = cheminFichier + "/" + nouveauNomFichier;
-
-    // 5. Copier le fichier texte existant pour créer une nouvelle version
-    QString cheminDescripteur = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
-    if (!QFile::copy(cheminDescripteur, cheminNouveauFichier)) {
-        QMessageBox::warning(this, "Erreur", "La création de la nouvelle bibliothèque a échoué !");
-        return;
-    }
-
-    // 6. Ajouter le nouveau descripteur au fichier texte
-    QFile fichierDescripteur(cheminNouveauFichier);
-    if (fichierDescripteur.open(QIODevice::Append | QIODevice::Text)) {
-        QTextStream sortie(&fichierDescripteur);
-        sortie << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", " << numero << ", " << prix << ", "
-               << acces << ", " << type << ", " << nbTraitement << ", " << numero << "\n";
-        fichierDescripteur.close();
-    } else {
-        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier de la nouvelle bibliothèque !");
-        return;
-    }
-
-    // 7. Copier l'image dans la bibliothèque avec le même nom que le titre
-    QString extensionImage = QFileInfo(cheminImageSource).suffix();
-    QString cheminImageDestination = cheminBibliotheque + "/" + titre + "." + extensionImage;
-    if (!QFile::copy(cheminImageSource, cheminImageDestination)) {
-        QMessageBox::warning(this, "Erreur", "La copie de l'image dans la bibliothèque a échoué !");
-        return;
-    }
-
-    // 8. Ajouter l'objet Image à la bibliothèque
-    Image nouvelleImage(cheminImageDestination.toStdString(),
-                        titre.toStdString(),
-                        numero,
-                        prix,
-                        acces.toStdString()[0],
-                        type.toStdString(),
-                        nbTraitement,
-                        numero);
-
-    library.ajouterDescripteurs(nouvelleImage);
-
-    // 9. Confirmation
-    QMessageBox::information(this, "Succès", "Le descripteur, l'image et la nouvelle bibliothèque ont été créés avec succès !");
-}
-
-
-
-// Modifier
-
-void BiblioWindow::on_actionModifierDescripteur_triggered() {
-    // 1. Définir le chemin fixe du dossier descripteurs
-    QString cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
-
-    // 2. Demander à l'utilisateur de choisir le fichier descripteurs à modifier
-    QString cheminDescripteur = QInputDialog::getText(this, "Modifier un descripteur", "Entrez le nom du fichier descripteurs .txt :", QLineEdit::Normal, "nouvelle_bibliotheque.txt");
-    QString cheminDescripteurComplet = cheminDescripteurs + "/" + cheminDescripteur;
-
-    if (cheminDescripteur.isEmpty() || !QFile::exists(cheminDescripteurComplet)) {
-        QMessageBox::warning(this, "Erreur", "Le fichier descripteurs spécifié est introuvable !");
-        return;
-    }
-
-    // 3. Demander le titre du descripteur à modifier
-    bool ok;
-    QString titreRecherche = QInputDialog::getText(this, "Modifier un descripteur", "Entrez le titre du descripteur à modifier :", QLineEdit::Normal, "", &ok);
-    if (!ok || titreRecherche.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Aucun titre spécifié !");
-        return;
-    }
-
-    // 4. Charger le fichier et rechercher le descripteur à modifier
-    QFile fichierDescripteur(cheminDescripteurComplet);
-    if (!fichierDescripteur.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier descripteurs.txt !");
-        return;
-    }
-
-    QString contenu;
-    QString ligneAModifier;
-    QTextStream fluxLecture(&fichierDescripteur);
-    while (!fluxLecture.atEnd()) {
-        QString ligne = fluxLecture.readLine();
-        if (ligne.startsWith(titreRecherche + ",")) {
-            ligneAModifier = ligne;
-        } else {
-            contenu += ligne + "\n";
-        }
-    }
-    fichierDescripteur.close();
-
-    if (ligneAModifier.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce titre !");
-        return;
-    }
-
-    // 5. Demander les nouvelles valeurs pour le descripteur
-    QStringList elements = ligneAModifier.split(", ");
-    if (elements.size() < 8) {
-        QMessageBox::warning(this, "Erreur", "Le descripteur sélectionné est invalide !");
-        return;
-    }
-
-    QString nouveauTitre = QInputDialog::getText(this, "Modifier un descripteur", "Nouveau titre :", QLineEdit::Normal, elements[0], &ok);
-    if (!ok || nouveauTitre.isEmpty()) return;
-
-    int nouveauNumero = QInputDialog::getInt(this, "Modifier un descripteur", "Nouveau numéro unique :", elements[2].toInt(), 0, 10000, 1, &ok);
-    if (!ok) return;
-
-    double nouveauPrix = QInputDialog::getDouble(this, "Modifier un descripteur", "Nouveau prix :", elements[3].toDouble(), 0, 10000, 2, &ok);
-    if (!ok) return;
-
-    QString nouvelAcces = QInputDialog::getText(this, "Modifier un descripteur", "Nouvel accès (O/L) :", QLineEdit::Normal, elements[4], &ok);
-    if (!ok || nouvelAcces.isEmpty()) return;
-
-    QString nouveauType = QInputDialog::getText(this, "Modifier un descripteur", "Nouveau type (couleur/gris) :", QLineEdit::Normal, elements[5], &ok);
-    if (!ok || nouveauType.isEmpty()) return;
-
-    int nouveauNbTraitement = QInputDialog::getInt(this, "Modifier un descripteur", "Nouveau nombre de traitements possibles :", elements[6].toInt(), 1, 100, 1, &ok);
-    if (!ok) return;
-
-    // 6. Construire la nouvelle ligne du descripteur
-    QString nouvelleLigne = nouveauTitre + ", " + elements[1] + ", " + QString::number(nouveauNumero) + ", "
-                            + QString::number(nouveauPrix) + ", " + nouvelAcces + ", " + nouveauType + ", "
-                            + QString::number(nouveauNbTraitement) + ", " + QString::number(nouveauNumero) + "\n";
-
-    contenu += nouvelleLigne;
-
-    // 7. Écrire les modifications dans le fichier
-    if (!fichierDescripteur.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        QMessageBox::warning(this, "Erreur", "Impossible d'écrire dans le fichier descripteurs.txt !");
-        return;
-    }
-
-    QTextStream fluxEcriture(&fichierDescripteur);
-    fluxEcriture << contenu;
-    fichierDescripteur.close();
-
-    // 8. Renommer l'image si le titre a été modifié
-    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
-    if (nouveauTitre != elements[0]) {
-        QString extensionImage = QFileInfo(elements[1]).suffix();
-        QString ancienCheminImage = cheminBibliotheque + "/" + elements[0] + "." + extensionImage;
-        QString nouveauCheminImage = cheminBibliotheque + "/" + nouveauTitre + "." + extensionImage;
-
-        if (QFile::exists(ancienCheminImage)) {
-            if (!QFile::rename(ancienCheminImage, nouveauCheminImage)) {
-                QMessageBox::warning(this, "Erreur", "Impossible de renommer l'image associée au descripteur !");
-            }
-        } else {
-            QMessageBox::warning(this, "Erreur", "L'image associée au descripteur est introuvable !");
-        }
-    }
-
-    // 9. Confirmation
-    QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
-}
-
-
-// Supprimer
-
-void BiblioWindow::on_actionSupprimerDescripteur_triggered() {
-    // Demander le numéro du descripteur à supprimer
-    bool ok;
-    int numero = QInputDialog::getInt(this, "Supprimer un descripteur",
-                                      "Entrez le numéro unique du descripteur :", 0, 0, 10000, 1, &ok);
-    if (!ok) {
-        QMessageBox::information(this, "Annulé", "Suppression annulée.");
-        return;
-    }
-
-    // Parcourir la liste pour trouver le descripteur correspondant
-    auto current = library.head; // Accès à la liste chaînée depuis votre bibliothèque
-    std::shared_ptr<Library::INode> previous = nullptr; // Pour maintenir une référence au noeud précédent
-    bool descripteurTrouve = false;
-
-    while (current) {
-        if (current->data.getNumero() == numero) {
-            descripteurTrouve = true;
-
-            // Supprimer le fichier image associé
-            std::string cheminImage = current->data.getSource(); // Récupérer le chemin de l'image sauvegardée
-            try {
-                if (std::filesystem::exists(cheminImage)) {
-                    std::filesystem::remove(cheminImage);
-                } else {
-                    QMessageBox::warning(this, "Avertissement",
-                                         "L'image associée au descripteur n'existe pas ou a déjà été supprimée.");
-                }
-            } catch (const std::exception &e) {
-                QMessageBox::warning(this, "Erreur",
-                                     QString("Impossible de supprimer l'image associée : %1").arg(e.what()));
-            }
-
-            // Supprimer le descripteur de la liste chaînée
-            if (previous) {
-                previous->next = current->next;
-            } else {
-                library.head = current->next;
-            }
-
-            QMessageBox::information(this, "Succès", "Le descripteur et son image associée ont été supprimés !");
-            return;
-        }
-
-        previous = current;
-        current = current->next;
-    }
-
-    if (!descripteurTrouve) {
-        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce numéro !");
-    }
-}
-
 void BiblioWindow::on_pushButtonSousListePrix_clicked(){
     if (selectedImagePath.isEmpty()) {
         QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
@@ -758,6 +486,7 @@ void BiblioWindow::on_pushButtonSousListePrix_clicked(){
         QMessageBox::information(this, "Détails de l'image", message);
 
     }
+    ui->SousListes->hide();
 
 }
 
@@ -881,6 +610,7 @@ void BiblioWindow::on_triprix_clicked()
     for (size_t i = 0; i < titres.size(); ++i) {
         qDebug() << QString::fromStdString(titres[i]) << " - " << prix[i] << "€";
     }
+    ui->Tris->hide();
 }
 
 
@@ -892,7 +622,7 @@ void BiblioWindow::on_triprix_clicked()
 void BiblioWindow::on_trinbtraitements_clicked()
 {
     std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
-    // Récupérer tous les items du widget
+    // On récupère toutes les images présentes dans le widget
     QList<QListWidgetItem*> items = ui->AffichageBiblio->findItems("*", Qt::MatchWildcard);
 
     if (items.isEmpty()) {
@@ -900,35 +630,34 @@ void BiblioWindow::on_trinbtraitements_clicked()
         return;
     }
 
-    // Liste pour stocker les objets Image créés
+    // On crée la liste pour stocker les images
     std::vector<Image> images;
 
-    // Vecteurs pour stocker les titres, nb de traitements et chemins des images
+    // On crée les listes pour stocker les titres, nb de traitements et chemins des images
     std::vector<std::string> titres;
-    std::vector<int> nbTraitements; // Vecteur pour stocker le nombre de traitements possibles
-    std::vector<QString> cheminsImages;  // Ajouter un vecteur pour stocker les chemins des images
+    std::vector<int> nbTraitements;
+    std::vector<QString> cheminsImages;
 
-    // Récupérer le chemin du dossier à partir de la première image (le dossier est le même pour toutes)
+    // On récupère le chemin du dossier des images chargées dans le widget
     QString dossierImage = QFileInfo(items[0]->data(Qt::UserRole).toString()).absolutePath();
     qDebug() << "Dossier d'images : " << dossierImage;
 
     for (QListWidgetItem* item : items) {
         QVariant userData = item->data(Qt::UserRole);
-        QString selectedImagePath = userData.toString(); // Récupérer le chemin du fichier
+        QString selectedImagePath = userData.toString();
 
-        // Vérifier si le chemin est valide
+
         if (selectedImagePath.isEmpty() || !QFile::exists(selectedImagePath)) {
             qDebug() << "Chemin de fichier invalide ou fichier inexistant : " << selectedImagePath;
             continue;
         }
 
-        // Créer une instance de l'objet Image
         Image image;
         image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
         qDebug() << "Chemin de l'image sélectionnée : " << selectedImagePath;
 
         try {
-            // Associer les descripteurs à partir du chemin
+            // On associe les descripteurs des images pour pouvoir récupérer les valeurs de nb de traitements
             image.associerDescripteur(cheminDescripteurs);
         } catch (const std::exception& e) {
             qDebug() << "Erreur lors de l'association des descripteurs pour : " << selectedImagePath
@@ -936,47 +665,44 @@ void BiblioWindow::on_trinbtraitements_clicked()
             continue;
         }
 
-        // Ajouter l'image à la liste
         images.push_back(image);
 
         // Ajouter le titre, le nombre de traitements possibles et le chemin à leurs vecteurs respectifs
         titres.push_back(image.getTitre());
-        nbTraitements.push_back(image.getnbTraitementPossible()); // Remplacer le prix par nbTraitements
-        cheminsImages.push_back(selectedImagePath);  // Ajouter le chemin de l'image
+        nbTraitements.push_back(image.getnbTraitementPossible());
+        cheminsImages.push_back(selectedImagePath);
     }
 
-    // Tri à bulles sur le nombre de traitements possibles (et réarrangement des titres et chemins associés)
+    // On effectue le tri du nb de traitements décroissant
     for (int i = 0; i < nbTraitements.size() - 1; i++) {
         for (int j = 0; j < nbTraitements.size() - i - 1; j++) {
-            if (nbTraitements[j] > nbTraitements[j + 1]) {
-                // Échanger les nombres de traitements possibles
+            if (nbTraitements[j] < nbTraitements[j + 1]) {
+
                 std::swap(nbTraitements[j], nbTraitements[j + 1]);
-                // Échanger les titres associés
+
                 std::swap(titres[j], titres[j + 1]);
-                // Échanger les chemins associés
+
                 std::swap(cheminsImages[j], cheminsImages[j + 1]);
             }
         }
     }
 
-    // Effacer l'affichage actuel du QListWidget
+    // On efface l'affichage actuelle pour pouvoir afficher celui du tri
     ui->AffichageBiblio->clear();
 
-    // Définir la taille des icônes comme dans la méthode `loadImagesIntoList`
     const QSize iconSize(150, 150);
 
-    // Réafficher les images dans l'ordre trié
+    // On affiche les images dans le bon ordre
     for (int i = 0; i < titres.size(); ++i) {
         QString imagePath = cheminsImages[i];
         QString title = QString::fromStdString(titres[i]);
 
-        // Créer un nouvel item avec le titre de l'image
+
         QListWidgetItem* newItem = new QListWidgetItem(title);
 
-        // Charger l'image en tant qu'icône
         QPixmap pixmap(imagePath);
         if (!pixmap.isNull()) {
-            // Redimensionner l'image pour l'affichage
+
             pixmap = pixmap.scaled(iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             newItem->setIcon(QIcon(pixmap));
             newItem->setSizeHint(iconSize);
@@ -1006,6 +732,7 @@ void BiblioWindow::on_trinbtraitements_clicked()
     for (size_t i = 0; i < titres.size(); ++i) {
         qDebug() << QString::fromStdString(titres[i]) << " - " << nbTraitements[i];
     }
+    ui->Tris->hide();
 }
 
 
@@ -1017,10 +744,9 @@ void BiblioWindow::on_souslistetype_clicked()
     }
     qDebug() << "Chemin de l'image sélectionnée : " << selectedImagePath;
 
-    // Chemin du fichier descripteurs
     std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
 
-    // Création de l'instance Image
+
     Image image;
     image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
     // Association des descripteurs
@@ -1057,5 +783,24 @@ void BiblioWindow::on_souslistetype_clicked()
                               .arg(nbTraitements);
         QMessageBox::information(this, "Détails de l'image", message);
     }
+    ui->SousListes->hide();
+}
+
+
+void BiblioWindow::on_SousListesButton_clicked()
+{
+    ui->SousListes->show();
+}
+
+
+void BiblioWindow::on_Trisbutton_clicked()
+{
+    ui->Tris->show();
+}
+
+
+void BiblioWindow::on_Retourbutton_clicked()
+{
+    ui->Tris->hide();
 }
 

@@ -9,8 +9,6 @@
 #include <QInputDialog>
 #include <QScreen>
 #include <QTextStream>
-#include <QDebug>
-
 
 
 // ----------------------------------------------------------------------------------------------
@@ -19,6 +17,7 @@
 
 // ----------------------------------------------------------------------------------------------
 
+cv::Mat g_imageAvecBruit;
 
 MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
     : QMainWindow(parent),
@@ -65,18 +64,19 @@ MainWindow::~MainWindow()
 // ************************ Chargement d'un image  ************************
 
 // ----------------------------------------------------------------------------------------------
+
 void MainWindow::loadAndDisplayImage(const QString &fileName)
 {
-
+    // Obtenir les dimensions de la fenêtre d'affichage (QGraphicsView)
     QSize viewSize = ui->AfficherImage->viewport()->size();
 
     if (!fileName.isEmpty()) {
         try {
-
+            // Réinitialiser les scènes
             sceneImage->clear();
-            delete seceneResultat;
-            seceneResultat = new QGraphicsScene(this);
-            ui->AffichageResultat->setScene(seceneResultat);
+            seceneResultat->clear();
+
+            // Libérer l'objet image précédent
             delete imageObj;
             imageObj = nullptr;
 
@@ -85,6 +85,7 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                 throw std::runtime_error("L'image n'a pas pu être chargée.");
             }
 
+            // Charger et traiter l'image
             if (img.format() == QImage::Format_Grayscale8) {
                 std::vector<std::vector<uint8_t>> imageGris;
                 for (int y = 0; y < img.height(); ++y) {
@@ -94,7 +95,7 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                     }
                     imageGris.push_back(row);
                 }
-                imageObj = new ImageGris(imageGris);
+                imageObj = new ImageGris(imageGris); // Charger comme image en niveaux de gris
             } else {
                 std::vector<std::vector<std::array<uint8_t, 3>>> imageCouleur;
                 for (int y = 0; y < img.height(); ++y) {
@@ -105,21 +106,26 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
                     }
                     imageCouleur.push_back(row);
                 }
-                imageObj = new ImageCouleur(imageCouleur);
+                imageObj = new ImageCouleur(imageCouleur); // Charger comme image couleur
             }
 
-
+            // Charger l'image dans sceneImage
             QPixmap pixmap(fileName);
             if (!pixmap.isNull()) {
-
+                // Définir la scène sur le QGraphicsView si ce n'est pas déjà fait
                 ui->AfficherImage->setScene(sceneImage);
-                sceneImage->clear();
+
+                // Redimensionner l'image pour correspondre à la taille de la fenêtre
                 QPixmap scaledPixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-                QGraphicsPixmapItem *item = sceneImage->addPixmap(scaledPixmap);
-                item->setPos(0, 0);
-                sceneImage->setSceneRect(scaledPixmap.rect());
+                // Ajouter le pixmap redimensionné à la scène
+                sceneImage->addPixmap(scaledPixmap);
+                sceneImage->setSceneRect(scaledPixmap.rect()); // Met à jour le rectangle de la scène
+
+                // Ajuster la vue pour s'assurer qu'elle correspond à la scène
                 ui->AfficherImage->fitInView(sceneImage->sceneRect(), Qt::KeepAspectRatio);
+
+                // Forcer une mise à jour immédiate de l'affichage
                 ui->AfficherImage->update();
             }
         } catch (const std::exception &e) {
@@ -127,6 +133,9 @@ void MainWindow::loadAndDisplayImage(const QString &fileName)
         }
     }
 }
+
+
+
 
 // ----------------------------------------------------------------------------------------------
 
@@ -417,7 +426,7 @@ void MainWindow::on_DetectionDroite_clicked()
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
-QMessageBox::information(this, tr("Information"), tr("Attention : Cette fonctionnalité est en cours de développement. Les résultats peuvent être imprécis."));
+
     cv::Mat imageMat;
 
     // Si l'image est en couleur
@@ -631,6 +640,7 @@ void MainWindow::on_RehaussementContours_clicked()
 // ----------------------------------------------------------------------------------------------
 void MainWindow::on_AppliquerConvolution_clicked()
 {
+
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
@@ -638,6 +648,9 @@ void MainWindow::on_AppliquerConvolution_clicked()
 
     // Convertir l'image en cv::Mat
     cv::Mat imageMat;
+
+
+
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
         // Image en couleur
         const auto& imageCouleur = img->getImageCouleur();
@@ -660,6 +673,13 @@ void MainWindow::on_AppliquerConvolution_clicked()
     } else {
         QMessageBox::warning(this, tr("Erreur"), tr("Type d'image non pris en charge."));
         return;
+    }
+
+
+    if (g_imageAvecBruit.empty()) {
+        imageMat = imageMat;
+    } else {
+        imageMat = g_imageAvecBruit;
     }
 
     // Appliquer la convolution
@@ -695,7 +715,307 @@ void MainWindow::on_AppliquerConvolution_clicked()
     ui->statusbar->showMessage("Convolution appliquée.");
 }
 
-//---------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------
+
+// *************************** Ajout Menu Descripteur *************************************
+
+// -----------------------------------------------------------------------------------------
+Library library;
+
+// Ajouter
+
+void MainWindow::on_actionAjouterDescripteur_triggered() {
+    // 1. Ouvrir un QFileDialog pour sélectionner l'image d'origine
+    QString cheminImageSource = QFileDialog::getOpenFileName(this,
+                                                             "Sélectionnez une image à ajouter",
+                                                             "",
+                                                             "Images (*.png *.jpg *.jpeg *.bmp *.pgm *.CR2);;Tous les fichiers (*)");
+
+    if (cheminImageSource.isEmpty()) {
+        QMessageBox::warning(this, "Avertissement", "Aucun fichier sélectionné !");
+        return;
+    }
+
+    // 2. Demander les descripteurs à l'utilisateur
+    bool ok;
+    QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok);
+    if (!ok || titre.isEmpty()) return;
+
+    int numero = QInputDialog::getInt(this, "Ajouter un descripteur", "Numéro unique :", 0, 0, 10000, 1, &ok);
+    if (!ok) return;
+
+    double prix = QInputDialog::getDouble(this, "Ajouter un descripteur", "Prix :", 0, 0, 10000, 2, &ok);
+    if (!ok) return;
+
+    QString acces = QInputDialog::getText(this, "Ajouter un descripteur", "Accès (O/L) :", QLineEdit::Normal, "O", &ok);
+    if (!ok || acces.isEmpty()) return;
+
+    QString type = QInputDialog::getText(this, "Ajouter un descripteur", "Type (couleur/gris) :", QLineEdit::Normal, "couleur", &ok);
+    if (!ok || type.isEmpty()) return;
+
+    int nbTraitement = QInputDialog::getInt(this, "Ajouter un descripteur", "Nombre de traitements possibles :", 1, 1, 100, 1, &ok);
+    if (!ok) return;
+
+    // 3. Vérifier l'unicité titre / numéro
+    if (library.titrecheck(titre.toStdString()) != 0) {
+        QMessageBox::warning(this, "Erreur", "Le titre existe déjà !");
+        return;
+    }
+    if (library.numerocheck(numero) != 0) {
+        QMessageBox::warning(this, "Erreur", "Le numéro existe déjà !");
+        return;
+    }
+
+    // 4. Demander à l'utilisateur de choisir le nom du fichier de la nouvelle bibliothèque
+    QString nouveauNomFichier = QInputDialog::getText(this, "Nom de la nouvelle bibliothèque", "Entrez le nom du nouveau fichier .txt :", QLineEdit::Normal, "nouvelle_bibliotheque.txt", &ok);
+    if (!ok || nouveauNomFichier.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Le nom du fichier n'est pas valide !");
+        return;
+    }
+
+    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    QString cheminFichier = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
+    QString cheminNouveauFichier = cheminFichier + "/" + nouveauNomFichier;
+
+    // 5. Copier le fichier texte existant pour créer une nouvelle version
+    QString cheminDescripteur = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+    if (!QFile::copy(cheminDescripteur, cheminNouveauFichier)) {
+        QMessageBox::warning(this, "Erreur", "La création de la nouvelle bibliothèque a échoué !");
+        return;
+    }
+
+    // 6. Ajouter le nouveau descripteur au fichier texte
+    QFile fichierDescripteur(cheminNouveauFichier);
+    if (fichierDescripteur.open(QIODevice::Append | QIODevice::Text)) {
+        QTextStream sortie(&fichierDescripteur);
+        sortie << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", " << numero << ", " << prix << ", "
+               << acces << ", " << type << ", " << nbTraitement << ", " << numero << "\n";
+        fichierDescripteur.close();
+    } else {
+        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier de la nouvelle bibliothèque !");
+        return;
+    }
+
+    // 7. Copier l'image dans la bibliothèque avec le même nom que le titre
+    QString extensionImage = QFileInfo(cheminImageSource).suffix();
+    QString cheminImageDestination = cheminBibliotheque + "/" + titre + "." + extensionImage;
+    if (!QFile::copy(cheminImageSource, cheminImageDestination)) {
+        QMessageBox::warning(this, "Erreur", "La copie de l'image dans la bibliothèque a échoué !");
+        return;
+    }
+
+    // 8. Ajouter l'objet Image à la bibliothèque
+    Image nouvelleImage(cheminImageDestination.toStdString(),
+                        titre.toStdString(),
+                        numero,
+                        prix,
+                        acces.toStdString()[0],
+                        type.toStdString(),
+                        nbTraitement,
+                        numero);
+
+    library.ajouterDescripteurs(nouvelleImage);
+
+    // 9. Confirmation
+    QMessageBox::information(this, "Succès", "Le descripteur, l'image et la nouvelle bibliothèque ont été créés avec succès !");
+}
+
+
+
+// Modifier
+
+void MainWindow::on_actionModifierDescripteur_triggered() {
+    // 1. Définir le chemin fixe du dossier descripteurs
+    QString cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
+
+    // 2. Demander à l'utilisateur de choisir le fichier descripteurs à modifier
+    QString cheminDescripteur = QInputDialog::getText(this, "Modifier un descripteur", "Entrez le nom du fichier descripteurs .txt :", QLineEdit::Normal, "nouvelle_bibliotheque.txt");
+    QString cheminDescripteurComplet = cheminDescripteurs + "/" + cheminDescripteur;
+
+    if (cheminDescripteur.isEmpty() || !QFile::exists(cheminDescripteurComplet)) {
+        QMessageBox::warning(this, "Erreur", "Le fichier descripteurs spécifié est introuvable !");
+        return;
+    }
+
+    // 3. Demander le titre du descripteur à modifier
+    bool ok;
+    QString titreRecherche = QInputDialog::getText(this, "Modifier un descripteur", "Entrez le titre du descripteur à modifier :", QLineEdit::Normal, "", &ok);
+    if (!ok || titreRecherche.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Aucun titre spécifié !");
+        return;
+    }
+
+    // 4. Charger le fichier et rechercher le descripteur à modifier
+    QFile fichierDescripteur(cheminDescripteurComplet);
+    if (!fichierDescripteur.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier descripteurs.txt !");
+        return;
+    }
+
+    QString contenu;
+    QString ligneAModifier;
+    QTextStream fluxLecture(&fichierDescripteur);
+    while (!fluxLecture.atEnd()) {
+        QString ligne = fluxLecture.readLine();
+        if (ligne.startsWith(titreRecherche + ",")) {
+            ligneAModifier = ligne;
+        } else {
+            contenu += ligne + "\n";
+        }
+    }
+    fichierDescripteur.close();
+
+    if (ligneAModifier.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce titre !");
+        return;
+    }
+
+    // 5. Demander les nouvelles valeurs pour le descripteur
+    QStringList elements = ligneAModifier.split(", ");
+    if (elements.size() < 8) {
+        QMessageBox::warning(this, "Erreur", "Le descripteur sélectionné est invalide !");
+        return;
+    }
+
+    QString nouveauTitre = QInputDialog::getText(this, "Modifier un descripteur", "Nouveau titre :", QLineEdit::Normal, elements[0], &ok);
+    if (!ok || nouveauTitre.isEmpty()) return;
+
+    int nouveauNumero = QInputDialog::getInt(this, "Modifier un descripteur", "Nouveau numéro unique :", elements[2].toInt(), 0, 10000, 1, &ok);
+    if (!ok) return;
+
+    double nouveauPrix = QInputDialog::getDouble(this, "Modifier un descripteur", "Nouveau prix :", elements[3].toDouble(), 0, 10000, 2, &ok);
+    if (!ok) return;
+
+    QString nouvelAcces = QInputDialog::getText(this, "Modifier un descripteur", "Nouvel accès (O/L) :", QLineEdit::Normal, elements[4], &ok);
+    if (!ok || nouvelAcces.isEmpty()) return;
+
+    QString nouveauType = QInputDialog::getText(this, "Modifier un descripteur", "Nouveau type (couleur/gris) :", QLineEdit::Normal, elements[5], &ok);
+    if (!ok || nouveauType.isEmpty()) return;
+
+    int nouveauNbTraitement = QInputDialog::getInt(this, "Modifier un descripteur", "Nouveau nombre de traitements possibles :", elements[6].toInt(), 1, 100, 1, &ok);
+    if (!ok) return;
+
+    // 6. Construire la nouvelle ligne du descripteur
+    QString nouvelleLigne = nouveauTitre + ", " + elements[1] + ", " + QString::number(nouveauNumero) + ", "
+                            + QString::number(nouveauPrix) + ", " + nouvelAcces + ", " + nouveauType + ", "
+                            + QString::number(nouveauNbTraitement) + ", " + QString::number(nouveauNumero) + "\n";
+
+    contenu += nouvelleLigne;
+
+    // 7. Écrire les modifications dans le fichier
+    if (!fichierDescripteur.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Erreur", "Impossible d'écrire dans le fichier descripteurs.txt !");
+        return;
+    }
+
+    QTextStream fluxEcriture(&fichierDescripteur);
+    fluxEcriture << contenu;
+    fichierDescripteur.close();
+
+    // 8. Renommer l'image si le titre a été modifié
+    QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Bibliotheque";
+    if (nouveauTitre != elements[0]) {
+        QString extensionImage = QFileInfo(elements[1]).suffix();
+        QString ancienCheminImage = cheminBibliotheque + "/" + elements[0] + "." + extensionImage;
+        QString nouveauCheminImage = cheminBibliotheque + "/" + nouveauTitre + "." + extensionImage;
+
+        if (QFile::exists(ancienCheminImage)) {
+            if (!QFile::rename(ancienCheminImage, nouveauCheminImage)) {
+                QMessageBox::warning(this, "Erreur", "Impossible de renommer l'image associée au descripteur !");
+            }
+        } else {
+            QMessageBox::warning(this, "Erreur", "L'image associée au descripteur est introuvable !");
+        }
+    }
+
+    // 9. Confirmation
+    QMessageBox::information(this, "Succès", "Le descripteur a été modifié avec succès !");
+}
+
+
+// Supprimer
+
+void MainWindow::on_actionSupprimerDescripteur_triggered() {
+    // Demander le numéro du descripteur à supprimer
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Supprimer un descripteur",
+                                      "Entrez le numéro unique du descripteur :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Suppression annulée.");
+        return;
+    }
+
+    // Parcourir la liste pour trouver le descripteur correspondant
+    auto current = library.head; // Accès à la liste chaînée depuis votre bibliothèque
+    std::shared_ptr<Library::INode> previous = nullptr; // Pour maintenir une référence au noeud précédent
+    bool descripteurTrouve = false;
+
+    while (current) {
+        if (current->data.getNumero() == numero) {
+            descripteurTrouve = true;
+
+            // Supprimer le fichier image associé
+            std::string cheminImage = current->data.getSource(); // Récupérer le chemin de l'image sauvegardée
+            try {
+                if (std::filesystem::exists(cheminImage)) {
+                    std::filesystem::remove(cheminImage);
+                } else {
+                    QMessageBox::warning(this, "Avertissement",
+                                         "L'image associée au descripteur n'existe pas ou a déjà été supprimée.");
+                }
+            } catch (const std::exception &e) {
+                QMessageBox::warning(this, "Erreur",
+                                     QString("Impossible de supprimer l'image associée : %1").arg(e.what()));
+            }
+
+            // Supprimer le descripteur de la liste chaînée
+            if (previous) {
+                previous->next = current->next;
+            } else {
+                library.head = current->next;
+            }
+
+            QMessageBox::information(this, "Succès", "Le descripteur et son image associée ont été supprimés !");
+            return;
+        }
+
+        previous = current;
+        current = current->next;
+    }
+
+    if (!descripteurTrouve) {
+        QMessageBox::warning(this, "Erreur", "Aucun descripteur trouvé avec ce numéro !");
+    }
+}
+
+
+// --------------------------------------------------------------------------------------------------
+
+// ***************************** Afficher image **************************
+
+// ----------------------------------------------------------------
+
+void MainWindow::on_actionRechercherImage_triggered() {
+    // Demander le numéro de l'image
+    bool ok;
+    int numero = QInputDialog::getInt(this, "Rechercher une image",
+                                      "Entrez le numéro de l'image :", 0, 0, 10000, 1, &ok);
+    if (!ok) {
+        QMessageBox::information(this, "Annulé", "Recherche annulée.");
+        return;
+    }
+
+    // Appeler la méthode de recherche dans Library
+    std::string resultat = library.rechercherImageParNumero(numero);
+
+    // Afficher le résultat
+    if (resultat == "Image non trouvée.") {
+        QMessageBox::warning(this, "Résultat", "Aucune image trouvée avec ce numéro.");
+    } else {
+        QMessageBox::information(this, "Résultat", QString::fromStdString(resultat));
+    }
+}
+
 
 void MainWindow::on_RetourVersBiblio_clicked()
 {
@@ -713,3 +1033,93 @@ void MainWindow::on_RetourVersBiblio_clicked()
     biblioWindow->show(); // Affiche la fenêtre Bibliothèque
     this->close();        // Ferme la fenêtre actuelle
 }
+
+
+cv::Mat MainWindow::on_BruiterImage_clicked()
+{
+    sceneImage->clear();
+
+    // Vérification si une image a été chargée
+    if (!imageObj) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
+        return cv::Mat();
+    }
+
+
+    cv::Mat imageMat;
+
+    if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
+        const auto& imageCouleur = img->getImageCouleur();
+        imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
+        for (int y = 0; y < imageMat.rows; ++y) {
+            for (int x = 0; x < imageMat.cols; ++x) {
+                const auto& pixel = imageCouleur[y][x];
+                imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]);
+            }
+        }
+    }
+
+    // Si l'image est en niveaux de gris
+    else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
+        const auto& imageGris = img->getImageGris();
+        imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
+        for (int y = 0; y < imageMat.rows; ++y) {
+            for (int x = 0; x < imageMat.cols; ++x) {
+                imageMat.at<uchar>(y, x) = imageGris[y][x];
+            }
+        }
+    }
+
+    // Ajout de bruit gaussien à l'image
+    if (!imageMat.empty()) {
+        const double mean = 0.0;       // Moyenne du bruit
+        const double stddev = 50.0;    // Écart-type du bruit
+
+        cv::Mat noise(imageMat.size(), imageMat.type());
+        cv::randn(noise, mean, stddev); // Génération de bruit gaussien
+
+        if (imageMat.channels() == 3) {
+            // Pour les images couleur : bruit appliqué sur les trois canaux
+            for (int y = 0; y < imageMat.rows; ++y) {
+                for (int x = 0; x < imageMat.cols; ++x) {
+                    for (int c = 0; c < 3; ++c) { // Pour chaque canal B, G, R
+                        imageMat.at<cv::Vec3b>(y, x)[c] = cv::saturate_cast<uchar>(
+                            imageMat.at<cv::Vec3b>(y, x)[c] + noise.at<cv::Vec3b>(y, x)[c]
+                            );
+                    }
+                }
+            }
+        } else if (imageMat.channels() == 1) {
+            // Pour les images en niveaux de gris : bruit appliqué sur un seul canal
+            imageMat += noise;
+        } // Ajouter le bruit à l'image
+    }
+
+    QImage imgResult;
+
+    if (imageMat.channels() == 3) {
+        // Conversion pour les images en couleur
+        cv::Mat imageRGB;
+        cv::cvtColor(imageMat, imageRGB, cv::COLOR_BGR2RGB);
+        imgResult = QImage(imageRGB.data, imageRGB.cols, imageRGB.rows, imageRGB.step, QImage::Format_RGB888);
+    } else if (imageMat.channels() == 1) {
+        // Conversion pour les images en niveaux de gris
+        imgResult = QImage(imageMat.data, imageMat.cols, imageMat.rows, imageMat.step, QImage::Format_Grayscale8);
+    }
+
+    // Création d'un QPixmap pour l'afficher
+    QPixmap pixmap = QPixmap::fromImage(imgResult);
+
+    // Redimensionnement pour s'adapter à la vue
+    QSize viewSize = ui->AfficherImage->viewport()->size();
+    pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    // Création d'une scène pour afficher le résultat
+    QGraphicsScene* sceneResultat = new QGraphicsScene(this);
+    sceneResultat->addPixmap(pixmap);
+    ui->AfficherImage->setScene(sceneResultat);
+    g_imageAvecBruit = imageMat;
+    return imageMat;
+}
+
+

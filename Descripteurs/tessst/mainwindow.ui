@@ -128,8 +128,8 @@
    <widget class="QGroupBox" name="GroupeSegmentation">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>270</y>
+      <x>10</x>
+      <y>310</y>
       <width>171</width>
       <height>161</height>
      </rect>
@@ -206,14 +206,27 @@
    <widget class="QPushButton" name="RetourVersBiblio">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>450</y>
+      <x>20</x>
+      <y>490</y>
       <width>191</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string>Retour vers Bibliothèque</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BruiterImage">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>270</y>
+      <width>181</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bruiter l'image</string>
     </property>
    </widget>
   </widget>
@@ -226,6 +239,16 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuDescripteurs">
+    <property name="title">
+     <string>Descripteurs</string>
+    </property>
+    <addaction name="actionAjouterDescripteur"/>
+    <addaction name="actionModifierDescripteur"/>
+    <addaction name="actionSupprimerDescripteur"/>
+    <addaction name="actionRechercherImage"/>
+   </widget>
+   <addaction name="menuDescripteurs"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAjouterDescripteur">
