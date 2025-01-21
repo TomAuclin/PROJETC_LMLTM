@@ -66,6 +66,7 @@ BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
     ui->DetailsButton->setVisible(false);
     ui->pushButtonRechercherp->setVisible(true);
 
+
     // Initialisation du texte pour le nombre d'images
     ui->labelImageCount->setText("Nombre d'images : 0");
     ui->SousListes->hide();
@@ -76,7 +77,7 @@ BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
         ui->actionAjouterDescripteur->setVisible(false);
         ui->actionModifierDescripteur->setVisible(false);
         ui->actionSupprimer_un_descripteur->setVisible(false);
-        ui->SaveBoutton->setVisible(false);
+         ui->menubar->setVisible(false);
     }
 
     // Connexions des slots aux signaux des widgets
@@ -172,14 +173,7 @@ void BiblioWindow::on_ChargeBoutton_clicked()
     }
 }
 
-void BiblioWindow::on_SaveBoutton_clicked()
-{
-    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer sous", "", "Text Files (*.txt);;All Files (*)");
-    if (!filePath.isEmpty()) {
-        library.sauvegarderDansFichier(filePath.toStdString());
-        QMessageBox::information(this, "Sauvegarde", "Bibliothèque sauvegardée dans le fichier.");
-    }
-}
+
 
 // Fonction pour charger le fichier par défaut
 void BiblioWindow::loadDefaultFile(const QString &userLogin)

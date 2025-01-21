@@ -27,19 +27,6 @@
      <string>Charger la Bibliothèque</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="SaveBoutton">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>490</y>
-      <width>171</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Sauvegarder</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="DetailsButton">
     <property name="geometry">
      <rect>

@@ -15,8 +15,6 @@
 #include <QMouseEvent>
 #include "Image.hpp"
 #include "Library.hpp"
-//#include "mainwindow.h"
-//#include "connexionwindow.h"
 #include <memory>
 #include <QVBoxLayout>
 
@@ -56,7 +54,6 @@ private slots:
 
     void on_TraitementButton_clicked(); // Réagit au clic sur le bouton de traitement des images
     void on_DetailsButton_clicked(); // Affiche les détails d'une image
-    void on_SaveBoutton_clicked(); // Sauvegarde les informations actuelles de la bibliothèque
     void on_pushButtonRechercherp_clicked(); // Recherche une image ou un fichier dans la bibliothèque
     void on_Deco_clicked(); // Déconnecte l'utilisateur et ferme la fenêtre
 
