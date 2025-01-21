@@ -108,15 +108,13 @@ void BiblioWindow::on_Deco_clicked()
 }
 
 // Fonction pour charger la bibliothèque d'images à partir d'un fichier
-
 void BiblioWindow::on_ChargeBoutton_clicked()
 {
     // Ouvre une boîte de dialogue pour sélectionner un fichier
     QString filePath = QFileDialog::getOpenFileName(this, "Sélectionnez un fichier", "", "Text Files (*.txt);;All Files (*)");
 
     if (!filePath.isEmpty()) {
-        cheminBiblio = filePath; // Met à jour avec le fichier choisi par l'utilisateur
-        qDebug() << "Nouveau fichier descripteurs chargé : " << cheminBiblio;
+        cheminBiblio = filePath;
 
         QFile file(filePath);
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -193,10 +191,6 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
         return;
     }
 
-    // **Initialisation du fichier descripteurs par défaut**
-    cheminBiblio = filePath; // Initialise le fichier descripteurs par défaut
-    qDebug() << "Fichier descripteurs par défaut chargé : " << cheminBiblio;
-
     // Répertoire des images
     QString imageDirectory = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque";
     ui->AffichageBiblio->clear();
@@ -255,7 +249,6 @@ void BiblioWindow::loadDefaultFile(const QString &userLogin)
     mettreAJourCompteurImages();
 }
 
-
 // Fonction pour gérer le clic sur un élément de la bibliothèque
 void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
 {
@@ -311,21 +304,45 @@ void BiblioWindow::mousePressEvent(QMouseEvent *event)
     QMainWindow::mousePressEvent(event);
 }
 
-
-
-void BiblioWindow::on_pushButtonRechercherp_clicked() {
-    bool ok;
-
-    // Vérification que le chemin des descripteurs est défini
-    if (cheminBiblio.isEmpty()) {
-        QMessageBox::warning(this, "Erreur", "Aucun fichier descripteur chargé !");
+void BiblioWindow::on_DetailsButton_clicked() {
+    if (selectedImagePath.isEmpty()) {
+        QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
         return;
     }
 
-    // Demande du numéro de l'image
+    // Chemin du fichier descripteurs
+    std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
+
+    // Création de l'instance Image
+    Image image;
+    image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
+    // Association des descripteurs
+    image.associerDescripteur(cheminDescripteurs);
+
+    // Formatage du prix avec le symbole €
+    std::string prixAvecEuro = std::to_string(image.getPrix()) + " €";
+
+    // Affichage des détails associés en utilisant les getters
+    QString details = QString::fromStdString(
+        "Titre : " + image.getTitre() + "\n" +
+        "Source : " + image.getSource() + "\n" +
+        "Numéro : " + std::to_string(image.getNumero()) + "\n" +
+        "Prix : " + prixAvecEuro + "\n" +  // Affichage avec le symbole euro
+        "Accès : " + std::string(1, image.getAccess()) + "\n" +
+        "Type : " + image.getType() + "\n" +
+        "Nombre de traitements possibles : " + std::to_string(image.getnbTraitementPossible()) + "\n"
+        );
+
+    // Affichage des détails dans une boîte de message
+    QMessageBox::information(this, "Détails de l'image", details);
+}
+
+void BiblioWindow::on_pushButtonRechercherp_clicked() {
+    bool ok;
+    std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
     int numeroImage = QInputDialog::getInt(this, tr("Recherche de Prix"),
                                            tr("Saisissez le numéro de l'image pour avoir son prix :"),
-                                           1, 1, ui->AffichageBiblio->count(), 1, &ok); // L'index commence à 1
+                                           1, 1, ui->AffichageBiblio->count(), 1, &ok);  // L'index commence à 1
     if (ok) {
         // Récupération de l'élément correspondant au numéro
         QListWidgetItem *item = ui->AffichageBiblio->item(numeroImage - 1);
@@ -339,10 +356,11 @@ void BiblioWindow::on_pushButtonRechercherp_clicked() {
         QString titreCherche = itemText.section('.', 1).trimmed(); // Extrait le texte après le numéro et le point
         qDebug() << "Titre extrait : " << titreCherche;
 
-        // Création de l'image et association des descripteurs
         Image image;
+
         image.titre = titreCherche.toStdString();
-        image.associerDescripteur(cheminBiblio.toStdString()); // Utilisation de cheminBiblio
+        // Association des descripteurs pour récupérer le prix
+        image.associerDescripteur(cheminDescripteurs);
 
         // Formatage du prix avec le symbole €
         std::string prixAvecEuro = std::to_string(image.getPrix()) + " €";
@@ -357,45 +375,6 @@ void BiblioWindow::on_pushButtonRechercherp_clicked() {
         qDebug() << "L'utilisateur a annulé la saisie.";
     }
 }
-
-void BiblioWindow::on_DetailsButton_clicked()
-{
-    if (selectedImagePath.isEmpty()) {
-        QMessageBox::warning(this, "Avertissement", "Aucune image sélectionnée !");
-        return;
-    }
-
-    // Vérifie si un fichier descripteurs est chargé
-    if (cheminBiblio.isEmpty()) {
-        QMessageBox::warning(this, "Avertissement", "Aucun fichier descripteurs chargé !");
-        return;
-    }
-
-    // Chemin du fichier descripteurs actif
-    std::string cheminDescripteurs = cheminBiblio.toStdString();
-    qDebug() << "Fichier descripteurs actif : " << cheminBiblio;
-
-    // Création de l'instance Image
-    Image image;
-    image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
-    // Association des descripteurs
-    image.associerDescripteur(cheminDescripteurs);
-
-    // Formatage et affichage des détails
-    std::string prixAvecEuro = std::to_string(image.getPrix()) + " €";
-    QString details = QString::fromStdString(
-        "Titre : " + image.getTitre() + "\n" +
-        "Source : " + image.getSource() + "\n" +
-        "Numéro : " + std::to_string(image.getNumero()) + "\n" +
-        "Prix : " + prixAvecEuro + "\n" +
-        "Accès : " + std::string(1, image.getAccess()) + "\n" +
-        "Type : " + image.getType() + "\n" +
-        "Nombre de traitements possibles : " + std::to_string(image.getnbTraitementPossible()) + "\n"
-        );
-
-    QMessageBox::information(this, "Détails de l'image", details);
-}
-
 
 
 
@@ -418,7 +397,6 @@ void BiblioWindow::setUserLogin(const QString &login) {
 // -----------------------------------------------------------------------------------------
 
 // Ajouter
-
 void BiblioWindow::on_actionAjouterDescripteur_triggered() {
     QString cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
     QString cheminDescripteur;
@@ -497,10 +475,25 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered() {
     if (!ok) return;
 
     QFile fichierDescripteur(cheminDescripteur);
-    if (fichierDescripteur.open(QIODevice::Append | QIODevice::Text)) {
-        QTextStream sortie(&fichierDescripteur);
-        sortie << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", " << numero << ", " << prix << ", "
-               << acces << ", " << type << ", " << nbTraitement << ", " << numero << "\n";
+    if (fichierDescripteur.open(QIODevice::ReadWrite | QIODevice::Text)) {
+        QTextStream fluxLecture(&fichierDescripteur);
+        fichierDescripteur.seek(fichierDescripteur.size());  // Aller à la fin du fichier
+        
+        // Vérifier si le fichier se termine par une nouvelle ligne
+        fichierDescripteur.seek(qMax(0LL, fichierDescripteur.size() - 1));
+        QChar dernierCaractere;
+        fluxLecture >> dernierCaractere;
+
+        // Ajouter une nouvelle ligne seulement si nécessaire
+        if (dernierCaractere != '\n') {
+            fluxLecture << "\n";
+        }
+
+        // Ajouter le nouveau descripteur sur une nouvelle ligne
+        fluxLecture << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", " 
+                    << numero << ", " << prix << ", " << acces << ", " << type << ", " 
+                    << nbTraitement << ", " << numero << "\n";
+        
         fichierDescripteur.close();
     } else {
         QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier cible !");
