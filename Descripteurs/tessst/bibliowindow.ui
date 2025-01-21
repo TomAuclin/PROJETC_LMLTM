@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>936</width>
+    <width>990</width>
     <height>587</height>
    </rect>
   </property>
@@ -32,8 +32,8 @@
      <rect>
       <x>280</x>
       <y>490</y>
-      <width>100</width>
-      <height>30</height>
+      <width>171</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -43,10 +43,10 @@
    <widget class="QPushButton" name="DetailsButton">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>90</y>
-      <width>80</width>
-      <height>21</height>
+      <x>830</x>
+      <y>150</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -66,10 +66,10 @@
    <widget class="QPushButton" name="TraitementButton">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>130</y>
-      <width>80</width>
-      <height>25</height>
+      <x>830</x>
+      <y>190</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -79,10 +79,10 @@
    <widget class="QPushButton" name="pushButtonRechercherp">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>50</y>
-      <width>80</width>
-      <height>25</height>
+      <x>830</x>
+      <y>70</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -92,7 +92,7 @@
    <widget class="QPushButton" name="Deco">
     <property name="geometry">
      <rect>
-      <x>810</x>
+      <x>830</x>
       <y>10</y>
       <width>100</width>
       <height>30</height>
@@ -115,52 +115,13 @@
      <string>Nombre d'images : 0</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="SousListes">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>270</y>
-      <width>231</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>SousListes</string>
-    </property>
-    <widget class="QPushButton" name="souslistetype">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>101</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>souslistetype</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButtonSousListePrix">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>60</y>
-       <width>101</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>souslisteprix</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QGroupBox" name="Tris">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>260</y>
-      <width>251</width>
-      <height>111</height>
+      <x>800</x>
+      <y>280</y>
+      <width>181</width>
+      <height>161</height>
      </rect>
     </property>
     <property name="title">
@@ -169,34 +130,34 @@
     <widget class="QPushButton" name="trinbtraitements">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>80</width>
-       <height>25</height>
+       <x>10</x>
+       <y>30</y>
+       <width>161</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>trinbtrait</string>
+      <string>Nombre de Traitement</string>
      </property>
     </widget>
     <widget class="QPushButton" name="triprix">
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>40</y>
-       <width>80</width>
-       <height>25</height>
+       <x>10</x>
+       <y>80</y>
+       <width>161</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>triprix</string>
+      <string>Prix</string>
      </property>
     </widget>
     <widget class="QPushButton" name="Retourbutton">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>80</y>
+       <x>60</x>
+       <y>130</y>
        <width>61</width>
        <height>20</height>
       </rect>
@@ -205,14 +166,53 @@
       <string>Retour</string>
      </property>
     </widget>
+    <widget class="QGroupBox" name="SousListes">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>181</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>SousListes</string>
+     </property>
+     <widget class="QPushButton" name="souslistetype">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Type</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonSousListePrix">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Prix</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QPushButton" name="SousListesButton">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>180</y>
-      <width>80</width>
-      <height>25</height>
+      <x>830</x>
+      <y>230</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -222,10 +222,10 @@
    <widget class="QPushButton" name="Trisbutton">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>220</y>
-      <width>80</width>
-      <height>25</height>
+      <x>830</x>
+      <y>110</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -238,7 +238,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>936</width>
+     <width>990</width>
      <height>22</height>
     </rect>
    </property>

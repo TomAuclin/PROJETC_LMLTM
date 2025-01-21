@@ -38,9 +38,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>110</y>
-      <width>181</width>
-      <height>25</height>
+      <y>50</y>
+      <width>191</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -90,9 +90,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>150</y>
-      <width>181</width>
-      <height>25</height>
+      <y>90</y>
+      <width>191</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -103,9 +103,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
-      <width>181</width>
-      <height>25</height>
+      <y>130</y>
+      <width>191</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -116,9 +116,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>230</y>
-      <width>181</width>
-      <height>25</height>
+      <y>170</y>
+      <width>191</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -128,8 +128,8 @@
    <widget class="QGroupBox" name="GroupeSegmentation">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>310</y>
+      <x>30</x>
+      <y>260</y>
       <width>171</width>
       <height>161</height>
      </rect>
@@ -194,9 +194,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>70</y>
-      <width>181</width>
-      <height>25</height>
+      <y>10</y>
+      <width>191</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -206,8 +206,8 @@
    <widget class="QPushButton" name="RetourVersBiblio">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>490</y>
+      <x>30</x>
+      <y>470</y>
       <width>191</width>
       <height>41</height>
      </rect>
@@ -220,35 +220,15 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>270</y>
-      <width>181</width>
-      <height>25</height>
+      <y>210</y>
+      <width>191</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>Bruiter l'image</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1299</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuDescripteurs">
-    <property name="title">
-     <string>Descripteurs</string>
-    </property>
-    <addaction name="actionAjouterDescripteur"/>
-    <addaction name="actionModifierDescripteur"/>
-    <addaction name="actionSupprimerDescripteur"/>
-    <addaction name="actionRechercherImage"/>
-   </widget>
-   <addaction name="menuDescripteurs"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAjouterDescripteur">
