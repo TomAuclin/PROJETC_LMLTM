@@ -212,7 +212,7 @@ void MainWindow::afficherHistogramme(int histogramme[256])
     // Efface la scène avant de redessiner
     seceneResultat->clear();
 
-    // Obtention de la taille de la vue pour l'affichage
+    // Obtention de la taille de la QGraphicsView
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     int width = viewSize.width();
     int height = viewSize.height();
@@ -220,38 +220,42 @@ void MainWindow::afficherHistogramme(int histogramme[256])
     int margin = 30;
     int maxVal = 0;
 
-    // Recherche de la valeur maximale dans l'histogramme pour ajuster la taille des barres
+    // Recherche de la valeur maximale dans l'histogramme pour ajuster la hauteur
     for (int i = 0; i < 256; ++i) {
         if (histogramme[i] > maxVal) {
             maxVal = histogramme[i];
         }
     }
 
-    // Largeur des barres de l'histogramme
-    int barWidth = width / 256;
+    // Largeur dynamique des barres pour remplir toute la vue
+    int barWidth = (width - 2 * margin) / 256;
     if (barWidth < 1) {
         barWidth = 1;
     }
 
     // Calcul du facteur d'échelle pour les hauteurs des barres
     int maxBarHeight = height - 2 * margin;
-    double scaleFactor = static_cast<double>(maxBarHeight) / maxVal;
+    double scaleFactor = (maxVal > 0) ? static_cast<double>(maxBarHeight) / maxVal : 1;
 
-    // Ajout des axes à la scène
-    seceneResultat->addLine(margin, height - margin, width, height - margin, QPen(Qt::black)); // Axe X
-    seceneResultat->addLine(margin, 0, margin, height - margin, QPen(Qt::black));             // Axe Y
+    // Ajuster la taille de la scène pour occuper toute la vue
+    seceneResultat->setSceneRect(0, 0, width, height);
+
+    // Ajout des axes
+    seceneResultat->addLine(margin, height - margin, width - margin, height - margin, QPen(Qt::black)); // Axe X
+    seceneResultat->addLine(margin, margin, margin, height - margin, QPen(Qt::black));                 // Axe Y
 
     // Affichage des graduations sur l'axe X
     for (int i = 0; i < 256; i += 32) {
-        seceneResultat->addLine(i * barWidth + margin, height - margin, i * barWidth + margin, height - margin - 5, QPen(Qt::black));
+        int xPos = i * barWidth + margin;
+        seceneResultat->addLine(xPos, height - margin, xPos, height - margin - 5, QPen(Qt::black));
         QGraphicsTextItem* textItem = seceneResultat->addText(QString::number(i));
-        textItem->setPos(i * barWidth + margin - 10, height - margin + 5);
+        textItem->setPos(xPos - 10, height - margin + 5);
     }
 
     // Affichage des graduations sur l'axe Y
     int tickInterval = maxVal / 5;
     for (int i = 0; i <= 5; ++i) {
-        int yPos = height - margin - (i * (height - 2 * margin) / 5);
+        int yPos = height - margin - (i * maxBarHeight / 5);
         seceneResultat->addLine(margin - 5, yPos, margin, yPos, QPen(Qt::black));
         QGraphicsTextItem* textItem = seceneResultat->addText(QString::number(i * tickInterval));
         textItem->setPos(margin - 30, yPos - 5);
@@ -260,11 +264,12 @@ void MainWindow::afficherHistogramme(int histogramme[256])
     // Dessin des barres de l'histogramme
     for (int i = 0; i < 256; ++i) {
         int barHeight = static_cast<int>(histogramme[i] * scaleFactor);
-        seceneResultat->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(Qt::black), QBrush(Qt::black));
+        seceneResultat->addRect(i * barWidth + margin, height - margin - barHeight,
+                                barWidth, barHeight, QPen(Qt::black), QBrush(Qt::black));
     }
 
-    // Affichage de la scène avec l'histogramme
-    ui->AffichageResultat->setScene(seceneResultat);
+    // Forcer l'ajustement de la scène à la QGraphicsView
+    ui->AffichageResultat->fitInView(seceneResultat->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
@@ -314,10 +319,13 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
     }
 
     // Affichage des barres de l'histogramme pour chaque canal
+    // Affichage des barres de l'histogramme pour chaque canal
     if (ui->Canal_R->isChecked()) {
         int histoRouge[256] = {0};
         Histogramme::calculerHistogramme(*imageObj, histoRouge, 0); // Canal rouge
         QColor couleurRouge = Qt::red;
+        couleurRouge.setAlpha(64); // Transparence à 50%
+
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoRouge[i] * scaleFactor);
             seceneResultat->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurRouge), QBrush(couleurRouge));
@@ -328,6 +336,8 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         int histoVert[256] = {0};
         Histogramme::calculerHistogramme(*imageObj, histoVert, 1); // Canal vert
         QColor couleurVert = Qt::green;
+        couleurVert.setAlpha(64); // Transparence à 50%
+
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoVert[i] * scaleFactor);
             seceneResultat->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurVert), QBrush(couleurVert));
@@ -338,11 +348,14 @@ void MainWindow::afficherHistogrammeCanal(int histogramme[256], int canal)
         int histoBleu[256] = {0};
         Histogramme::calculerHistogramme(*imageObj, histoBleu, 2); // Canal bleu
         QColor couleurBleu = Qt::blue;
+        couleurBleu.setAlpha(64); // Transparence à 50%
+
         for (int i = 0; i < 256; ++i) {
             int barHeight = static_cast<int>(histoBleu[i] * scaleFactor);
             seceneResultat->addRect(i * barWidth + margin, height - margin - barHeight, barWidth, barHeight, QPen(couleurBleu), QBrush(couleurBleu));
         }
     }
+
 
     ui->AffichageResultat->setScene(seceneResultat);
 }
@@ -1088,6 +1101,10 @@ void MainWindow::on_RetourVersBiblio_clicked()
         // Créez une nouvelle instance si elle n'existe pas
         biblioWindow = std::make_unique<BiblioWindow>(LoginUtilisateur);
     }
+
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
 
     biblioWindow->show(); // Affiche la fenêtre Bibliothèque
     this->close();        // Ferme la fenêtre actuelle
