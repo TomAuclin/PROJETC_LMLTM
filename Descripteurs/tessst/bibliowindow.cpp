@@ -75,6 +75,7 @@ BiblioWindow::BiblioWindow(const QString &login, QWidget *parent)
         ui->actionAjouterDescripteur->setVisible(false);
         ui->actionModifierDescripteur->setVisible(false);
         ui->actionSupprimer_un_descripteur->setVisible(false);
+        ui->SaveBoutton->setVisible(false);
     }
 
     // Connexions des slots aux signaux des widgets
