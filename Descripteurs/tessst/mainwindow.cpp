@@ -21,7 +21,7 @@
 // ----------------------------------------------------------------------------------------------
 
 cv::Mat g_imageAvecBruit;
-
+int check;
 MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),                          // Initialisation de l'interface utilisateur
@@ -748,7 +748,7 @@ void MainWindow::on_AppliquerConvolution_clicked()
     }
 
 
-    if (g_imageAvecBruit.empty()) {
+    if (check!=1) {
         imageMat = imageMat;
     } else {
         imageMat = g_imageAvecBruit;
@@ -767,7 +767,16 @@ void MainWindow::on_AppliquerConvolution_clicked()
     QImage imgResultat;
     if (resultat.channels() == 3) {
         // Image en couleur
-        imgResultat = QImage(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_RGB888).rgbSwapped();
+        cv::Mat resultatRGB;
+        cv::cvtColor(resultat, resultatRGB, cv::COLOR_BGR2RGB);
+        if (check==1){
+            imgResultat = QImage(resultatRGB.data, resultatRGB.cols, resultatRGB.rows, resultatRGB.step, QImage::Format_RGB888).rgbSwapped();
+
+        }
+        else {
+            imgResultat = QImage(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_RGB888).rgbSwapped();
+
+        }
     } else if (resultat.channels() == 1) {
         // Image en niveaux de gris
         imgResultat = QImage(resultat.data, resultat.cols, resultat.rows, resultat.step, QImage::Format_Grayscale8);
@@ -1108,6 +1117,7 @@ void MainWindow::on_RetourVersBiblio_clicked()
 
     biblioWindow->show(); // Affiche la fenêtre Bibliothèque
     this->close();        // Ferme la fenêtre actuelle
+    check=0;
 }
 
 
@@ -1121,9 +1131,9 @@ cv::Mat MainWindow::on_BruiterImage_clicked()
         return cv::Mat();
     }
 
-
     cv::Mat imageMat;
 
+    // Conversion de l'image en cv::Mat
     if (ImageCouleur* img = dynamic_cast<ImageCouleur*>(imageObj)) {
         const auto& imageCouleur = img->getImageCouleur();
         imageMat = cv::Mat(imageCouleur.size(), imageCouleur[0].size(), CV_8UC3);
@@ -1133,10 +1143,7 @@ cv::Mat MainWindow::on_BruiterImage_clicked()
                 imageMat.at<cv::Vec3b>(y, x) = cv::Vec3b(pixel[0], pixel[1], pixel[2]);
             }
         }
-    }
-
-    // Si l'image est en niveaux de gris
-    else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
+    } else if (ImageGris* img = dynamic_cast<ImageGris*>(imageObj)) {
         const auto& imageGris = img->getImageGris();
         imageMat = cv::Mat(imageGris.size(), imageGris[0].size(), CV_8U);
         for (int y = 0; y < imageMat.rows; ++y) {
@@ -1146,56 +1153,67 @@ cv::Mat MainWindow::on_BruiterImage_clicked()
         }
     }
 
-    // Ajout de bruit gaussien à l'image
-    if (!imageMat.empty()) {
-        const double mean = 0.0;       // Moyenne du bruit
-        const double stddev = 50.0;    // Écart-type du bruit
-
-        cv::Mat noise(imageMat.size(), imageMat.type());
-        cv::randn(noise, mean, stddev); // Génération de bruit gaussien
-
-        if (imageMat.channels() == 3) {
-            // Pour les images couleur : bruit appliqué sur les trois canaux
-            for (int y = 0; y < imageMat.rows; ++y) {
-                for (int x = 0; x < imageMat.cols; ++x) {
-                    for (int c = 0; c < 3; ++c) { // Pour chaque canal B, G, R
-                        imageMat.at<cv::Vec3b>(y, x)[c] = cv::saturate_cast<uchar>(
-                            imageMat.at<cv::Vec3b>(y, x)[c] + noise.at<cv::Vec3b>(y, x)[c]
-                            );
-                    }
-                }
-            }
-        } else if (imageMat.channels() == 1) {
-            // Pour les images en niveaux de gris : bruit appliqué sur un seul canal
-            imageMat += noise;
-        } // Ajouter le bruit à l'image
+    // Vérification si l'image a été correctement chargée
+    if (imageMat.empty()) {
+        QMessageBox::warning(this, tr("Erreur"), tr("Impossible de charger l'image."));
+        return cv::Mat();
     }
 
-    QImage imgResult;
+    // Générer un bruit gaussien
+    cv::Mat noise(imageMat.size(), CV_32F);
+    cv::randn(noise, 0, 30); // Moyenne = 0, écart-type = 30
 
+    cv::Mat imageNoisy;
     if (imageMat.channels() == 3) {
-        // Conversion pour les images en couleur
-        cv::Mat imageRGB;
-        cv::cvtColor(imageMat, imageRGB, cv::COLOR_BGR2RGB);
-        imgResult = QImage(imageRGB.data, imageRGB.cols, imageRGB.rows, imageRGB.step, QImage::Format_RGB888);
+        // Convertir l'image en float
+        cv::Mat imageFloat;
+        imageMat.convertTo(imageFloat, CV_32F);
+
+        // Ajouter du bruit gaussien pour chaque canal
+        std::vector<cv::Mat> channels;
+        cv::split(imageFloat, channels);
+        for (auto& channel : channels) {
+            channel += noise;
+        }
+        cv::merge(channels, imageFloat);
+
+        // Clip et convertir en CV_8U
+        cv::min(imageFloat, 255, imageFloat);
+        cv::max(imageFloat, 0, imageFloat);
+        imageFloat.convertTo(imageNoisy, CV_8U);
     } else if (imageMat.channels() == 1) {
-        // Conversion pour les images en niveaux de gris
-        imgResult = QImage(imageMat.data, imageMat.cols, imageMat.rows, imageMat.step, QImage::Format_Grayscale8);
+        // Image en niveaux de gris
+        cv::Mat imageFloat;
+        imageMat.convertTo(imageFloat, CV_32F);
+        imageFloat += noise;
+
+        // Clip et convertir en CV_8U
+        cv::min(imageFloat, 255, imageFloat);
+        cv::max(imageFloat, 0, imageFloat);
+        imageFloat.convertTo(imageNoisy, CV_8U);
     }
 
-    // Création d'un QPixmap pour l'afficher
-    QPixmap pixmap = QPixmap::fromImage(imgResult);
+    // Conversion en QImage pour affichage
+    QImage imgResult;
+    if (imageNoisy.channels() == 3) {
+        cv::Mat imageRGB;
+        cv::cvtColor(imageNoisy, imageRGB, cv::COLOR_BGR2RGB);
+        imgResult = QImage(imageRGB.data, imageRGB.cols, imageRGB.rows, imageRGB.step, QImage::Format_RGB888).rgbSwapped();
+    } else if (imageNoisy.channels() == 1) {
+        imgResult = QImage(imageNoisy.data, imageNoisy.cols, imageNoisy.rows, imageNoisy.step, QImage::Format_Grayscale8);
+    }
 
-    // Redimensionnement pour s'adapter à la vue
+    // Affichage dans l'interface
+    QPixmap pixmap = QPixmap::fromImage(imgResult);
     QSize viewSize = ui->AfficherImage->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    // Création d'une scène pour afficher le résultat
     QGraphicsScene* sceneResultat = new QGraphicsScene(this);
     sceneResultat->addPixmap(pixmap);
     ui->AfficherImage->setScene(sceneResultat);
-    g_imageAvecBruit = imageMat;
-    return imageMat;
+
+    // Mettre à jour la variable globale
+    g_imageAvecBruit = imageNoisy;
+    check=1;
+    return imageNoisy;
 }
-
-
