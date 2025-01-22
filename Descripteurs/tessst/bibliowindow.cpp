@@ -418,7 +418,10 @@ void BiblioWindow::setUserLogin(const QString &login) {
 // -----------------------------------------------------------------------------------------
 
 // Ajouter
+// Cette fonction se déclenche lorsqu'on active l'action "Ajouter un descripteur" dans le menu
+//Permet d'ajouter une images avec ses descripteurs
 void BiblioWindow::on_actionAjouterDescripteur_triggered() {
+    //On defini le chemin par defaut des descripteurs
     QString cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
     QString cheminDescripteur;
     
@@ -427,7 +430,8 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered() {
         "Créer un nouveau fichier"
     };
     
-    bool ok;
+    bool ok; //Variable pour vérifier si l'utilisateur valide une action
+    //Affiche une boîte de dialogue pour choisir où ajouter le descripteur
     QString choix = QInputDialog::getItem(this, "Choix d'ajout", "Que voulez-vous faire ?", options, 0, false, &ok);
     if (!ok) return;
     
@@ -437,6 +441,7 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered() {
             QMessageBox::warning(this, "Erreur", "Aucun fichier sélectionné.");
             return;
         }
+        //Si le fichier sélectionné est "Biblio_init.txt", on le copie sous un autre nom pour garder notre biblio initiale intact
         if (QFileInfo(cheminDescripteur).fileName() == "Biblio_init.txt") {
             QString cheminModifie = cheminDescripteurs + "/Biblio_init_change.txt";
             if (!QFile::exists(cheminModifie)) {
@@ -445,9 +450,9 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered() {
                     return;
                 }
             }
-            cheminDescripteur = cheminModifie;
+            cheminDescripteur = cheminModifie; // On met à jour le chemin du fichier
         }
-    } else {
+    } else { //si l'utilisateur veut créer un nouveau fichier, il doit rentrer un nom defichier
         QString nomFichier = QInputDialog::getText(this, "Créer un fichier", "Entrez le nom du fichier (sans extension) :");
         if (nomFichier.isEmpty()) {
             QMessageBox::warning(this, "Erreur", "Le nom du fichier est invalide.");
@@ -463,20 +468,24 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered() {
         QMessageBox::information(this, "Fichier créé", "Le fichier a été créé avec succès !");
     }
 
+    //On selectionne une image à ajouter dans notre biblio
     QString cheminImageSource = QFileDialog::getOpenFileName(this, "Sélectionnez une image à ajouter", "", "Images (*.png *.jpg *.jpeg *.bmp *.pgm *.CR2);;Tous les fichiers (*)");
     if (cheminImageSource.isEmpty()) {
         QMessageBox::warning(this, "Avertissement", "Aucun fichier sélectionné !");
         return;
     }
 
+    //la ca definie le chemin de la bibliotheque ou on va copier l'image
     QString cheminBibliotheque = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Bibliotheque";
     QString cheminImageDestination = cheminBibliotheque + "/" + QFileInfo(cheminImageSource).fileName();
 
+    //On copie l'image dans la bibliotheque
     if (!QFile::copy(cheminImageSource, cheminImageDestination)) {
         QMessageBox::warning(this, "Erreur", "La copie de l'image dans la bibliothèque a échoué !");
         return;
     }
 
+    //On demande à l'utilisateur de rentrer les descripteurs de l'image
     QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok);
     if (!ok || titre.isEmpty()) return;
 
@@ -495,22 +504,21 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered() {
     int nbTraitement = QInputDialog::getInt(this, "Ajouter un descripteur", "Nombre de traitements possibles :", 1, 1, 100, 1, &ok);
     if (!ok) return;
 
+    //Ces informations sont ajoutées dans le fichier descripteur
     QFile fichierDescripteur(cheminDescripteur);
     if (fichierDescripteur.open(QIODevice::ReadWrite | QIODevice::Text)) {
         QTextStream fluxLecture(&fichierDescripteur);
         fichierDescripteur.seek(fichierDescripteur.size());  // Aller à la fin du fichier
         
-        // Vérifier si le fichier se termine par une nouvelle ligne
         fichierDescripteur.seek(qMax(0LL, fichierDescripteur.size() - 1));
         QChar dernierCaractere;
         fluxLecture >> dernierCaractere;
 
-        // Ajouter une nouvelle ligne seulement si nécessaire
         if (dernierCaractere != '\n') {
             fluxLecture << "\n";
         }
 
-        // Ajouter le nouveau descripteur sur une nouvelle ligne
+        //On ajoute le nouveau descripteur sur une nouvelle ligne
         fluxLecture << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", " 
                     << numero << ", " << prix << ", " << acces << ", " << type << ", " 
                     << nbTraitement << ", " << numero << "\n";
@@ -524,31 +532,26 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered() {
     QMessageBox::information(this, "Succès", "Le descripteur et l'image ont été ajoutés avec succès !");
 }
 
-
-
-
-// Modifier
+// Modifier un descripteur
 void BiblioWindow::on_actionModifierDescripteur_triggered()
 {
-    // Définir le chemin fixe des descripteurs
+    //ici on définit le chemin de base où sont stockés les descripteurs
     QString cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst";
 
-    // Si cheminBiblio est vide, on considère qu'on veut modifier Biblio_init.txt
-    // Sinon, on récupère simplement le nom du fichier indiqué par cheminBiblio
+    //on vérifie si cheminBiblio est vide : si oui, on utilise "Biblio_init.txt", sinon on garde le fichier indiqué
     QString cheminDescripteur = cheminBiblio.isEmpty() 
             ? "Biblio_init.txt" 
             : QFileInfo(cheminBiblio).fileName();
 
+    //on construit le chemin complet du fichier cible
     QString cheminDescripteurComplet = cheminDescripteurs + "/" + cheminDescripteur;
 
-    // ----- GESTION DU BIBLIO_INIT.TXT -----
-    // Si l'utilisateur cherche à modifier Biblio_init.txt,
-    // on bascule vers Biblio_init_change.txt (en le créant s'il n'existe pas)
+    // ----- GESTION DU FICHIER Biblio_init.txt -----
+    //si on travaille avec "Biblio_init.txt", on passe à un fichier modifiable "Biblio_init_change.txt"
     if (cheminDescripteur == "Biblio_init.txt") {
-        // Nom du fichier "change"
         QString cheminModifie = cheminDescripteurs + "/Biblio_init_change.txt";
 
-        // S'il n'existe pas, on essaie de le créer en copiant l'original
+        //si le fichier "change" n'existe pas encore, on essaie de le créer en copiant l'original
         if (!QFile::exists(cheminModifie)) {
             if (!QFile::copy(cheminDescripteurComplet, cheminModifie)) {
                 QMessageBox::warning(
@@ -561,13 +564,12 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
             }
         }
 
-        // Désormais, on travaille sur le fichier "change" plutôt que sur l'init
+        //on met à jour le chemin pour travailler sur "change"
         cheminDescripteurComplet = cheminModifie;
     }
 
-    // ----- OUVERTURE DU FICHIER CIBLE (INIT_CHANGE OU AUTRE FICHIER) -----
-
-    // Charger en lecture pour récupérer la liste des descripteurs existants
+    // ----- OUVERTURE DU FICHIER CIBLE -----
+    //on ouvre le fichier pour lire les descripteurs existants
     QFile fichierDescripteur(cheminDescripteurComplet);
     if (!fichierDescripteur.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Erreur", 
@@ -576,27 +578,28 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
         return;
     }
 
+    //on lit chaque ligne pour récupérer les noms des images/descripteurs
     QStringList listeDescripteurs;
     QTextStream fluxLecture(&fichierDescripteur);
     while (!fluxLecture.atEnd()) {
         QString ligne = fluxLecture.readLine().trimmed();
-        if (!ligne.isEmpty()) {
+        if (!ligne.isEmpty()) { //on ignore les lignes vides
             QStringList parties = ligne.split(",");
             if (parties.size() > 1) {
-                listeDescripteurs.append(parties[1].trimmed());
+                listeDescripteurs.append(parties[1].trimmed()); //on garde juste le nom de l'image
             }
         }
     }
     fichierDescripteur.close();
 
-    // Vérifier si on a bien des descripteurs disponibles
+    //si aucune image/descripteur n'est trouvée, on arrête ici
     if (listeDescripteurs.isEmpty()) {
         QMessageBox::information(this, "Aucun descripteur", 
                                  "Il n'y a aucun descripteur disponible à modifier.");
         return;
     }
 
-    // Demander à l'utilisateur quel descripteur il souhaite modifier
+    //on demande à l'utilisateur de choisir quel descripteur il veut modifier
     bool ok = false;
     QString nomImageRecherche = QInputDialog::getItem(
                 this,
@@ -612,7 +615,8 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
         return;
     }
 
-    // ----- RECHARGER LE FICHIER POUR IDENTIFIER LA LIGNE A MODIFIER -----
+    // ----- IDENTIFIER LA LIGNE À MODIFIER -----
+    //on rouvre le fichier pour trouver et extraire la ligne du descripteur choisi
     if (!fichierDescripteur.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Erreur", 
                              "Impossible d'ouvrir le fichier descripteurs :\n" 
@@ -620,36 +624,37 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
         return;
     }
 
-    QString contenu;
-    QString ligneAModifier;
+    QString contenu; //ici on stocke toutes les lignes sauf celle à modifier
+    QString ligneAModifier; //c'est la ligne qu'on va changer
     fluxLecture.setDevice(&fichierDescripteur);
 
-    // On va relire ligne par ligne : on stocke tout sauf la ligne à modifier
     while (!fluxLecture.atEnd()) {
         QString ligne = fluxLecture.readLine();
         if (ligne.contains(nomImageRecherche)) {
-            ligneAModifier = ligne;
+            ligneAModifier = ligne; //on trouve la ligne cible
         } else {
-            contenu += ligne + "\n";
+            contenu += ligne + "\n"; //on garde les autres lignes
         }
     }
     fichierDescripteur.close();
 
+    //si on n'a pas trouvé la ligne à modifier, on arrête ici
     if (ligneAModifier.isEmpty()) {
         QMessageBox::warning(this, "Erreur", 
                              "Aucun descripteur trouvé avec ce nom d'image !");
         return;
     }
 
-    // ----- EXTRAIRE LES CHAMPS ET DEMANDER LES NOUVELLES VALEURS -----
+    // ----- DEMANDER LES NOUVELLES VALEURS -----
+    //on découpe la ligne existante en parties pour accéder aux champs individuels
     QStringList elements = ligneAModifier.split(", ");
-    if (elements.size() < 8) {
+    if (elements.size() < 8) { //on vérifie que la ligne a bien tous les champs nécessaires
         QMessageBox::warning(this, "Erreur", 
                              "Le descripteur sélectionné est invalide ou mal formé !");
         return;
     }
 
-    // Champ : Titre
+    //champ : Titre
     QString nouveauTitre = QInputDialog::getText(
                 this, "Modifier un descripteur", 
                 "Nouveau titre :", 
@@ -660,33 +665,27 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
     if (!ok || nouveauTitre.isEmpty()) 
         return;
 
-    // Champ : NumUnique
+    //champ : Numéro unique
     int nouveauNumero = QInputDialog::getInt(
                 this, "Modifier un descripteur", 
                 "Nouveau numéro unique :", 
-                elements[2].toInt(), // valeur initiale
-                0,      // min
-                100000, // max
-                1,      // pas
-                &ok
+                elements[2].toInt(), 
+                0, 100000, 1, &ok
     );
     if (!ok) 
         return;
 
-    // Champ : Prix
+    //champ : Prix
     double nouveauPrix = QInputDialog::getDouble(
                 this, "Modifier un descripteur", 
                 "Nouveau prix :", 
-                elements[3].toDouble(), // valeur initiale
-                0,       // min
-                100000,  // max
-                2,       // décimales
-                &ok
+                elements[3].toDouble(), 
+                0, 100000, 2, &ok
     );
     if (!ok) 
         return;
 
-    // Champ : Accès
+    //champ : Accès
     QString nouvelAcces = QInputDialog::getText(
                 this, "Modifier un descripteur", 
                 "Nouvel accès (O/L) :", 
@@ -697,7 +696,7 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
     if (!ok || nouvelAcces.isEmpty()) 
         return;
 
-    // Champ : Type
+    //champ : Type
     QString nouveauType = QInputDialog::getText(
                 this, "Modifier un descripteur", 
                 "Nouveau type (couleur, gris) :", 
@@ -708,7 +707,7 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
     if (!ok || nouveauType.isEmpty()) 
         return;
 
-    // Champ : NbTraitements
+    //champ : Nombre de traitements
     int nouveauNbTraitement = QInputDialog::getInt(
                 this, "Modifier un descripteur", 
                 "Nouveau nombre de traitements possibles :", 
@@ -718,6 +717,7 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
     if (!ok) 
         return;
 
+    //on prépare la nouvelle version de la ligne
     QString nouvelleLigne =
             nouveauTitre + ", " +
             elements[1] + ", " + 
@@ -726,13 +726,14 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
             nouvelAcces + ", " +
             nouveauType + ", " +
             QString::number(nouveauNbTraitement) + ", " +
-            QString::number(nouveauNumero) + // ou tout autre champ 
+            QString::number(nouveauNumero) + 
             "\n";
 
-    // Ajout de la ligne modifiée au reste du fichier
+    //on ajoute la ligne modifiée au reste du contenu
     contenu += nouvelleLigne;
 
-    // ----- ÉCRITURE DANS LE FICHIER CIBLE -----
+    // ----- ÉCRITURE DU FICHIER -----
+    //on ouvre le fichier en mode écriture pour mettre à jour son contenu
     if (!fichierDescripteur.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Erreur", 
                              "Impossible d'écrire dans le fichier descripteurs :\n" 
@@ -741,29 +742,28 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
     }
 
     QTextStream fluxEcriture(&fichierDescripteur);
-    fluxEcriture << contenu;
+    fluxEcriture << contenu; //on écrit le nouveau contenu
     fichierDescripteur.close();
 
+    //on affiche un message pour dire que tout s'est bien passé
     QMessageBox::information(this,
                              "Succès",
                              "Le descripteur a été modifié avec succès dans :\n"
                              + cheminDescripteurComplet);
 }
 
-
-
-// Supprimer
+// Supprimer un descripteur
 void BiblioWindow::on_actionSupprimerDescripteur_triggered()
 {
-    // 1) Récupérer le chemin actuel du fichier chargé
+    //on vérifie si un fichier a été chargé, sinon on ne peut pas continuer
     if (cheminBiblio.isEmpty()) {
         QMessageBox::warning(this, "Erreur", 
                              "Aucun fichier n'a été chargé. Impossible de supprimer.");
         return;
     }
-    QString fileToModify = cheminBiblio; 
+    QString fileToModify = cheminBiblio;
 
-    // 2) Récupérer tous les items du QListWidget
+    //on récupère tous les éléments affichés dans le QListWidget
     QList<QListWidgetItem*> items = ui->AffichageBiblio->findItems("*", Qt::MatchWildcard);
     if (items.isEmpty()) {
         QMessageBox::information(this, "Information", 
@@ -771,26 +771,26 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
         return;
     }
 
-    // 3) Construire un vecteur d'objets Image depuis l'affichage
+    //ici on construit un vecteur avec tous les objets "Image" présents dans l'affichage
     std::vector<Image> images;           
     std::vector<QString> cheminsImages;  
 
     for (QListWidgetItem* item : items) {
-        // Récupère le chemin de l'image depuis le UserRole
+        //on récupère le chemin de l'image associée à chaque item
         QVariant userData = item->data(Qt::UserRole);
         QString selectedImagePath = userData.toString();
 
-        // Vérifier si l'image existe
+        //on vérifie que le chemin est valide et que l'image existe
         if (selectedImagePath.isEmpty() || !QFile::exists(selectedImagePath)) {
             qDebug() << "Chemin invalide ou inexistant : " << selectedImagePath;
             continue;
         }
 
-        // Créer un objet Image et définir son titre (nom de fichier)
+        //on crée un objet Image et on lui associe son titre (nom du fichier)
         Image image;
         image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
 
-        // Associer les descripteurs (pour remplir getNumero(), getPrix(), etc.)
+        //on associe les descripteurs au fichier pour récupérer ses propriétés
         try {
             image.associerDescripteur(fileToModify.toStdString());
         } catch (const std::exception& e) {
@@ -798,29 +798,28 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
             continue;
         }
 
-        images.push_back(image);
-        cheminsImages.push_back(selectedImagePath);
+        images.push_back(image); //on ajoute l'image au vecteur
+        cheminsImages.push_back(selectedImagePath); //et son chemin associé
     }
 
-    // 4) Vérifier qu'on a bien des images en mémoire
+    //on vérifie qu'il y a bien des images en mémoire
     if (images.empty()) {
         QMessageBox::information(this, "Information", 
                                  "Aucune image exploitable n'a été détectée.");
         return;
     }
 
-    // 5) Demander à l'utilisateur le numéro à supprimer (1..images.size())
+    //on demande à l'utilisateur de sélectionner le numéro de l'image à supprimer
     bool ok;
     int nbImages = (int)images.size();
     int numeroSup = QInputDialog::getInt(
                         this,
                         "Supprimer un descripteur",
-                        QString("Entrez le numéro (1 à %1) de l'image à supprimer :")
-                                .arg(nbImages),
-                        1,   // Valeur par défaut
-                        1,   // Min
-                        nbImages,  // Max
-                        1,   // Step
+                        QString("Entrez le numéro (1 à %1) de l'image à supprimer :").arg(nbImages),
+                        1,   // valeur par défaut
+                        1,   // min
+                        nbImages,  // max
+                        1,   // pas
                         &ok
                     );
     if (!ok) {
@@ -828,21 +827,20 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
         return;
     }
 
-    // 6) Récupérer l'image correspondante (index = numeroSup-1)
-    int index = numeroSup - 1;   // entre 0 et nbImages-1
+    //on récupère l'image sélectionnée (son index est numéroSup - 1)
+    int index = numeroSup - 1;   
     Image &imgASupprimer = images[index];
     QString cheminImage = cheminsImages[index];
 
-     if (QFileInfo(fileToModify).fileName() == "Biblio_init.txt") {
-         QMessageBox::warning(this, "Interdit",
-                              "Vous n'avez pas le droit de supprimer directement dans Biblio_init.txt !");
-         return;
+    //on interdit toute suppression dans le fichier "Biblio_init.txt"
+    if (QFileInfo(fileToModify).fileName() == "Biblio_init.txt") {
+        QMessageBox::warning(this, "Interdit",
+                             "Vous n'avez pas le droit de supprimer directement dans Biblio_init.txt !");
+        return;
     }
 
-    // 8) Supprimer la ligne correspondante dans le fichier .txt
-    //    - On lit toutes les lignes
-    //    - On compare titre & numéro au descripteur qu'on veut supprimer
-    //    - On recopie toutes les autres lignes
+    // ----- SUPPRESSION DE LA LIGNE DANS LE FICHIER -----
+    //on ouvre le fichier en lecture pour lire toutes les lignes
     QFile fichierDescripteur(fileToModify);
     if (!fichierDescripteur.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Erreur",
@@ -851,37 +849,33 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
         return;
     }
 
-    QString contenuFinal;
+    QString contenuFinal; //ici on va stocker toutes les lignes sauf celle à supprimer
     QTextStream fluxLecture(&fichierDescripteur);
 
-    QString titreASupprimer  = QString::fromStdString(imgASupprimer.titre).trimmed();
-    int numeroASupprimer     = imgASupprimer.getNumero();
+    QString titreASupprimer = QString::fromStdString(imgASupprimer.titre).trimmed();
+    int numeroASupprimer = imgASupprimer.getNumero();
 
-    // Lecture ligne à ligne
     while (!fluxLecture.atEnd()) {
         QString line = fluxLecture.readLine();
         QStringList fields = line.split(",");
-        if (fields.size() < 3) {
+        if (fields.size() < 3) { //si la ligne est invalide, on la garde telle quelle
             contenuFinal += line + "\n";
             continue;
         }
 
-        QString titre  = fields[0].trimmed();
-        int numero     = fields[2].trimmed().toInt();
+        QString titre = fields[0].trimmed();
+        int numero = fields[2].trimmed().toInt();
 
-        // Comparaison : si titre & numéro correspondent, on ne recopie pas
+        //si c'est la ligne correspondant au descripteur, on la skip
         if (titre == titreASupprimer && numero == numeroASupprimer) {
-            // => C'est la ligne à supprimer => on la skip
             qDebug() << "Suppression de la ligne :" << line;
-            // Ne rien ajouter à contenuFinal
         } else {
-            // Sinon, on recopie
-            contenuFinal += line + "\n";
+            contenuFinal += line + "\n"; //sinon, on la garde
         }
     }
     fichierDescripteur.close();
 
-    // On réécrit le fichier
+    //on ouvre le fichier en écriture pour y inscrire le nouveau contenu
     if (!fichierDescripteur.open(QIODevice::WriteOnly | QIODevice::Text)) {
         QMessageBox::warning(this, "Erreur",
                              "Impossible de rouvrir le fichier en écriture :\n"
@@ -889,10 +883,11 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
         return;
     }
     QTextStream fluxEcriture(&fichierDescripteur);
-    fluxEcriture << contenuFinal;
+    fluxEcriture << contenuFinal; //on écrit le contenu mis à jour
     fichierDescripteur.close();
 
-    // 9) Supprimer l'image dans le dossier s'il existe
+    // ----- SUPPRESSION DU FICHIER IMAGE -----
+    //on vérifie que le fichier image existe et on tente de le supprimer
     if (QFile::exists(cheminImage)) {
         if (!QFile::remove(cheminImage)) {
             QMessageBox::warning(this, "Erreur", 
@@ -900,13 +895,14 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
         }
     }
 
-    // 10) Mettre à jour l'affichage => on enlève l'élément supprimé
-    // On vide la liste
+    // ----- MISE À JOUR DE L'AFFICHAGE -----
+    //on vide l'affichage de la liste
     ui->AffichageBiblio->clear();
-    // On enlève l'image du vecteur
+    //on enlève l'image et son chemin des vecteurs
     images.erase(images.begin() + index);
     cheminsImages.erase(cheminsImages.begin() + index);
 
+    //on recrée les items restants dans le QListWidget
     int compteur = 1;
     for (size_t i = 0; i < images.size(); ++i) {
         QString path = cheminsImages[i];
@@ -920,11 +916,10 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
         compteur++;
     }
 
+    //on affiche un message pour indiquer que tout s'est bien passé
     QMessageBox::information(this, "Succès",
                              "Le descripteur et l'image associée ont été supprimés avec succès !");
 }
-
-
 
 
 void BiblioWindow::on_pushButtonSousListePrix_clicked(){
