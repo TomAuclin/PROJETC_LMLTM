@@ -33,3 +33,4 @@ Tom, GruArbre_gris.pgm, 105, 124, L, gris, 4, 105
 Tom, EauBord_couleur.CR2, 102, 546, L, couleur, 5, 102
 Tom, Dome_couleur.CR2, 100, 225, L, couleur, 5, 100
 Tom, ChaussureLydia_couleur.CR2, 94, 10000, L, couleur, 5, 94
+blabla, Ville_couleur.CR2, 3455, 67, O, couleur, 6, 3455
