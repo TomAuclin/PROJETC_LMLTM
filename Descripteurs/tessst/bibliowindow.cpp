@@ -328,6 +328,8 @@ void BiblioWindow::mousePressEvent(QMouseEvent *event)
         ui->TraitementButton->setVisible(false);
         ui->DetailsButton->setVisible(false);
         ui->SousListesButton->hide();
+        ui->SousListes->hide();
+
     }
 
     QMainWindow::mousePressEvent(event);
@@ -1185,17 +1187,6 @@ void BiblioWindow::on_triprix_clicked()
         ui->AffichageBiblio->addItem(newItem);
     }
 
-    // Afficher un résumé des images réarrangées
-    QString summary = "Images réarrangées :\n";
-    for (size_t i = 0; i < titres.size(); ++i)
-    {
-        summary += QString("Titre : %1, Prix : %2 €\n")
-                       .arg(QString::fromStdString(titres[i]))
-                       .arg(prix[i]);
-    }
-
-    QMessageBox::information(this, "Images réarrangées", summary);
-
     // Vérifier les titres et prix dans la console après réarrangement
     qDebug() << "Titres et prix après réarrangement :";
     for (size_t i = 0; i < titres.size(); ++i)
@@ -1316,16 +1307,6 @@ void BiblioWindow::on_trinbtraitements_clicked()
         ui->AffichageBiblio->addItem(newItem);
     }
 
-    // Afficher un résumé des images réarrangées
-    QString summary = "Images réarrangées :\n";
-    for (size_t i = 0; i < titres.size(); ++i)
-    {
-        summary += QString("Titre : %1, Nombre de traitements : %2\n")
-                       .arg(QString::fromStdString(titres[i]))
-                       .arg(nbTraitements[i]);
-    }
-
-    QMessageBox::information(this, "Images réarrangées", summary);
 
     // Vérifier les titres et nb de traitements dans la console après réarrangement
     qDebug() << "Titres et nb de traitements après réarrangement :";
@@ -1396,6 +1377,7 @@ void BiblioWindow::on_SousListesButton_clicked()
 void BiblioWindow::on_Trisbutton_clicked()
 {
     ui->Tris->show();
+
 }
 
 void BiblioWindow::on_Retourbutton_clicked()

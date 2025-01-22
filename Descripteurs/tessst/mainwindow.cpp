@@ -465,7 +465,7 @@ void MainWindow::on_DetectionContour_clicked()
         return;
     }
 
-    // Conversion de l'image des contours pour l'afficher
+    // ersion de l'image des contours pour l'afficher
     QImage imgContours(contours.data, contours.cols, contours.rows, contours.step, QImage::Format_Grayscale8);
     QPixmap pixmap = QPixmap::fromImage(imgContours);
 
