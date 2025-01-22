@@ -491,6 +491,10 @@ void MainWindow::on_DetectionContour_clicked()
 
 void MainWindow::on_DetectionDroite_clicked()
 {
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
+
     QMessageBox::information(this, tr("Information"), tr("Attention : Cette fonctionnalité est en cours de développement. Les résultats peuvent être imprécis."));
 
     // Vérification si une image a été chargée
@@ -567,6 +571,10 @@ void MainWindow::on_DetectionDroite_clicked()
 
 // ----------------------------------------------------------------------------------------------
 std::vector<int> MainWindow::getSelectedSegmentationCanaux() {
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
+
     std::vector<int> canaux;
     if (ui->Segmentation_Canal_R->isChecked()) {
         canaux.push_back(0); // Rouge
@@ -581,6 +589,9 @@ std::vector<int> MainWindow::getSelectedSegmentationCanaux() {
 }
 
 void MainWindow::on_SegmenterCouleur_clicked() {
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
@@ -717,6 +728,10 @@ void MainWindow::on_AppliquerConvolution_clicked()
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
+
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
 
     // Convertir l'image en cv::Mat
     cv::Mat imageMat;
@@ -1124,6 +1139,10 @@ void MainWindow::on_RetourVersBiblio_clicked()
 cv::Mat MainWindow::on_BruiterImage_clicked()
 {
     sceneImage->clear();
+
+    ui->Canal_R->setVisible(false);
+    ui->Canal_V->setVisible(false);
+    ui->Canal_B->setVisible(false);
 
     // Vérification si une image a été chargée
     if (!imageObj) {
