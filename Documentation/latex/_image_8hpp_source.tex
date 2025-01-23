@@ -1,0 +1,74 @@
+\doxysection{Image.\+hpp}
+\hypertarget{_image_8hpp_source}{}\label{_image_8hpp_source}\index{Descripteurs/tessst/Image.hpp@{Descripteurs/tessst/Image.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ IMAGE\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ IMAGE\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Inclusion\ des\ fichiers\ nécessaires\ pour\ gérer\ l'interface,\ les\ images\ et\ la\ bibliothèque.}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ Classe\ Image}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ Représente\ une\ image\ avec\ son\ Descripteur\ :\ ses\ caractéristiques.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_image}{Image}}\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00017\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_a4de4d0e94d17dc3666fdcbaeccf6ac99}{source}};\ }
+\DoxyCodeLine{00018\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_a68bcef6968162c310a2d9f6f16348b31}{titre}};\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_a20f11867fae02d989ef43e4d0e6c1fe7}{numero}};\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{class_image_adf2c17f4d4b75b39cd67f81a2bec71a4}{prix}};\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{class_image_a3a0ba57fe0e5011ee3bcc44112d5d25e}{acces}};\ }
+\DoxyCodeLine{00022\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_a7a7e07c3e2a1e93093320193eef180b4}{type}};\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_a50de5f06f127b4f0b6831ebdd72e8053}{nbTraitementPossible}};\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_afac3a1a5e86c580a8277caa16a56efa4}{identite}};\ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ Constructeur\ complet\ qui\ initialise\ toutes\ les\ variables\ membres\ avec\ des\ valeurs\ spécifiques.}}
+\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{class_image}{Image}}(\textcolor{keyword}{const}\ std::string\&\ src,\ \textcolor{keyword}{const}\ std::string\&\ tit,\ \textcolor{keywordtype}{int}\ num,\ \textcolor{keywordtype}{double}\ prx,\ \textcolor{keywordtype}{char}\ acc,\ \textcolor{keyword}{const}\ std::string\&\ typ,\ \textcolor{keywordtype}{int}\ nTp,\ \textcolor{keywordtype}{int}\ ide);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{//\ Constructeur\ par\ défaut,\ qui\ initialise\ les\ variables\ membres\ avec\ des\ valeurs\ par\ défaut\ (ex\ :\ une\ chaîne\ vide\ pour\ 'source'\ et\ 'titre').}}
+\DoxyCodeLine{00031\ \ \ \ \ \mbox{\hyperlink{class_image}{Image}}()}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{class_image_a4de4d0e94d17dc3666fdcbaeccf6ac99}{source}}(\textcolor{stringliteral}{"{}"{}}),\ \mbox{\hyperlink{class_image_a68bcef6968162c310a2d9f6f16348b31}{titre}}(\textcolor{stringliteral}{"{}"{}}),\ \mbox{\hyperlink{class_image_a20f11867fae02d989ef43e4d0e6c1fe7}{numero}}(0),\ \mbox{\hyperlink{class_image_adf2c17f4d4b75b39cd67f81a2bec71a4}{prix}}(0.0),\ \mbox{\hyperlink{class_image_a3a0ba57fe0e5011ee3bcc44112d5d25e}{acces}}(\textcolor{stringliteral}{'O'}),\ \mbox{\hyperlink{class_image_a7a7e07c3e2a1e93093320193eef180b4}{type}}(\textcolor{stringliteral}{"{}inconnu"{}}),\ \mbox{\hyperlink{class_image_a50de5f06f127b4f0b6831ebdd72e8053}{nbTraitementPossible}}(0),\ \mbox{\hyperlink{class_image_afac3a1a5e86c580a8277caa16a56efa4}{identite}}(0)\ \{\}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Méthodes\ existantes}}
+\DoxyCodeLine{00035\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_ad72789742cd2fef7de9add5b6ae404c9}{getDescripteur}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_ac71fab44de5425f31837190e4e96b94a}{nbrcarac}}();\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_a1a3e6be4de21a7bfc13e0f7c8f83320f}{getNumero}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_aa991682b538c5abc1e65d7f0453ed308}{getPrix}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00039\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_acc3713a7aa07ac35354b545e935b306b}{getSource}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00040\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_ab4578e26036fa361bca4a6b1e139d935}{getTitre}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{class_image_a415033ed49e49e264ca2b5e40fcd20ac}{getAccess}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00042\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_aa3090b8e10677cf8100b0df689182f76}{getType}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_a9f53a00b045d12ab0b8ec3302b29bcfe}{getnbTraitementPossible}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00044\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_a783d4c10d65f8e92bfa84bc83a419e1e}{getDescripteurSimple}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00045\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_a9b6cf01672f4c9a1c035d61d829aea45}{getDescripteurGratuit}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00046\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_ad2839c838a0f564f411981fbfb7821cd}{getDescripteursmoins10}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00047\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_a3a7120b3ffe5f90cda8227264bf638a5}{getDescripteursplus10}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ Ajouter/modifier/supprimer\ descripteur}}
+\DoxyCodeLine{00050\ \ \ \ \ std::string\ \mbox{\hyperlink{class_image_a3ffecd52acc28a993e2dde89c8951ba3}{getChemin}}()\ \textcolor{keyword}{const};\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_a36e6ac90195fd43a82a6fb888c29c330}{setChemin}}(\textcolor{keyword}{const}\ std::string\&\ chemin);\ }
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_ace11d52eb15501b9cdf1f6cecc1b8fcb}{setNumero}}(\textcolor{keywordtype}{int}\ \_numero);\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_a11bf31c5a8d4706c276d37020e346b6c}{setPrix}}(\textcolor{keywordtype}{int}\ \_prix);\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_af03c5b5a8e4dc264c6a960b7b0ed045e}{setTitre}}(std::string\ \_Titre);\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_a4e76cb81642b84c10dbcf708a3618cee}{setAccess}}(\textcolor{keywordtype}{char}\ \_Access);\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_a47095986afbdd2d5786375abe7a07996}{setType}}(std::string\ \_Type);\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_acc91c9410ce2d9961204b818696a9790}{setnbTraitementPossible}}(\textcolor{keywordtype}{int}\ \_nbTraitementPossible);\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_ad0e7d90691e95657deb45c43744d3099}{associerDescripteur}}(\textcolor{keyword}{const}\ std::string\&\ fichierDescripteurs);\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_image_afca9f1c888143dfd3d710456c3f65783}{setSource}}(\textcolor{keyword}{const}\ std::string\&\ src);\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_image_ab1ceaf865389a84c46e9c2220a52428e}{rechercherPrix}}(\textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_image_a20f11867fae02d989ef43e4d0e6c1fe7}{numero}},\ \textcolor{keyword}{const}\ std::string\&\ cheminDescripteurs);\ }
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ Destructeur}}
+\DoxyCodeLine{00064\ \ \ \ \ \mbox{\hyperlink{class_image_a0294f63700543e11c0f0da85601c7ae5}{\string~Image}}();\ }
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

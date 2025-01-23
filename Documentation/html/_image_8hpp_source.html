@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.11.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Projet C++ Gestion des bibliothèque et traitement d&#39;images:  Fichier source de Descripteurs/tessst/Image.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Projet C++ Gestion des bibliothèque et traitement d&#39;images
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.11.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche',false);
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_e0f7bbe281bafec556c01aae9d49fac9.html">Descripteurs</a></li><li class="navelem"><a class="el" href="dir_200c7ac152f5c1a5e67f01c24fc89cd1.html">tessst</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
+<div class="header">
+  <div class="headertitle"><div class="title">Image.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef IMAGE_HPP</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define IMAGE_HPP</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Inclusion des fichiers nécessaires pour gérer l&#39;interface, les images et la bibliothèque.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;sstream&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">/*</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * Classe Image</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> * Représente une image avec son Descripteur : ses caractéristiques.</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> */</span></div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="class_image.html">   15</a></span><span class="keyword">class </span><a class="code hl_class" href="class_image.html">Image</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="class_image.html#a4de4d0e94d17dc3666fdcbaeccf6ac99">   17</a></span>    std::string <a class="code hl_variable" href="class_image.html#a4de4d0e94d17dc3666fdcbaeccf6ac99">source</a>; </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="class_image.html#a68bcef6968162c310a2d9f6f16348b31">   18</a></span>    std::string <a class="code hl_variable" href="class_image.html#a68bcef6968162c310a2d9f6f16348b31">titre</a>; </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="class_image.html#a20f11867fae02d989ef43e4d0e6c1fe7">   19</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_image.html#a20f11867fae02d989ef43e4d0e6c1fe7">numero</a>; </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="class_image.html#adf2c17f4d4b75b39cd67f81a2bec71a4">   20</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="class_image.html#adf2c17f4d4b75b39cd67f81a2bec71a4">prix</a>; </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="class_image.html#a3a0ba57fe0e5011ee3bcc44112d5d25e">   21</a></span>    <span class="keywordtype">char</span> <a class="code hl_variable" href="class_image.html#a3a0ba57fe0e5011ee3bcc44112d5d25e">acces</a>; </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_image.html#a7a7e07c3e2a1e93093320193eef180b4">   22</a></span>    std::string <a class="code hl_variable" href="class_image.html#a7a7e07c3e2a1e93093320193eef180b4">type</a>; </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_image.html#a50de5f06f127b4f0b6831ebdd72e8053">   23</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_image.html#a50de5f06f127b4f0b6831ebdd72e8053">nbTraitementPossible</a>; </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_image.html#afac3a1a5e86c580a8277caa16a56efa4">   24</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="class_image.html#afac3a1a5e86c580a8277caa16a56efa4">identite</a>; </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="comment">// Constructeur complet qui initialise toutes les variables membres avec des valeurs spécifiques.</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <a class="code hl_class" href="class_image.html">Image</a>(<span class="keyword">const</span> std::string&amp; src, <span class="keyword">const</span> std::string&amp; tit, <span class="keywordtype">int</span> num, <span class="keywordtype">double</span> prx, <span class="keywordtype">char</span> acc, <span class="keyword">const</span> std::string&amp; typ, <span class="keywordtype">int</span> nTp, <span class="keywordtype">int</span> ide);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Constructeur par défaut, qui initialise les variables membres avec des valeurs par défaut (ex : une chaîne vide pour &#39;source&#39; et &#39;titre&#39;).</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <a class="code hl_class" href="class_image.html">Image</a>()</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        : <a class="code hl_variable" href="class_image.html#a4de4d0e94d17dc3666fdcbaeccf6ac99">source</a>(<span class="stringliteral">&quot;&quot;</span>), <a class="code hl_variable" href="class_image.html#a68bcef6968162c310a2d9f6f16348b31">titre</a>(<span class="stringliteral">&quot;&quot;</span>), <a class="code hl_variable" href="class_image.html#a20f11867fae02d989ef43e4d0e6c1fe7">numero</a>(0), <a class="code hl_variable" href="class_image.html#adf2c17f4d4b75b39cd67f81a2bec71a4">prix</a>(0.0), <a class="code hl_variable" href="class_image.html#a3a0ba57fe0e5011ee3bcc44112d5d25e">acces</a>(<span class="stringliteral">&#39;O&#39;</span>), <a class="code hl_variable" href="class_image.html#a7a7e07c3e2a1e93093320193eef180b4">type</a>(<span class="stringliteral">&quot;inconnu&quot;</span>), <a class="code hl_variable" href="class_image.html#a50de5f06f127b4f0b6831ebdd72e8053">nbTraitementPossible</a>(0), <a class="code hl_variable" href="class_image.html#afac3a1a5e86c580a8277caa16a56efa4">identite</a>(0) {}</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="comment">// Méthodes existantes</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    std::string <a class="code hl_function" href="class_image.html#ad72789742cd2fef7de9add5b6ae404c9">getDescripteur</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_image.html#ac71fab44de5425f31837190e4e96b94a">nbrcarac</a>(); </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_image.html#a1a3e6be4de21a7bfc13e0f7c8f83320f">getNumero</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_image.html#aa991682b538c5abc1e65d7f0453ed308">getPrix</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    std::string <a class="code hl_function" href="class_image.html#acc3713a7aa07ac35354b545e935b306b">getSource</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    std::string <a class="code hl_function" href="class_image.html#ab4578e26036fa361bca4a6b1e139d935">getTitre</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordtype">char</span> <a class="code hl_function" href="class_image.html#a415033ed49e49e264ca2b5e40fcd20ac">getAccess</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    std::string <a class="code hl_function" href="class_image.html#aa3090b8e10677cf8100b0df689182f76">getType</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_image.html#a9f53a00b045d12ab0b8ec3302b29bcfe">getnbTraitementPossible</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    std::string <a class="code hl_function" href="class_image.html#a783d4c10d65f8e92bfa84bc83a419e1e">getDescripteurSimple</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    std::string <a class="code hl_function" href="class_image.html#a9b6cf01672f4c9a1c035d61d829aea45">getDescripteurGratuit</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    std::string <a class="code hl_function" href="class_image.html#ad2839c838a0f564f411981fbfb7821cd">getDescripteursmoins10</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    std::string <a class="code hl_function" href="class_image.html#a3a7120b3ffe5f90cda8227264bf638a5">getDescripteursplus10</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// Ajouter/modifier/supprimer descripteur</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    std::string <a class="code hl_function" href="class_image.html#a3ffecd52acc28a993e2dde89c8951ba3">getChemin</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#a36e6ac90195fd43a82a6fb888c29c330">setChemin</a>(<span class="keyword">const</span> std::string&amp; chemin); </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#ace11d52eb15501b9cdf1f6cecc1b8fcb">setNumero</a>(<span class="keywordtype">int</span> _numero); </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#a11bf31c5a8d4706c276d37020e346b6c">setPrix</a>(<span class="keywordtype">int</span> _prix); </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#af03c5b5a8e4dc264c6a960b7b0ed045e">setTitre</a>(std::string _Titre); </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#a4e76cb81642b84c10dbcf708a3618cee">setAccess</a>(<span class="keywordtype">char</span> _Access); </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#a47095986afbdd2d5786375abe7a07996">setType</a>(std::string _Type); </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#acc91c9410ce2d9961204b818696a9790">setnbTraitementPossible</a>(<span class="keywordtype">int</span> _nbTraitementPossible); </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#ad0e7d90691e95657deb45c43744d3099">associerDescripteur</a>(<span class="keyword">const</span> std::string&amp; fichierDescripteurs); </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_image.html#afca9f1c888143dfd3d710456c3f65783">setSource</a>(<span class="keyword">const</span> std::string&amp; src); </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_image.html#ab1ceaf865389a84c46e9c2220a52428e">rechercherPrix</a>(<span class="keywordtype">int</span> <a class="code hl_variable" href="class_image.html#a20f11867fae02d989ef43e4d0e6c1fe7">numero</a>, <span class="keyword">const</span> std::string&amp; cheminDescripteurs); </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// Destructeur</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_function" href="class_image.html#a0294f63700543e11c0f0da85601c7ae5">~Image</a>(); </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclass_image_html"><div class="ttname"><a href="class_image.html">Image</a></div><div class="ttdef"><b>Definition</b> Image.hpp:15</div></div>
+<div class="ttc" id="aclass_image_html_a0294f63700543e11c0f0da85601c7ae5"><div class="ttname"><a href="class_image.html#a0294f63700543e11c0f0da85601c7ae5">Image::~Image</a></div><div class="ttdeci">~Image()</div><div class="ttdoc">Destructeur de la classe, utilisé pour nettoyer les ressources allouées pendant la durée de vie de l'...</div><div class="ttdef"><b>Definition</b> Image.cpp:201</div></div>
+<div class="ttc" id="aclass_image_html_a11bf31c5a8d4706c276d37020e346b6c"><div class="ttname"><a href="class_image.html#a11bf31c5a8d4706c276d37020e346b6c">Image::setPrix</a></div><div class="ttdeci">void setPrix(int _prix)</div><div class="ttdoc">Modifie le prix de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:107</div></div>
+<div class="ttc" id="aclass_image_html_a1a3e6be4de21a7bfc13e0f7c8f83320f"><div class="ttname"><a href="class_image.html#a1a3e6be4de21a7bfc13e0f7c8f83320f">Image::getNumero</a></div><div class="ttdeci">int getNumero() const</div><div class="ttdoc">Retourne le numéro d'identification de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:97</div></div>
+<div class="ttc" id="aclass_image_html_a20f11867fae02d989ef43e4d0e6c1fe7"><div class="ttname"><a href="class_image.html#a20f11867fae02d989ef43e4d0e6c1fe7">Image::numero</a></div><div class="ttdeci">int numero</div><div class="ttdoc">Numéro d'identification unique pour chaque image, permet de différencier les images.</div><div class="ttdef"><b>Definition</b> Image.hpp:19</div></div>
+<div class="ttc" id="aclass_image_html_a36e6ac90195fd43a82a6fb888c29c330"><div class="ttname"><a href="class_image.html#a36e6ac90195fd43a82a6fb888c29c330">Image::setChemin</a></div><div class="ttdeci">void setChemin(const std::string &amp;chemin)</div><div class="ttdoc">Définit le chemin de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:24</div></div>
+<div class="ttc" id="aclass_image_html_a3a0ba57fe0e5011ee3bcc44112d5d25e"><div class="ttname"><a href="class_image.html#a3a0ba57fe0e5011ee3bcc44112d5d25e">Image::acces</a></div><div class="ttdeci">char acces</div><div class="ttdoc">Statut d'accès de l'image, 'O' pour ouvert (accessible par tous) et 'L' pour limité (accessible sous ...</div><div class="ttdef"><b>Definition</b> Image.hpp:21</div></div>
+<div class="ttc" id="aclass_image_html_a3a7120b3ffe5f90cda8227264bf638a5"><div class="ttname"><a href="class_image.html#a3a7120b3ffe5f90cda8227264bf638a5">Image::getDescripteursplus10</a></div><div class="ttdeci">std::string getDescripteursplus10() const</div><div class="ttdoc">Retourne un descripteur pour les images dont le prix est supérieur à 10.</div><div class="ttdef"><b>Definition</b> Image.cpp:79</div></div>
+<div class="ttc" id="aclass_image_html_a3ffecd52acc28a993e2dde89c8951ba3"><div class="ttname"><a href="class_image.html#a3ffecd52acc28a993e2dde89c8951ba3">Image::getChemin</a></div><div class="ttdeci">std::string getChemin() const</div><div class="ttdoc">Retourne le chemin de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:19</div></div>
+<div class="ttc" id="aclass_image_html_a415033ed49e49e264ca2b5e40fcd20ac"><div class="ttname"><a href="class_image.html#a415033ed49e49e264ca2b5e40fcd20ac">Image::getAccess</a></div><div class="ttdeci">char getAccess() const</div><div class="ttdoc">Retourne le statut d'accès de l'image ('O' ou 'L').</div><div class="ttdef"><b>Definition</b> Image.cpp:101</div></div>
+<div class="ttc" id="aclass_image_html_a47095986afbdd2d5786375abe7a07996"><div class="ttname"><a href="class_image.html#a47095986afbdd2d5786375abe7a07996">Image::setType</a></div><div class="ttdeci">void setType(std::string _Type)</div><div class="ttdoc">Modifie le type de l'image (ex: couleur ou niveaux de gris).</div><div class="ttdef"><b>Definition</b> Image.cpp:110</div></div>
+<div class="ttc" id="aclass_image_html_a4de4d0e94d17dc3666fdcbaeccf6ac99"><div class="ttname"><a href="class_image.html#a4de4d0e94d17dc3666fdcbaeccf6ac99">Image::source</a></div><div class="ttdeci">std::string source</div><div class="ttdoc">Source de l'image ou son Auteur, peut être une référence à l'origine de l'image.</div><div class="ttdef"><b>Definition</b> Image.hpp:17</div></div>
+<div class="ttc" id="aclass_image_html_a4e76cb81642b84c10dbcf708a3618cee"><div class="ttname"><a href="class_image.html#a4e76cb81642b84c10dbcf708a3618cee">Image::setAccess</a></div><div class="ttdeci">void setAccess(char _Access)</div><div class="ttdoc">Modifie le statut d'accès de l'image ('O' ou 'L').</div><div class="ttdef"><b>Definition</b> Image.cpp:109</div></div>
+<div class="ttc" id="aclass_image_html_a50de5f06f127b4f0b6831ebdd72e8053"><div class="ttname"><a href="class_image.html#a50de5f06f127b4f0b6831ebdd72e8053">Image::nbTraitementPossible</a></div><div class="ttdeci">int nbTraitementPossible</div><div class="ttdoc">Nombre de traitements possibles sur l'image, peut être utilisé pour savoir combien d'opérations l'ima...</div><div class="ttdef"><b>Definition</b> Image.hpp:23</div></div>
+<div class="ttc" id="aclass_image_html_a68bcef6968162c310a2d9f6f16348b31"><div class="ttname"><a href="class_image.html#a68bcef6968162c310a2d9f6f16348b31">Image::titre</a></div><div class="ttdeci">std::string titre</div><div class="ttdoc">Titre de l'image, une description ou un nom donné à l'image.</div><div class="ttdef"><b>Definition</b> Image.hpp:18</div></div>
+<div class="ttc" id="aclass_image_html_a783d4c10d65f8e92bfa84bc83a419e1e"><div class="ttname"><a href="class_image.html#a783d4c10d65f8e92bfa84bc83a419e1e">Image::getDescripteurSimple</a></div><div class="ttdeci">std::string getDescripteurSimple() const</div><div class="ttdoc">Retourne un descripteur simplifié de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:56</div></div>
+<div class="ttc" id="aclass_image_html_a7a7e07c3e2a1e93093320193eef180b4"><div class="ttname"><a href="class_image.html#a7a7e07c3e2a1e93093320193eef180b4">Image::type</a></div><div class="ttdeci">std::string type</div><div class="ttdoc">Type ou catégorie de l'image, par exemple 'couleur' ou 'niveaux de gris'.</div><div class="ttdef"><b>Definition</b> Image.hpp:22</div></div>
+<div class="ttc" id="aclass_image_html_a9b6cf01672f4c9a1c035d61d829aea45"><div class="ttname"><a href="class_image.html#a9b6cf01672f4c9a1c035d61d829aea45">Image::getDescripteurGratuit</a></div><div class="ttdeci">std::string getDescripteurGratuit() const</div><div class="ttdoc">Retourne un descripteur pour les images gratuites.</div><div class="ttdef"><b>Definition</b> Image.cpp:89</div></div>
+<div class="ttc" id="aclass_image_html_a9f53a00b045d12ab0b8ec3302b29bcfe"><div class="ttname"><a href="class_image.html#a9f53a00b045d12ab0b8ec3302b29bcfe">Image::getnbTraitementPossible</a></div><div class="ttdeci">int getnbTraitementPossible() const</div><div class="ttdoc">Retourne le nombre de traitements possibles sur l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:103</div></div>
+<div class="ttc" id="aclass_image_html_aa3090b8e10677cf8100b0df689182f76"><div class="ttname"><a href="class_image.html#aa3090b8e10677cf8100b0df689182f76">Image::getType</a></div><div class="ttdeci">std::string getType() const</div><div class="ttdoc">Retourne le type de l'image ('couleur', 'niveaux de gris', etc.).</div><div class="ttdef"><b>Definition</b> Image.cpp:102</div></div>
+<div class="ttc" id="aclass_image_html_aa991682b538c5abc1e65d7f0453ed308"><div class="ttname"><a href="class_image.html#aa991682b538c5abc1e65d7f0453ed308">Image::getPrix</a></div><div class="ttdeci">int getPrix() const</div><div class="ttdoc">Retourne le prix de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:98</div></div>
+<div class="ttc" id="aclass_image_html_ab1ceaf865389a84c46e9c2220a52428e"><div class="ttname"><a href="class_image.html#ab1ceaf865389a84c46e9c2220a52428e">Image::rechercherPrix</a></div><div class="ttdeci">bool rechercherPrix(int numero, const std::string &amp;cheminDescripteurs)</div><div class="ttdoc">Recherche le prix d'une image dans un fichier descripteur donné par le chemin.</div><div class="ttdef"><b>Definition</b> Image.cpp:169</div></div>
+<div class="ttc" id="aclass_image_html_ab4578e26036fa361bca4a6b1e139d935"><div class="ttname"><a href="class_image.html#ab4578e26036fa361bca4a6b1e139d935">Image::getTitre</a></div><div class="ttdeci">std::string getTitre() const</div><div class="ttdoc">Retourne le titre de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:100</div></div>
+<div class="ttc" id="aclass_image_html_ac71fab44de5425f31837190e4e96b94a"><div class="ttname"><a href="class_image.html#ac71fab44de5425f31837190e4e96b94a">Image::nbrcarac</a></div><div class="ttdeci">int nbrcarac()</div><div class="ttdoc">Retourne le nombre de caractères du descripteur de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:42</div></div>
+<div class="ttc" id="aclass_image_html_acc3713a7aa07ac35354b545e935b306b"><div class="ttname"><a href="class_image.html#acc3713a7aa07ac35354b545e935b306b">Image::getSource</a></div><div class="ttdeci">std::string getSource() const</div><div class="ttdoc">Retourne la source (ou l'auteur) de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:99</div></div>
+<div class="ttc" id="aclass_image_html_acc91c9410ce2d9961204b818696a9790"><div class="ttname"><a href="class_image.html#acc91c9410ce2d9961204b818696a9790">Image::setnbTraitementPossible</a></div><div class="ttdeci">void setnbTraitementPossible(int _nbTraitementPossible)</div><div class="ttdoc">Modifie le nombre de traitements possibles sur l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:111</div></div>
+<div class="ttc" id="aclass_image_html_ace11d52eb15501b9cdf1f6cecc1b8fcb"><div class="ttname"><a href="class_image.html#ace11d52eb15501b9cdf1f6cecc1b8fcb">Image::setNumero</a></div><div class="ttdeci">void setNumero(int _numero)</div><div class="ttdoc">Modifie le numéro d'identification de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:106</div></div>
+<div class="ttc" id="aclass_image_html_ad0e7d90691e95657deb45c43744d3099"><div class="ttname"><a href="class_image.html#ad0e7d90691e95657deb45c43744d3099">Image::associerDescripteur</a></div><div class="ttdeci">void associerDescripteur(const std::string &amp;fichierDescripteurs)</div><div class="ttdoc">Associe un fichier descripteur à l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:132</div></div>
+<div class="ttc" id="aclass_image_html_ad2839c838a0f564f411981fbfb7821cd"><div class="ttname"><a href="class_image.html#ad2839c838a0f564f411981fbfb7821cd">Image::getDescripteursmoins10</a></div><div class="ttdeci">std::string getDescripteursmoins10() const</div><div class="ttdoc">Retourne un descripteur pour les images dont le prix est inférieur à 10.</div><div class="ttdef"><b>Definition</b> Image.cpp:70</div></div>
+<div class="ttc" id="aclass_image_html_ad72789742cd2fef7de9add5b6ae404c9"><div class="ttname"><a href="class_image.html#ad72789742cd2fef7de9add5b6ae404c9">Image::getDescripteur</a></div><div class="ttdeci">std::string getDescripteur() const</div><div class="ttdoc">Retourne un descripteur complet de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:29</div></div>
+<div class="ttc" id="aclass_image_html_adf2c17f4d4b75b39cd67f81a2bec71a4"><div class="ttname"><a href="class_image.html#adf2c17f4d4b75b39cd67f81a2bec71a4">Image::prix</a></div><div class="ttdeci">double prix</div><div class="ttdoc">Prix de l'image, représente la valeur monétaire de l'image.</div><div class="ttdef"><b>Definition</b> Image.hpp:20</div></div>
+<div class="ttc" id="aclass_image_html_af03c5b5a8e4dc264c6a960b7b0ed045e"><div class="ttname"><a href="class_image.html#af03c5b5a8e4dc264c6a960b7b0ed045e">Image::setTitre</a></div><div class="ttdeci">void setTitre(std::string _Titre)</div><div class="ttdoc">Modifie le titre de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:108</div></div>
+<div class="ttc" id="aclass_image_html_afac3a1a5e86c580a8277caa16a56efa4"><div class="ttname"><a href="class_image.html#afac3a1a5e86c580a8277caa16a56efa4">Image::identite</a></div><div class="ttdeci">int identite</div><div class="ttdoc">Identifiant unique de l'image, peut servir à l'identifier de manière unique dans une base de données ...</div><div class="ttdef"><b>Definition</b> Image.hpp:24</div></div>
+<div class="ttc" id="aclass_image_html_afca9f1c888143dfd3d710456c3f65783"><div class="ttname"><a href="class_image.html#afca9f1c888143dfd3d710456c3f65783">Image::setSource</a></div><div class="ttdeci">void setSource(const std::string &amp;src)</div><div class="ttdoc">Modifie la source (ou auteur) de l'image.</div><div class="ttdef"><b>Definition</b> Image.cpp:112</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0
+</small></address>
+</div><!-- doc-content -->
+</body>
+</html>

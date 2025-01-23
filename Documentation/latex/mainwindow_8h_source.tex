@@ -1,0 +1,102 @@
+\doxysection{mainwindow.\+h}
+\hypertarget{mainwindow_8h_source}{}\label{mainwindow_8h_source}\index{Descripteurs/tessst/mainwindow.h@{Descripteurs/tessst/mainwindow.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MAINWINDOW\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MAINWINDOW\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Inclusion\ des\ fichiers\ d'en-\/tête}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}Traitement.hpp"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}Library.hpp"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}bibliowindow.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ Inclusion\ des\ fichiers\ nécessaires\ pour\ gérer\ l'interface,\ les\ images\ et\ la\ bibliothèque.}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <QMainWindow>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QGraphicsScene>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QImage>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ Déclaration\ anticipée\ de\ la\ classe\ BiblioWindow}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_biblio_window}{BiblioWindow}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ QT\_BEGIN\_NAMESPACE}
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }Ui\ \{}
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_main_window}{MainWindow}};}
+\DoxyCodeLine{00020\ \}}
+\DoxyCodeLine{00021\ QT\_END\_NAMESPACE}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_main_window}{MainWindow}}\ :\ \textcolor{keyword}{public}\ QMainWindow}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ Constructeur\ prenant\ le\ login,\ le\ chemin\ de\ l'image\ et\ un\ pointeur\ vers\ la\ fenêtre\ BiblioWindow\ en\ paramètre.}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_main_window}{MainWindow}}(\textcolor{keyword}{const}\ QString\ \&login,\ \textcolor{keyword}{const}\ QString\ \&imagePath,\ \mbox{\hyperlink{class_biblio_window}{BiblioWindow}}\ *parentBiblio\ =\ \textcolor{keyword}{nullptr},\ QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ Méthode\ pour\ charger\ et\ afficher\ une\ image\ à\ partir\ d'un\ fichier}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ loadAndDisplayImage(\textcolor{keyword}{const}\ QString\ \&fileName);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Constructeur\ par\ défaut}}
+\DoxyCodeLine{00035\ \ \ \ \ \mbox{\hyperlink{class_main_window}{MainWindow}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ Destructeur}}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{class_main_window}{\string~MainWindow}}();}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ Méthode\ pour\ calculer\ l'histogramme\ de\ l'image}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_CalculerHisto\_clicked();}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//\ Méthodes\ pour\ gérer\ les\ changements\ d'état\ des\ canaux\ R,\ V,\ et\ B}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_Canal\_R\_stateChanged(\textcolor{keywordtype}{int}\ arg1);}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_Canal\_V\_stateChanged(\textcolor{keywordtype}{int}\ arg1);}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_Canal\_B\_stateChanged(\textcolor{keywordtype}{int}\ arg1);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ Méthodes\ pour\ effectuer\ des\ traitements\ d'image}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_DetectionContour\_clicked();}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_DetectionDroite\_clicked();}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_RehaussementContours\_clicked();}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_SegmenterCouleur\_clicked();}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_AppliquerConvolution\_clicked();}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//Ajout\ du\ menu\ Descripteur}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_actionAjouterDescripteur\_triggered();}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_actionModifierDescripteur\_triggered();}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_actionSupprimerDescripteur\_triggered();}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//Afficher\ l'image}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_actionRechercherImage\_triggered();}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ Méthode\ pour\ revenir\ à\ la\ fenêtre\ de\ la\ bibliothèque}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_RetourVersBiblio\_clicked();}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ cv::Mat\ \ on\_BruiterImage\_clicked();}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00072\ \ \ \ \ Ui::MainWindow\ *ui;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pointeur\ vers\ l'interface\ utilisateur\ de\ la\ fenêtre}}
+\DoxyCodeLine{00073\ \ \ \ \ QGraphicsScene\ *sceneImage;\ \ \ \ \ \ \ \textcolor{comment}{//\ Scène\ pour\ afficher\ l'image}}
+\DoxyCodeLine{00074\ \ \ \ \ QGraphicsScene\ *seceneResultat;\ \ \ \textcolor{comment}{//\ Scène\ pour\ afficher\ l'histogramme}}
+\DoxyCodeLine{00075\ \ \ \ \ QImage\ image;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Image\ chargée}}
+\DoxyCodeLine{00076\ \ \ \ \ \mbox{\hyperlink{class_image__color}{Image\_color}}*\ imageObj;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pointeur\ vers\ une\ image\ (en\ niveaux\ de\ gris\ ou\ couleur)}}
+\DoxyCodeLine{00077\ \ \ \ \ QString\ LoginUtilisateur;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Login\ de\ l'utilisateur}}
+\DoxyCodeLine{00078\ \ \ \ \ QString\ selectedImagePath;\ \ \ \ \ \ \ \textcolor{comment}{//\ Chemin\ de\ l'image\ sélectionnée}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ Méthode\ pour\ afficher\ l'histogramme\ de\ l'image}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{void}\ afficherHistogramme(\textcolor{keywordtype}{int}\ histogramme[256]);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ Méthode\ pour\ afficher\ l'histogramme\ d'un\ canal\ spécifique}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{void}\ afficherHistogrammeCanal(\textcolor{keywordtype}{int}\ histogramme[256],\ \textcolor{keywordtype}{int}\ canal);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ Méthode\ pour\ obtenir\ les\ canaux\ sélectionnés\ pour\ la\ segmentation}}
+\DoxyCodeLine{00087\ \ \ \ \ std::vector<int>\ getSelectedSegmentationCanaux();}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{int}\ seuilUtilisateur\ =\ 0.8;\ \ \textcolor{comment}{//\ Seuil\ pour\ certains\ traitements}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \mbox{\hyperlink{class_biblio_window}{BiblioWindow}}\ *parentBiblio;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pointeur\ vers\ la\ fenêtre\ BiblioWindow\ (utilisé\ pour\ la\ navigation)}}
+\DoxyCodeLine{00092\ \ \ \ \ std::unique\_ptr<BiblioWindow>\ biblioWindow;\ \ \textcolor{comment}{//\ Pointeur\ unique\ pour\ gérer\ la\ fenêtre\ BiblioWindow\ de\ manière\ automatique}}
+\DoxyCodeLine{00093\ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ MAINWINDOW\_H}}
+
+\end{DoxyCode}
