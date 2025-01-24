@@ -172,10 +172,11 @@ void MainWindow::on_CalculerHisto_clicked()
 {
     // Vérification de l'existence d'une image chargée
     if (!imageObj) {
-        // Affichage d'un message d'erreur si aucune image n'est chargée
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return;
     }
+
+    qDebug() << "Adresse imageObj avant calcul histogramme :" << imageObj; // Debug
 
     // Vérification si l'image est en niveaux de gris
     bool isGrayscale = dynamic_cast<ImageGris*>(imageObj) != nullptr;
@@ -187,22 +188,31 @@ void MainWindow::on_CalculerHisto_clicked()
         // Calcul de l'histogramme de l'image
         Histogramme::calculerHistogramme(*imageObj, histogramme);
 
+        // Initialisation ou réinitialisation de la scène
+        if (!seceneResultat) {
+            seceneResultat = new QGraphicsScene(this);
+        }
+        seceneResultat->clear();
+
         // Affichage de l'histogramme combiné
         afficherHistogramme(histogramme);
 
-        // Si l'image est en niveaux de gris, désactivation des boutons pour les canaux
-        if (isGrayscale) {
-            ui->Canal_R->setVisible(false);
-            ui->Canal_V->setVisible(false);
-            ui->Canal_B->setVisible(false);
-        } else {
-            // Sinon, on rend les boutons pour les canaux visibles
-            ui->Canal_R->setVisible(true);
-            ui->Canal_V->setVisible(true);
-            ui->Canal_B->setVisible(true);
-        }
+        // Rafraîchissement forcé de l'affichage
+        ui->AffichageResultat->setScene(nullptr);
+        ui->AffichageResultat->setScene(seceneResultat);
+        ui->AffichageResultat->fitInView(seceneResultat->sceneRect(), Qt::KeepAspectRatio);
+
+        // Réinitialisation des boutons des canaux
+        ui->Canal_R->setChecked(false);
+        ui->Canal_V->setChecked(false);
+        ui->Canal_B->setChecked(false);
+
+        // Gestion de la visibilité des boutons de canaux
+        ui->Canal_R->setVisible(!isGrayscale);
+        ui->Canal_V->setVisible(!isGrayscale);
+        ui->Canal_B->setVisible(!isGrayscale);
+
     } catch (const std::exception& e) {
-        // En cas d'exception, affichage d'un message d'erreur
         QMessageBox::critical(this, tr("Erreur"), tr(e.what()));
     }
 }
