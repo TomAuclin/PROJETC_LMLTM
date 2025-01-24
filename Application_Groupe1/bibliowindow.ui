@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BiblioWindow</class>
+ <widget class="QMainWindow" name="BiblioWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1137</width>
+    <height>727</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="ChargeBoutton">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Charger la Bibliothèque</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="DetailsButton">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Details</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="AffichageBiblio">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>781</width>
+      <height>501</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="TraitementButton">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>180</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Traitement</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonRechercherp">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>60</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Prix Image</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Deco">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>10</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Déconnexion</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelImageCount">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>20</y>
+      <width>151</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Nombre d'images : 0</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="Tris">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>270</y>
+      <width>181</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Tris</string>
+    </property>
+    <widget class="QPushButton" name="trinbtraitements">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>161</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Nombre de Traitement</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="triprix">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Prix</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="Retourbutton">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>130</y>
+       <width>61</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Retour</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="SousListesButton">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>220</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sous-Listes</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Trisbutton">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>100</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tris</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="SousListes">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>440</y>
+      <width>181</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>SousListes</string>
+    </property>
+    <widget class="QPushButton" name="souslistetype">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>161</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Type</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButtonSousListePrix">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Prix</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1137</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuDescripteurs">
+    <property name="title">
+     <string>Descripteurs</string>
+    </property>
+    <addaction name="actionAjouterDescripteur"/>
+    <addaction name="actionModifierDescripteur"/>
+    <addaction name="actionSupprimer_un_descripteur"/>
+   </widget>
+   <addaction name="menuDescripteurs"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAjouterDescripteur">
+   <property name="text">
+    <string>Ajouter un descripteur</string>
+   </property>
+  </action>
+  <action name="actionModifierDescripteur">
+   <property name="text">
+    <string>Modifier un descripteur</string>
+   </property>
+  </action>
+  <action name="actionSupprimer_un_descripteur">
+   <property name="text">
+    <string>Supprimer un descripteur</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

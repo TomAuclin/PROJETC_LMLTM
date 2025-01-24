@@ -1,0 +1,107 @@
+#include "bibliowindow.h"
+#include "ui_bibliowindow.h"
+
+#include <QFileDialog>
+#include <QListWidgetItem>
+#include <QPixmap>
+#include <QIcon>
+#include <QMessageBox>
+#include <QDir>
+#include <QDebug>
+
+BiblioWindow::BiblioWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::BiblioWindow)
+    , selectedImagePath("") // Initialiser à vide
+{
+    ui->setupUi(this);
+
+    // Configurer le QListWidget pour afficher en mode mosaïque
+    ui->AffichageBiblio->setViewMode(QListWidget::IconMode);
+    ui->AffichageBiblio->setResizeMode(QListWidget::Adjust);
+    ui->AffichageBiblio->setMovement(QListWidget::Static);
+    ui->AffichageBiblio->setSpacing(10);
+
+    // Masquer les boutons au départ
+    ui->detailsButton->hide();
+    ui->traitementButton->hide();
+
+    // Connecter le clic sur une image
+    connect(ui->AffichageBiblio, &QListWidget::itemClicked, this, &BiblioWindow::on_AffichageBiblio_itemClicked);
+}
+
+BiblioWindow::~BiblioWindow()
+{
+    delete ui;
+}
+
+void BiblioWindow::on_ChargerBiblioButton_clicked()
+{
+    QString directoryPath = QFileDialog::getExistingDirectory(this, "Sélectionnez un dossier d'images");
+
+    if (directoryPath.isEmpty()) {
+        qDebug() << "Aucun dossier sélectionné.";
+        return;
+    }
+
+    // Charger les images dans le QListWidget
+    loadImagesIntoList(directoryPath);
+}
+
+void BiblioWindow::loadImagesIntoList(const QString &directoryPath)
+{
+    ui->AffichageBiblio->clear();
+
+    QDir dir(directoryPath);
+    QStringList imageFiles = dir.entryList(QStringList() << "*.png" << "*.CR2" << "*.pgm", QDir::Files);
+
+    if (imageFiles.isEmpty()) {
+        QMessageBox::information(this, "Aucune image", "Le dossier sélectionné ne contient aucune image.");
+        return;
+    }
+
+    const QSize iconSize(150, 150);
+
+    foreach (const QString &fileName, imageFiles) {
+        QString filePath = directoryPath + "/" + fileName;
+        QPixmap pixmap(filePath);
+
+        if (!pixmap.isNull()) {
+            QListWidgetItem *item = new QListWidgetItem();
+            item->setIcon(QIcon(pixmap.scaled(iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+            item->setData(Qt::UserRole, filePath);  // Stocker le chemin de l'image
+            item->setSizeHint(iconSize);
+
+            ui->AffichageBiblio->addItem(item);
+        } else {
+            qDebug() << "Impossible de charger l'image : " << filePath;
+        }
+    }
+
+    ui->AffichageBiblio->setIconSize(iconSize);
+}
+
+void BiblioWindow::on_AffichageBiblio_itemClicked(QListWidgetItem *item)
+{
+    // Récupérer le chemin de l'image sélectionnée
+    selectedImagePath = item->data(Qt::UserRole).toString();
+    qDebug() << "Image sélectionnée : " << selectedImagePath;
+
+    // Afficher les boutons "Details" et "Traitement"
+    ui->detailsButton->show();
+    ui->traitementButton->show();
+}
+
+void BiblioWindow::on_traitementButton_clicked()
+{
+    if (selectedImagePath.isEmpty()) {
+        QMessageBox::warning(this, "Aucune image sélectionnée", "Veuillez sélectionner une image avant de continuer.");
+        return;
+    }
+
+    // Traiter l'image sélectionnée
+    qDebug() << "Traitement de l'image : " << selectedImagePath;
+
+    // Exemple : Afficher une boîte de message
+    QMessageBox::information(this, "Traitement", "Traitement appliqué à l'image : " + selectedImagePath);
+}
