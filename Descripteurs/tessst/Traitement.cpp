@@ -78,24 +78,28 @@ void Histogramme::calculerHistogramme(const Image_color& image, int histogramme[
 // ----------------------------------------------------------------------------------------------
 
 // ************************ Filtrage par convolution ************************
-
+// Cette fonction effectue le filtrage par convolution d'une image
+// Entree : pointeur vers une un objet de type matriciel qui represente notre image
+// Sortie : objet de type matriciel qui represente l'image convolue
 // ----------------------------------------------------------------------------------------------
 
 cv::Mat Traitement::convolution(const cv::Mat& image) {
-   // Creation du filtre (gaussien ou moyenneur )
-    //image.convertTo(image, CV_32F);
+    // Creation du filtre (gaussien ou moyenneur )
+    // ici il s'agit d'un filtre gaussien
     cv::Mat filter = (cv::Mat_<float>(3, 3) << 
         1.0f/16, 2.0f/16, 1.0f/16, 
         2.0f/16, 4.0f/16, 2.0f/16, 
         1.0f/16, 2.0f/16, 1.0f/16);
 
+    // On déclare des variables qui nous serviront pour l'etape de convolution
     int rows = image.rows;
     int cols = image.cols;
     int filterSize = filter.rows; 
     int pad = filterSize/2;
-    //image.convertTo(image, CV_32F);
+
     // On differencie les images couleurs des images en nuances de gris
     cv::Mat result;
+    // Image couleur
     if (image.channels() == 3) {
    
         std::vector<cv::Mat> channels(3);
@@ -103,14 +107,17 @@ cv::Mat Traitement::convolution(const cv::Mat& image) {
 
         for (int c = 0; c < 3; ++c) {
             cv::Mat temp = cv::Mat::zeros(rows, cols, CV_32F);
+            // On effectue les boucles sur chaque pixels
             for (int i = pad; i < rows - pad; ++i) {
                 for (int j = pad; j < cols - pad; ++j) {
                     float sum = 0.0f;
+                    // On boucle sur tous les pixels adjacents et sur les differents coefficients du filtre
                     for (int k = -pad; k <= pad; ++k) {
                         for (int l = -pad; l <= pad; ++l) {
                             sum += channels[c].at<uchar>(i + k, j + l) * filter.at<float>(pad + k, pad + l);
                         }
                     }
+                    // On met a jour la valeur du pixel considere
                     temp.at<float>(i, j) = sum;
                 }
             }
@@ -119,7 +126,8 @@ cv::Mat Traitement::convolution(const cv::Mat& image) {
 
         }
 
-        cv::merge(channels, result); 
+        cv::merge(channels, result);
+    // Meme chose pour une image en niveau de gris
     } else if (image.channels() == 1) {
         result = cv::Mat::zeros(rows, cols, CV_32F);
         for (int i = pad; i < rows - pad; ++i) {
@@ -139,6 +147,8 @@ cv::Mat Traitement::convolution(const cv::Mat& image) {
         std::cerr << "Erreur : Type d'image non pris en charge." << std::endl;
         return cv::Mat();
     }
+
+    // On retourne l'image convolue
 
     return result;
 }

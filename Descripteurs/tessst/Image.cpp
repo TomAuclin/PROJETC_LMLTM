@@ -67,7 +67,7 @@ std::string Image::getDescripteurSimple() const {
 }
 
 // Retourne un descripteur limité pour les images avec moins de 10 traitements possibles
-std::string Image::getDescripteursmoins10() const {
+std::string Image::getDescripteursplus10() const {
     std::ostringstream descripteur;
     descripteur << source << ", "
                 << titre << ", "
@@ -76,7 +76,7 @@ std::string Image::getDescripteursmoins10() const {
 }
 
 // Retourne un descripteur pour les images avec plus de 10 traitements possibles
-std::string Image::getDescripteursplus10() const {
+std::string Image::getDescripteursplus100() const {
     std::ostringstream descripteur;
     descripteur << source << ", "
                 << titre << ", "
@@ -87,6 +87,12 @@ std::string Image::getDescripteursplus10() const {
 
 // Retourne un descripteur limité aux images gratuites
 std::string Image::getDescripteurGratuit() const {
+    std::ostringstream descripteur;
+    descripteur << source;
+    return descripteur.str();
+}
+
+std::string Image::getDescripteursmoins10() const {
     std::ostringstream descripteur;
     descripteur << source << ", "
                 << titre;

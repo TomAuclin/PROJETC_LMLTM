@@ -1012,13 +1012,13 @@ void BiblioWindow::on_pushButtonSousListePrix_clicked()
     // Chemin du fichier descripteurs
     std::string cheminDescripteurs = "/media/sf_PROJETC_LMLTM/Descripteurs/tessst/Biblio_init.txt";
 
-    // Création de l'instance Image
+    // On cree notre Image
     Image image;
     image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
-    // Association des descripteurs
+    // On associe les descripteurs a l'image selectionnee
     image.associerDescripteur(cheminDescripteurs);
 
-    // Formatage du prix avec le symbole €
+    // On met le symbole euro apres le prix
     std::string prixAvecEuro = std::to_string(image.getPrix()) + " €";
 
     double prix = image.getPrix();
@@ -1027,9 +1027,9 @@ void BiblioWindow::on_pushButtonSousListePrix_clicked()
     std::string titre = image.getTitre();
     int nbTraitements = image.getnbTraitementPossible();
 
-    if (prix < 10 && prix != 0)
+    if (prix > 9.99 && prix <= 99.99)
     {
-        // Formater et afficher le prix dans un message
+        // On affiche la sous liste de descripteur adequat selon le critere
         QString message = QString(
                               "Titre : %1\n"
                               "Source : %2\n"
@@ -1038,11 +1038,10 @@ void BiblioWindow::on_pushButtonSousListePrix_clicked()
                               .arg(QString::fromStdString(source))
                               .arg(QString::fromStdString(type));
         QMessageBox::information(this, "Prix de l'image", message);
-        // Affichage des détails dans une boîte de message
+
     }
-    else if (prix >= 10)
+    else if (prix > 99.99)
     {
-        // Formater et afficher le prix dans un message
         QString message = QString(
                               "Titre : %1\n"
                               "Source : %2\n"
@@ -1055,9 +1054,8 @@ void BiblioWindow::on_pushButtonSousListePrix_clicked()
 
         QMessageBox::information(this, "Détails de l'image", message);
     }
-    else if (prix == 0)
+    else if (prix <= 9.99 && prix !=0)
     {
-        // Formater et afficher le prix dans un message
         QString message = QString(
                               "Titre : %1\n"
                               "Source : %2\n"
@@ -1065,6 +1063,17 @@ void BiblioWindow::on_pushButtonSousListePrix_clicked()
                               )
                               .arg(QString::fromStdString(titre))
                               .arg(QString::fromStdString(source));
+
+        QMessageBox::information(this, "Détails de l'image", message);
+    }
+    else if (prix ==0)
+    {
+        QString message = QString(
+                              "Titre : %1\n"
+
+
+                              )
+                              .arg(QString::fromStdString(titre));
 
         QMessageBox::information(this, "Détails de l'image", message);
     }
@@ -1330,7 +1339,7 @@ void BiblioWindow::on_souslistetype_clicked()
 
     Image image;
     image.titre = QFileInfo(selectedImagePath).fileName().toStdString();
-    // Association des descripteurs
+    // On associe les descripteurs a l'image séléctionnée
     image.associerDescripteur(cheminDescripteurs);
 
     double prix = image.getPrix();

@@ -44,7 +44,8 @@ public:
     std::string getDescripteurSimple() const; ///< Retourne un descripteur simplifié de l'image.
     std::string getDescripteurGratuit() const; ///< Retourne un descripteur pour les images gratuites.
     std::string getDescripteursmoins10() const; ///< Retourne un descripteur pour les images dont le prix est inférieur à 10.
-    std::string getDescripteursplus10() const; ///< Retourne un descripteur pour les images dont le prix est supérieur à 10.
+    std::string getDescripteursplus10() const; ///< Retourne un descripteur pour les images dont le prix est supérieur à 10 mais inferieur a 100.
+    std::string getDescripteursplus100() const; ///< Retourne un descripteur pour les images dont le prix est supérieur à 100.
 
     // Ajouter/modifier/supprimer descripteur
     std::string getChemin() const; ///< Retourne le chemin de l'image.

@@ -142,16 +142,22 @@ void Library::supprimerDescripteurs(int numero)
 
 /*------------------------------------------------------------------------------------------------*/
 
+// Fonction qui permet de trier une bibliotheque selon un critere de prix
+// Entree : Objet de type library qui represente notre bibliotheque
+// Sortie : /
 void  Library::tricroissant(Library liste)
 
 {
+    // on initialise la tete de notre liste chainee
     auto current = head;
     
+    // on parcourt les elements de notre liste
     for (int i = 0; i <liste.tailleListe()-1; i ++ )
     {current = head;
-    
+
         for (int j = 0; j <liste.tailleListe()-1; j ++ )   
-        {          
+        {   // Si le prix d'un element est plus grand alors cet element change de place dans la
+            // liste avec l'element de prix moins eleve
             if (current->data.getPrix() > current->next->data.getPrix())
             {
                
@@ -165,8 +171,12 @@ void  Library::tricroissant(Library liste)
     }   
 }
 
+// Fonction qui permet de trier une bibliotheque selon un critere de nombre de traitements
+// Entree : Objet de type library qui represente notre bibliotheque
+// Sortie : /
 void Library::trinbtraitement(Library liste)
 {
+    // Le principe est le meme que pour tricroissant()
     auto current = head;
     
     for (int i = 0; i <liste.tailleListe()-1; i ++ )
@@ -268,6 +278,9 @@ void Library::afficherImagesAvecAccesO(const std::string &nomFichier) const
     fichier.close();
 }
 
+// Cette fonction retourne la taille de la liste
+// Entre : /
+// Sortie : entier taille
 int Library::tailleListe()
 {
     int taille = 0;
@@ -280,15 +293,21 @@ int Library::tailleListe()
     return taille;
 }
 
+// Fonction permettant d'afficher une sous-liste de descripteurs
+// de toutes les images de la bibliotheque selon un critere de prix
+// Entree : Objet de type Library representant notre bibliotheque
+// Sortie : /
 void Library::sousListePrix(Library liste)
 {
+    // Pour chaque image de la bibliothque on affiche une sous-liste
+    // selon son prix est entre 0 et 10, 10 et 100, superieur a 100 ou gratuite
     auto current = head;
     while (current) {
-        if (current->data.getPrix() < 10 && current->data.getPrix() != 0)
+        if (current->data.getPrix() <= 9.99 && current->data.getPrix() != 0)
         {
             std::cout << current->data.getDescripteursmoins10() << std::endl;
         }
-        if (current->data.getPrix() > 10)
+        if (current->data.getPrix() > 9.99 && current->data.getPrix() <=99.99 )
         {
             std::cout << current->data.getDescripteursplus10() << std::endl;
         }
@@ -296,21 +315,29 @@ void Library::sousListePrix(Library liste)
         {
             std::cout << current->data.getDescripteurGratuit() << std::endl;
         }
+        if (current->data.getPrix() > 99.99)
+        {
+            std::cout << current->data.getDescripteursplus100() << std::endl;
+        }
         current = current->next;
     }
 }
 
+// Fonction permettant d'afficher une sous-liste de descripteurs
+// d'une image de la bibliotheque selon un critere de prix
+// Entree : int qui represente le numero de l'image
+// Sortie : /
 void Library::sousListePrix(int numero)
 {
     auto current = head;
     while (current) {
         if (current->data.getNumero() == numero)
         {
-            if (current->data.getPrix() < 10 && current->data.getPrix() != 0)
+            if (current->data.getPrix() <= 9.99 && current->data.getPrix() != 0)
             {
                 std::cout << current->data.getDescripteursmoins10() << std::endl;
             }
-            if (current->data.getPrix() > 10)
+            if (current->data.getPrix() > 9.99 && current->data.getPrix() <=99.99 )
             {
                 std::cout << current->data.getDescripteursplus10() << std::endl;
             }
@@ -318,14 +345,24 @@ void Library::sousListePrix(int numero)
             {
                 std::cout << current->data.getDescripteurGratuit() << std::endl;
             }
+            if (current->data.getPrix() > 99.99)
+            {
+                std::cout << current->data.getDescripteursplus100() << std::endl;
+            }
         }
         current = current->next;
     }
 }
 
+
+
+// Fonction permettant d'afficher une sous-liste de descripteurs
+// de toutes les images de la bibliotheque selon un critere de type
+// Entree : Objet de type Library representant notre bibliotheque
+// Sortie : /
 void Library::sousListetype(Library Liste)
 {
-
+    // Meme principe que la fonction sousListePrix mais le critere est le type de l'image
     auto current = head;
     while (current) {
     
@@ -343,7 +380,10 @@ void Library::sousListetype(Library Liste)
 }
 
 
-
+// Fonction permettant d'afficher une sous-liste de descripteurs
+// d'une image de la bibliotheque selon un critere de type
+// Entree : int qui represente le numero de l'image
+// Sortie : /
 void Library::sousListetype(int numero)
 {
     auto current = head;
@@ -363,8 +403,6 @@ void Library::sousListetype(int numero)
         }
 }
 }
-
-// !!!!!!!!!!!!!!!!!!!! Sousliste couleur et gris 
 
 /**
  * Recherche une image dans la liste en fonction de son numéro.
@@ -387,6 +425,9 @@ std::string Library::rechercherImageParNumero(int numero) const {
     return "Image non trouvée."; // Retourne un message si aucune image ne correspond
 }
 
+// Fonction permettant de modifier l'ensemble des descripteurs d'une image
+// Entree : int qui est le numero de l'image, objet de type Library qui est notre bibliotheque
+// Sortie : /
 void Library::modifdescripteurs(int numero, Library bibli)
 {
     
@@ -396,7 +437,7 @@ void Library::modifdescripteurs(int numero, Library bibli)
     int nbimages = 0;
     while (current) { // Parcourt la liste tant qu'il y a des nœuds
         if (current->data.getNumero() == numero) {
-            
+            // On parcourt l'ensemble de nos descripteurs pour demander a l'utilisateur si il veut les modifier
             for (int i = 0; i < current->data.nbrcarac(); i++)
             {
                 if (i == 0)
@@ -730,8 +771,13 @@ void Library::save() {
 
     std::cout << "La nouvelle bibliothèque a été sauvegardée sous le nom : " << nomBibliotheque << std::endl;
 
-}void Library::fusion(Library liste2)
-{  
+}
+
+// Fonction permettant de fusionner deux bibliotheque
+// Entre : objet de type Library qui represente la seconde bibliotheque
+void Library::fusion(Library liste2)
+{
+    // On ajoute a la premiere bibliotheque chaque element de la seconde
     auto current = liste2.head;
     while (current) {
         ajouterDescripteurs(current->data);
@@ -739,10 +785,16 @@ void Library::save() {
     }
 }
 
+// Fonction permettant de verifier si la chaine de charactere passée en argument coincide
+// au titre d'une image
+// Entree : string
+// Sortie : int (1 si la chaine de caractere correspond a un titre, 0 sinon)
 int Library::titrecheck(std::string _titre) const
 {
     int check = 0;
     auto _titrecheck = head;
+    // On parcourt tous les titres des images de notre bibliotheque et on teste
+    // si il existe une egalite notre argument
     while (_titrecheck)
 
         {   
@@ -755,10 +807,15 @@ int Library::titrecheck(std::string _titre) const
     return check;
 }
 
-
+// Fonction permettant de verifier si un entier passé en argument coincide
+// au numero d'une image
+// Entree : int
+// Sortie : int (1 si la chaine de caractere correspond a un titre, 0 sinon)
 int Library::numerocheck(int num) const {
     auto numcheck = head;
     int check = 0;
+    // On parcourt tous les numeros des images de notre bibliotheque et on teste
+    // si il existe une egalite avec notre argument
     while (numcheck){
 
         if (numcheck->data.getNumero()== num){

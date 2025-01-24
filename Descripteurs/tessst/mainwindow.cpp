@@ -20,8 +20,10 @@
 
 // ----------------------------------------------------------------------------------------------
 
+
 cv::Mat g_imageAvecBruit;
 int check;
+
 MainWindow::MainWindow(const QString &login, const QString &imagePath, BiblioWindow *parentBiblio, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),                          // Initialisation de l'interface utilisateur
@@ -708,7 +710,10 @@ void MainWindow::on_RehaussementContours_clicked()
 // ----------------------------------------------------------------------------------------------
 
 // ************************ Convolution ************************
-
+// Cette fonction permet d'appliquer le filtrge par convolution
+// d'une image et d'afficher le résultat
+// Entre : /
+// Sortie : /
 // ----------------------------------------------------------------------------------------------
 void MainWindow::on_AppliquerConvolution_clicked()
 {
@@ -718,7 +723,7 @@ void MainWindow::on_AppliquerConvolution_clicked()
         return;
     }
 
-    // Convertir l'image en cv::Mat
+    // On convertit l'image en cv::Mat
     cv::Mat imageMat;
 
 
@@ -747,14 +752,14 @@ void MainWindow::on_AppliquerConvolution_clicked()
         return;
     }
 
-
+    // Si check est egal a 1 alors l'utilisateur a bruité l'image et on considère donc pour la suite l'image bruitée
     if (check!=1) {
         imageMat = imageMat;
     } else {
         imageMat = g_imageAvecBruit;
     }
 
-    // Appliquer la convolution
+    // On applique la convolution
     Traitement traitement;
     cv::Mat resultat = traitement.convolution(imageMat);
 
@@ -770,6 +775,7 @@ void MainWindow::on_AppliquerConvolution_clicked()
         cv::Mat resultatRGB;
         cv::cvtColor(resultat, resultatRGB, cv::COLOR_BGR2RGB);
         if (check==1){
+            // Des conversions d'espaces couleurs sont utiles sinon nous n'obtenons pas de résultats
             imgResultat = QImage(resultatRGB.data, resultatRGB.cols, resultatRGB.rows, resultatRGB.step, QImage::Format_RGB888).rgbSwapped();
 
         }
@@ -785,6 +791,7 @@ void MainWindow::on_AppliquerConvolution_clicked()
         return;
     }
 
+    // Affichage
     QPixmap pixmap = QPixmap::fromImage(imgResultat);
     QSize viewSize = ui->AffichageResultat->viewport()->size();
     pixmap = pixmap.scaled(viewSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -1120,12 +1127,15 @@ void MainWindow::on_RetourVersBiblio_clicked()
     check=0;
 }
 
-
+// Fonction permettant de bruiter l'image séléctionnée par l'utilisateur en mettant a jour une variable globale
+// Entree : /
+// Sortie : /
 cv::Mat MainWindow::on_BruiterImage_clicked()
 {
+    // On vide la scene
     sceneImage->clear();
 
-    // Vérification si une image a été chargée
+    // On verifie si une image a été chargée
     if (!imageObj) {
         QMessageBox::warning(this, tr("Erreur"), tr("Aucune image chargée."));
         return cv::Mat();
@@ -1153,41 +1163,46 @@ cv::Mat MainWindow::on_BruiterImage_clicked()
         }
     }
 
-    // Vérification si l'image a été correctement chargée
+    // On verifie si l'image a été correctement chargée
     if (imageMat.empty()) {
         QMessageBox::warning(this, tr("Erreur"), tr("Impossible de charger l'image."));
         return cv::Mat();
     }
 
-    // Générer un bruit gaussien
-    cv::Mat noise(imageMat.size(), CV_32F);
-    cv::randn(noise, 0, 30); // Moyenne = 0, écart-type = 30
+    // Etape de reduction de la taille d'image pour que le bruitage soit visible et pour ne pas faire crasher l'algorithme
+    cv::Mat imageResized;
+    cv::resize(imageMat, imageResized, cv::Size(400, 400), 0, 0, cv::INTER_AREA);
+
+    // On génère un bruit gaussien
+    cv::Mat noise(imageResized.size(), CV_32F);
+    cv::randn(noise, 0, 55); // Moyenne = 0, écart-type = 30
 
     cv::Mat imageNoisy;
-    if (imageMat.channels() == 3) {
-        // Convertir l'image en float
-        cv::Mat imageFloat;
-        imageMat.convertTo(imageFloat, CV_32F);
+    // Image couleur
+    if (imageResized.channels() == 3) {
 
-        // Ajouter du bruit gaussien pour chaque canal
+        cv::Mat imageFloat;
+        imageResized.convertTo(imageFloat, CV_32F);
+
+        // On ajoute le bruit gaussien a chaque canal de l'image
         std::vector<cv::Mat> channels;
         cv::split(imageFloat, channels);
         for (auto& channel : channels) {
             channel += noise;
         }
-        cv::merge(channels, imageFloat);
 
-        // Clip et convertir en CV_8U
+        cv::merge(channels, imageFloat);
         cv::min(imageFloat, 255, imageFloat);
         cv::max(imageFloat, 0, imageFloat);
         imageFloat.convertTo(imageNoisy, CV_8U);
-    } else if (imageMat.channels() == 1) {
-        // Image en niveaux de gris
+
+    // Image en niveau de gris
+    } else if (imageResized.channels() == 1) {
+
         cv::Mat imageFloat;
-        imageMat.convertTo(imageFloat, CV_32F);
+        imageResized.convertTo(imageFloat, CV_32F);
         imageFloat += noise;
 
-        // Clip et convertir en CV_8U
         cv::min(imageFloat, 255, imageFloat);
         cv::max(imageFloat, 0, imageFloat);
         imageFloat.convertTo(imageNoisy, CV_8U);
@@ -1212,8 +1227,10 @@ cv::Mat MainWindow::on_BruiterImage_clicked()
     sceneResultat->addPixmap(pixmap);
     ui->AfficherImage->setScene(sceneResultat);
 
-    // Mettre à jour la variable globale
+    // On met à jour la variable globale
     g_imageAvecBruit = imageNoisy;
     check=1;
     return imageNoisy;
 }
+
+
