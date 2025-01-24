@@ -1,0 +1,55 @@
+\doxysection{connexionwindow.\+h}
+\hypertarget{connexionwindow_8h_source}{}\label{connexionwindow_8h_source}\index{Descripteurs/tessst/connexionwindow.h@{Descripteurs/tessst/connexionwindow.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ CONNEXIONWINDOW\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ CONNEXIONWINDOW\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Inclusion\ des\ fichiers\ d'en-\/tête}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}bibliowindow.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Inclusion\ des\ fichiers\ nécessaires\ pour\ gérer\ l'interface,\ les\ images\ et\ la\ bibliothèque.}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QDialog>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_biblio_window}{BiblioWindow}};\ \textcolor{comment}{//\ Déclaration\ anticipée\ de\ la\ classe\ BiblioWindow}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }Ui\ \{}
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_connexion_window}{ConnexionWindow}};\ \textcolor{comment}{//\ Déclaration\ anticipée\ de\ l'interface\ utilisateur\ de\ ConnexionWindow}}
+\DoxyCodeLine{00015\ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_connexion_window}{ConnexionWindow}}\ :\ \textcolor{keyword}{public}\ QDialog}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ Constructeur\ de\ la\ fenêtre\ de\ connexion,\ prend\ un\ parent\ QWidget}}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_connexion_window}{ConnexionWindow}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ Destructeur\ de\ la\ classe\ ConnexionWindow}}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{class_connexion_window}{\string~ConnexionWindow}}();}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ Retourne\ le\ login\ de\ l'utilisateur\ actuellement\ entré}}
+\DoxyCodeLine{00029\ \ \ \ \ QString\ getLogin()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ Gère\ les\ changements\ de\ position\ du\ curseur\ dans\ le\ champ\ de\ texte\ du\ login}}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_Login\_cursorPositionChanged(\textcolor{keywordtype}{int}\ arg1,\ \textcolor{keywordtype}{int}\ arg2);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ Gère\ l'événement\ du\ clic\ sur\ le\ bouton\ de\ connexion}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ on\_connexionButton\_clicked();}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ Ui::ConnexionWindow\ *ui;\ \textcolor{comment}{//\ Interface\ utilisateur\ générée\ par\ Qt\ pour\ ConnexionWindow}}
+\DoxyCodeLine{00042\ \ \ \ \ std::unique\_ptr<BiblioWindow>\ biblioWindow;\textcolor{comment}{//\ Pointeur\ unique\ pour\ gérer\ la\ fenêtre\ BiblioWindow}}
+\DoxyCodeLine{00043\ \ \ \ \ QString\ LoginActuel;\ \textcolor{comment}{//\ Stocke\ le\ login\ actuel\ saisi\ par\ l'utilisateur}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ Configure\ l'affichage\ du\ logo\ dans\ la\ fenêtre\ de\ connexion}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ setupLogo();}
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ CONNEXIONWINDOW\_H}}
+
+\end{DoxyCode}

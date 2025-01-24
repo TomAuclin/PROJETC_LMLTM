@@ -1,0 +1,33 @@
+\doxysection{Gestion\+Utilisateur.\+hpp}
+\hypertarget{_gestion_utilisateur_8hpp_source}{}\label{_gestion_utilisateur_8hpp_source}\index{Descripteurs/tessst/GestionUtilisateur.hpp@{Descripteurs/tessst/GestionUtilisateur.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GESTIONUTILISATEUR\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GESTIONUTILISATEUR\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Inclusion\ des\ fichiers\ nécessaires\ pour\ gérer\ l'interface,\ les\ images\ et\ la\ bibliothèque.}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_gestion_utilisateur}{GestionUtilisateur}}\ \{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{comment}{//\ Stocke\ le\ login\ de\ l'utilisateur\ sous\ forme\ de\ chaîne\ de\ caractères}}
+\DoxyCodeLine{00010\ \ \ \ \ std::string\ login;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{comment}{//\ Constructeur\ de\ la\ classe\ GestionUtilisateur}}
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{class_gestion_utilisateur}{GestionUtilisateur}}();}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{void}\ connexion();\ \textcolor{comment}{//\ Méthode\ pour\ connecter\ l'utilisateur}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{void}\ deconnexion();\ \textcolor{comment}{//\ Méthode\ pour\ déconnecter\ l'utilisateur}}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{void}\ setLogin(\textcolor{keyword}{const}\ std::string\&\ login);\ \textcolor{comment}{//\ Méthode\ pour\ mettre\ à\ jour\ le\ login\ de\ l'utilisateur}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ std::string\ getLogin();\ \ \textcolor{comment}{//\ Méthode\ pour\ obtenir\ le\ login\ actuel\ de\ l'utilisateur}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{comment}{//\ Destructeur\ de\ la\ classe\ GestionUtilisateur}}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{class_gestion_utilisateur}{\string~GestionUtilisateur}}();}
+\DoxyCodeLine{00024\ \};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GESTIONUTILISATEUR\_HPP}}
+
+\end{DoxyCode}

@@ -1,0 +1,116 @@
+\doxysection{Référence de la classe Image}
+\hypertarget{class_image}{}\label{class_image}\index{Image@{Image}}
+\doxysubsubsection*{Fonctions membres publiques}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_image_ae2900a1845ecdd53b3a5aeefaa1cd3fc}\label{class_image_ae2900a1845ecdd53b3a5aeefaa1cd3fc} 
+{\bfseries Image} (const std\+::string \&src, const std\+::string \&tit, int num, double prx, char acc, const std\+::string \&typ, int n\+Tp, int ide)
+\item 
+\Hypertarget{class_image_ad72789742cd2fef7de9add5b6ae404c9}\label{class_image_ad72789742cd2fef7de9add5b6ae404c9} 
+std\+::string {\bfseries get\+Descripteur} () const
+\begin{DoxyCompactList}\small\item\em Retourne un descripteur complet de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_ac71fab44de5425f31837190e4e96b94a}\label{class_image_ac71fab44de5425f31837190e4e96b94a} 
+int {\bfseries nbrcarac} ()
+\begin{DoxyCompactList}\small\item\em Retourne le nombre de caractères du descripteur de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a1a3e6be4de21a7bfc13e0f7c8f83320f}\label{class_image_a1a3e6be4de21a7bfc13e0f7c8f83320f} 
+int {\bfseries get\+Numero} () const
+\begin{DoxyCompactList}\small\item\em Retourne le numéro d\textquotesingle{}identification de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_aa991682b538c5abc1e65d7f0453ed308}\label{class_image_aa991682b538c5abc1e65d7f0453ed308} 
+int {\bfseries get\+Prix} () const
+\begin{DoxyCompactList}\small\item\em Retourne le prix de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_acc3713a7aa07ac35354b545e935b306b}\label{class_image_acc3713a7aa07ac35354b545e935b306b} 
+std\+::string {\bfseries get\+Source} () const
+\begin{DoxyCompactList}\small\item\em Retourne la source (ou l\textquotesingle{}auteur) de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_ab4578e26036fa361bca4a6b1e139d935}\label{class_image_ab4578e26036fa361bca4a6b1e139d935} 
+std\+::string {\bfseries get\+Titre} () const
+\begin{DoxyCompactList}\small\item\em Retourne le titre de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a415033ed49e49e264ca2b5e40fcd20ac}\label{class_image_a415033ed49e49e264ca2b5e40fcd20ac} 
+char {\bfseries get\+Access} () const
+\begin{DoxyCompactList}\small\item\em Retourne le statut d\textquotesingle{}accès de l\textquotesingle{}image (\textquotesingle{}O\textquotesingle{} ou \textquotesingle{}L\textquotesingle{}). \end{DoxyCompactList}\item 
+\Hypertarget{class_image_aa3090b8e10677cf8100b0df689182f76}\label{class_image_aa3090b8e10677cf8100b0df689182f76} 
+std\+::string {\bfseries get\+Type} () const
+\begin{DoxyCompactList}\small\item\em Retourne le type de l\textquotesingle{}image (\textquotesingle{}couleur\textquotesingle{}, \textquotesingle{}niveaux de gris\textquotesingle{}, etc.). \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a9f53a00b045d12ab0b8ec3302b29bcfe}\label{class_image_a9f53a00b045d12ab0b8ec3302b29bcfe} 
+int {\bfseries getnb\+Traitement\+Possible} () const
+\begin{DoxyCompactList}\small\item\em Retourne le nombre de traitements possibles sur l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a783d4c10d65f8e92bfa84bc83a419e1e}\label{class_image_a783d4c10d65f8e92bfa84bc83a419e1e} 
+std\+::string {\bfseries get\+Descripteur\+Simple} () const
+\begin{DoxyCompactList}\small\item\em Retourne un descripteur simplifié de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a9b6cf01672f4c9a1c035d61d829aea45}\label{class_image_a9b6cf01672f4c9a1c035d61d829aea45} 
+std\+::string {\bfseries get\+Descripteur\+Gratuit} () const
+\begin{DoxyCompactList}\small\item\em Retourne un descripteur pour les images gratuites. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_ad2839c838a0f564f411981fbfb7821cd}\label{class_image_ad2839c838a0f564f411981fbfb7821cd} 
+std\+::string {\bfseries get\+Descripteursmoins10} () const
+\begin{DoxyCompactList}\small\item\em Retourne un descripteur pour les images dont le prix est inférieur à 10. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a3a7120b3ffe5f90cda8227264bf638a5}\label{class_image_a3a7120b3ffe5f90cda8227264bf638a5} 
+std\+::string {\bfseries get\+Descripteursplus10} () const
+\begin{DoxyCompactList}\small\item\em Retourne un descripteur pour les images dont le prix est supérieur à 10. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a3ffecd52acc28a993e2dde89c8951ba3}\label{class_image_a3ffecd52acc28a993e2dde89c8951ba3} 
+std\+::string {\bfseries get\+Chemin} () const
+\begin{DoxyCompactList}\small\item\em Retourne le chemin de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a36e6ac90195fd43a82a6fb888c29c330}\label{class_image_a36e6ac90195fd43a82a6fb888c29c330} 
+void {\bfseries set\+Chemin} (const std\+::string \&chemin)
+\begin{DoxyCompactList}\small\item\em Définit le chemin de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_ace11d52eb15501b9cdf1f6cecc1b8fcb}\label{class_image_ace11d52eb15501b9cdf1f6cecc1b8fcb} 
+void {\bfseries set\+Numero} (int \+\_\+numero)
+\begin{DoxyCompactList}\small\item\em Modifie le numéro d\textquotesingle{}identification de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a11bf31c5a8d4706c276d37020e346b6c}\label{class_image_a11bf31c5a8d4706c276d37020e346b6c} 
+void {\bfseries set\+Prix} (int \+\_\+prix)
+\begin{DoxyCompactList}\small\item\em Modifie le prix de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_af03c5b5a8e4dc264c6a960b7b0ed045e}\label{class_image_af03c5b5a8e4dc264c6a960b7b0ed045e} 
+void {\bfseries set\+Titre} (std\+::string \+\_\+\+Titre)
+\begin{DoxyCompactList}\small\item\em Modifie le titre de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a4e76cb81642b84c10dbcf708a3618cee}\label{class_image_a4e76cb81642b84c10dbcf708a3618cee} 
+void {\bfseries set\+Access} (char \+\_\+\+Access)
+\begin{DoxyCompactList}\small\item\em Modifie le statut d\textquotesingle{}accès de l\textquotesingle{}image (\textquotesingle{}O\textquotesingle{} ou \textquotesingle{}L\textquotesingle{}). \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a47095986afbdd2d5786375abe7a07996}\label{class_image_a47095986afbdd2d5786375abe7a07996} 
+void {\bfseries set\+Type} (std\+::string \+\_\+\+Type)
+\begin{DoxyCompactList}\small\item\em Modifie le type de l\textquotesingle{}image (ex\+: couleur ou niveaux de gris). \end{DoxyCompactList}\item 
+\Hypertarget{class_image_acc91c9410ce2d9961204b818696a9790}\label{class_image_acc91c9410ce2d9961204b818696a9790} 
+void {\bfseries setnb\+Traitement\+Possible} (int \+\_\+nb\+Traitement\+Possible)
+\begin{DoxyCompactList}\small\item\em Modifie le nombre de traitements possibles sur l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_ad0e7d90691e95657deb45c43744d3099}\label{class_image_ad0e7d90691e95657deb45c43744d3099} 
+void {\bfseries associer\+Descripteur} (const std\+::string \&fichier\+Descripteurs)
+\begin{DoxyCompactList}\small\item\em Associe un fichier descripteur à l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_afca9f1c888143dfd3d710456c3f65783}\label{class_image_afca9f1c888143dfd3d710456c3f65783} 
+void {\bfseries set\+Source} (const std\+::string \&src)
+\begin{DoxyCompactList}\small\item\em Modifie la source (ou auteur) de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_ab1ceaf865389a84c46e9c2220a52428e}\label{class_image_ab1ceaf865389a84c46e9c2220a52428e} 
+bool {\bfseries rechercher\+Prix} (int \mbox{\hyperlink{class_image_a20f11867fae02d989ef43e4d0e6c1fe7}{numero}}, const std\+::string \&chemin\+Descripteurs)
+\begin{DoxyCompactList}\small\item\em Recherche le prix d\textquotesingle{}une image dans un fichier descripteur donné par le chemin. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a0294f63700543e11c0f0da85601c7ae5}\label{class_image_a0294f63700543e11c0f0da85601c7ae5} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Image} ()
+\begin{DoxyCompactList}\small\item\em Destructeur de la classe, utilisé pour nettoyer les ressources allouées pendant la durée de vie de l\textquotesingle{}objet. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Attributs publics}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_image_a4de4d0e94d17dc3666fdcbaeccf6ac99}\label{class_image_a4de4d0e94d17dc3666fdcbaeccf6ac99} 
+std\+::string {\bfseries source}
+\begin{DoxyCompactList}\small\item\em Source de l\textquotesingle{}image ou son Auteur, peut être une référence à l\textquotesingle{}origine de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a68bcef6968162c310a2d9f6f16348b31}\label{class_image_a68bcef6968162c310a2d9f6f16348b31} 
+std\+::string {\bfseries titre}
+\begin{DoxyCompactList}\small\item\em Titre de l\textquotesingle{}image, une description ou un nom donné à l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a20f11867fae02d989ef43e4d0e6c1fe7}\label{class_image_a20f11867fae02d989ef43e4d0e6c1fe7} 
+int {\bfseries numero}
+\begin{DoxyCompactList}\small\item\em Numéro d\textquotesingle{}identification unique pour chaque image, permet de différencier les images. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_adf2c17f4d4b75b39cd67f81a2bec71a4}\label{class_image_adf2c17f4d4b75b39cd67f81a2bec71a4} 
+double {\bfseries prix}
+\begin{DoxyCompactList}\small\item\em Prix de l\textquotesingle{}image, représente la valeur monétaire de l\textquotesingle{}image. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a3a0ba57fe0e5011ee3bcc44112d5d25e}\label{class_image_a3a0ba57fe0e5011ee3bcc44112d5d25e} 
+char {\bfseries acces}
+\begin{DoxyCompactList}\small\item\em Statut d\textquotesingle{}accès de l\textquotesingle{}image, \textquotesingle{}O\textquotesingle{} pour ouvert (accessible par tous) et \textquotesingle{}L\textquotesingle{} pour limité (accessible sous conditions). \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a7a7e07c3e2a1e93093320193eef180b4}\label{class_image_a7a7e07c3e2a1e93093320193eef180b4} 
+std\+::string {\bfseries type}
+\begin{DoxyCompactList}\small\item\em Type ou catégorie de l\textquotesingle{}image, par exemple \textquotesingle{}couleur\textquotesingle{} ou \textquotesingle{}niveaux de gris\textquotesingle{}. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_a50de5f06f127b4f0b6831ebdd72e8053}\label{class_image_a50de5f06f127b4f0b6831ebdd72e8053} 
+int {\bfseries nb\+Traitement\+Possible}
+\begin{DoxyCompactList}\small\item\em Nombre de traitements possibles sur l\textquotesingle{}image, peut être utilisé pour savoir combien d\textquotesingle{}opérations l\textquotesingle{}image peut subir. \end{DoxyCompactList}\item 
+\Hypertarget{class_image_afac3a1a5e86c580a8277caa16a56efa4}\label{class_image_afac3a1a5e86c580a8277caa16a56efa4} 
+int {\bfseries identite}
+\begin{DoxyCompactList}\small\item\em Identifiant unique de l\textquotesingle{}image, peut servir à l\textquotesingle{}identifier de manière unique dans une base de données ou un système. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+La documentation de cette classe a été générée à partir des fichiers suivants \+:\begin{DoxyCompactItemize}
+\item 
+Descripteurs/tessst/Image.\+hpp\item 
+Descripteurs/tessst/Image.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.11.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Projet C++ Gestion des bibliothèque et traitement d&#39;images:  Fichier source de Descripteurs/tessst/Library.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Projet C++ Gestion des bibliothèque et traitement d&#39;images
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.11.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche',false);
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_e0f7bbe281bafec556c01aae9d49fac9.html">Descripteurs</a></li><li class="navelem"><a class="el" href="dir_200c7ac152f5c1a5e67f01c24fc89cd1.html">tessst</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
+<div class="header">
+  <div class="headertitle"><div class="title">Library.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef LIBRARY_HPP</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define LIBRARY_HPP</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// Inclusion des fichiers d&#39;en-tête</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;Image.hpp&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// Inclusion des fichiers nécessaires pour gérer l&#39;interface, les images et la bibliothèque.</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;QString&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="foldopen" id="foldopen00022" data-start="{" data-end="};">
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="class_library.html">   22</a></span><span class="keyword">class </span><a class="code hl_class" href="class_library.html">Library</a> {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="struct_library_1_1_i_node.html">   29</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="struct_library_1_1_i_node.html">INode</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="struct_library_1_1_i_node.html#a18654b6600a77b8e98e1897d5fb3bfe9">   30</a></span>        <a class="code hl_class" href="class_image.html">Image</a> <a class="code hl_variable" href="struct_library_1_1_i_node.html#a18654b6600a77b8e98e1897d5fb3bfe9">data</a>; </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="struct_library_1_1_i_node.html#a2f80f455d0c928825a49e312a893bd53">   31</a></span>        std::shared_ptr&lt;INode&gt; <a class="code hl_variable" href="struct_library_1_1_i_node.html#a2f80f455d0c928825a49e312a893bd53">next</a>; </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="struct_library_1_1_i_node.html#ada7441cd5764966a6dd38cfac4c82e27">   37</a></span>        <a class="code hl_function" href="struct_library_1_1_i_node.html#ada7441cd5764966a6dd38cfac4c82e27">INode</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_image.html">Image</a>&amp; img) : <a class="code hl_variable" href="struct_library_1_1_i_node.html#a18654b6600a77b8e98e1897d5fb3bfe9">data</a>(img), <a class="code hl_variable" href="struct_library_1_1_i_node.html#a2f80f455d0c928825a49e312a893bd53">next</a>(nullptr) {}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    };</div>
+</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="class_library.html#a5f727de4ab180ee5a6a9ce5af138d4c4">   40</a></span>    std::shared_ptr&lt;INode&gt; <a class="code hl_variable" href="class_library.html#a5f727de4ab180ee5a6a9ce5af138d4c4">head</a>; </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <a class="code hl_function" href="class_library.html#a82338219d8bf51962ff5f60a0db21b19">Library</a>(); </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a2e643f8aa619bd7f3b9fbecea86e4f11">ajouterDescripteurs</a>(<span class="keyword">const</span> <a class="code hl_class" href="class_image.html">Image</a>&amp; img); </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a641799ca72913e9c8ce222ac5c69fca5">supprimerDescripteurs</a>(<span class="keywordtype">int</span> numero); </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a3f3bcf972d8707970426a2fcc8f7c7e6">modifdescripteurs</a>(<span class="keywordtype">int</span> numero, <a class="code hl_class" href="class_library.html">Library</a> bibli); </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    QString <a class="code hl_function" href="class_library.html#a71caad1e75da6284afbd4dcb0a8507ac">determineBibliotheque</a>(<span class="keywordtype">double</span> prix) <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    std::string <a class="code hl_function" href="class_library.html#ab30a67a69592adb87e341b6a7faa176b">getDossierParPrix</a>(<span class="keywordtype">double</span> prix) <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">bool</span> <a class="code hl_function" href="class_library.html#a954915dfe6f7adc5b90b380f7d396653">sauvegarderImage</a>(<span class="keyword">const</span> std::string &amp;cheminImage, <span class="keywordtype">double</span> prix, <span class="keyword">const</span> std::string &amp;titre); </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    std::string <a class="code hl_function" href="class_library.html#a4965b883993e5d5b7683187c37f08b1e">getCheminProjet</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a5d811063caa78061ed3d7b581cc2c93e">tricroissant</a>(<a class="code hl_class" href="class_library.html">Library</a> liste); </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#aa77de8eae1707674dab014366fd52bee">trinbtraitement</a>(<a class="code hl_class" href="class_library.html">Library</a> liste); </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#ad7c3908f606b9a46a9085101a568b288">afficher</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a10903df82320dafbafeeb9ba732f2a23">afficherGratuites</a>() <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a5fc8170fb53102e054a8b056328a30d7">modifierAcces</a>(<span class="keywordtype">int</span> numero, <span class="keyword">const</span> std::string &amp;nomFichier); </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="class_library.html#a09899f6572158e0e3812e59ea0209713">   64</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a09899f6572158e0e3812e59ea0209713">modifierAccesDansFichier</a>(<span class="keyword">const</span> std::string &amp;nomFichier, <span class="keywordtype">int</span> numero); </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_library.html#aa39d5bd45586cfa87243b3c11827bee6">tailleListe</a>(); </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a5524af38f24b61ea19b93440dba86fd3">sousListePrix</a>(<a class="code hl_class" href="class_library.html">Library</a> liste); </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a5524af38f24b61ea19b93440dba86fd3">sousListePrix</a>(<span class="keywordtype">int</span> numero); </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a7a6f1f1b6bd776aa7eb3240869f369ad">sousListetype</a>(<a class="code hl_class" href="class_library.html">Library</a> Liste); </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a7a6f1f1b6bd776aa7eb3240869f369ad">sousListetype</a>(<span class="keywordtype">int</span> numero); </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a47c006286609390eab98b9bd5c654cdc">afficherImagesAvecAccesO</a>(<span class="keyword">const</span> std::string&amp; nomFichier) <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#ab28ff78eab793b22b5229a30f6e298d9">sauvegarderDansFichier</a>(<span class="keyword">const</span> std::string&amp; nomFichier) <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#ae142cb949291a0878ab3f36c3cc9b22b">chargerDepuisFichier</a>(<span class="keyword">const</span> std::string&amp; nomFichier); </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#ad2c871e949db33fe15d2f438fef330cd">save</a>(); </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a0a177fbd0deb71bb1e938c2b02bae6bf">permuterImages</a>(<span class="keywordtype">int</span> numero1, <span class="keywordtype">int</span> numero2); </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="class_library.html#a998cf39776f465108c8dae3e24b63dc6">   77</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a998cf39776f465108c8dae3e24b63dc6">copyFile</a>(<span class="keyword">const</span> std::string&amp; sourcePath, <span class="keyword">const</span> std::string&amp; destinationFolder); </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="class_library.html#a17432fcd2f679ab9f1092f371aa9af72">fusion</a>(<a class="code hl_class" href="class_library.html">Library</a> liste2); </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_library.html#a7a1c4c3073211a7a7f47f6e51d156fe8">titrecheck</a>(std::string _titre) <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    std::string <a class="code hl_function" href="class_library.html#a33eeb26662f9f769b21de6f4d811db23">rechercherImageParNumero</a>(<span class="keywordtype">int</span> numero) <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keywordtype">int</span> <a class="code hl_function" href="class_library.html#a44c43715a122d9f9d1ead74a5035ba91">numerocheck</a>(<span class="keywordtype">int</span> num) <span class="keyword">const</span>; </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <a class="code hl_function" href="class_library.html#a62120f28a9b50cc5b151d868e42ab936">~Library</a>(); </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>};</div>
+</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclass_image_html"><div class="ttname"><a href="class_image.html">Image</a></div><div class="ttdef"><b>Definition</b> Image.hpp:15</div></div>
+<div class="ttc" id="aclass_library_html"><div class="ttname"><a href="class_library.html">Library</a></div><div class="ttdef"><b>Definition</b> Library.hpp:22</div></div>
+<div class="ttc" id="aclass_library_html_a09899f6572158e0e3812e59ea0209713"><div class="ttname"><a href="class_library.html#a09899f6572158e0e3812e59ea0209713">Library::modifierAccesDansFichier</a></div><div class="ttdeci">void modifierAccesDansFichier(const std::string &amp;nomFichier, int numero)</div></div>
+<div class="ttc" id="aclass_library_html_a0a177fbd0deb71bb1e938c2b02bae6bf"><div class="ttname"><a href="class_library.html#a0a177fbd0deb71bb1e938c2b02bae6bf">Library::permuterImages</a></div><div class="ttdeci">void permuterImages(int numero1, int numero2)</div><div class="ttdef"><b>Definition</b> Library.cpp:597</div></div>
+<div class="ttc" id="aclass_library_html_a10903df82320dafbafeeb9ba732f2a23"><div class="ttname"><a href="class_library.html#a10903df82320dafbafeeb9ba732f2a23">Library::afficherGratuites</a></div><div class="ttdeci">void afficherGratuites() const</div><div class="ttdef"><b>Definition</b> Library.cpp:199</div></div>
+<div class="ttc" id="aclass_library_html_a17432fcd2f679ab9f1092f371aa9af72"><div class="ttname"><a href="class_library.html#a17432fcd2f679ab9f1092f371aa9af72">Library::fusion</a></div><div class="ttdeci">void fusion(Library liste2)</div><div class="ttdef"><b>Definition</b> Library.cpp:733</div></div>
+<div class="ttc" id="aclass_library_html_a2e643f8aa619bd7f3b9fbecea86e4f11"><div class="ttname"><a href="class_library.html#a2e643f8aa619bd7f3b9fbecea86e4f11">Library::ajouterDescripteurs</a></div><div class="ttdeci">void ajouterDescripteurs(const Image &amp;img)</div><div class="ttdef"><b>Definition</b> Library.cpp:113</div></div>
+<div class="ttc" id="aclass_library_html_a33eeb26662f9f769b21de6f4d811db23"><div class="ttname"><a href="class_library.html#a33eeb26662f9f769b21de6f4d811db23">Library::rechercherImageParNumero</a></div><div class="ttdeci">std::string rechercherImageParNumero(int numero) const</div><div class="ttdef"><b>Definition</b> Library.cpp:379</div></div>
+<div class="ttc" id="aclass_library_html_a3f3bcf972d8707970426a2fcc8f7c7e6"><div class="ttname"><a href="class_library.html#a3f3bcf972d8707970426a2fcc8f7c7e6">Library::modifdescripteurs</a></div><div class="ttdeci">void modifdescripteurs(int numero, Library bibli)</div><div class="ttdef"><b>Definition</b> Library.cpp:390</div></div>
+<div class="ttc" id="aclass_library_html_a44c43715a122d9f9d1ead74a5035ba91"><div class="ttname"><a href="class_library.html#a44c43715a122d9f9d1ead74a5035ba91">Library::numerocheck</a></div><div class="ttdeci">int numerocheck(int num) const</div><div class="ttdef"><b>Definition</b> Library.cpp:759</div></div>
+<div class="ttc" id="aclass_library_html_a47c006286609390eab98b9bd5c654cdc"><div class="ttname"><a href="class_library.html#a47c006286609390eab98b9bd5c654cdc">Library::afficherImagesAvecAccesO</a></div><div class="ttdeci">void afficherImagesAvecAccesO(const std::string &amp;nomFichier) const</div><div class="ttdef"><b>Definition</b> Library.cpp:230</div></div>
+<div class="ttc" id="aclass_library_html_a4965b883993e5d5b7683187c37f08b1e"><div class="ttname"><a href="class_library.html#a4965b883993e5d5b7683187c37f08b1e">Library::getCheminProjet</a></div><div class="ttdeci">std::string getCheminProjet() const</div><div class="ttdef"><b>Definition</b> Library.cpp:58</div></div>
+<div class="ttc" id="aclass_library_html_a5524af38f24b61ea19b93440dba86fd3"><div class="ttname"><a href="class_library.html#a5524af38f24b61ea19b93440dba86fd3">Library::sousListePrix</a></div><div class="ttdeci">void sousListePrix(Library liste)</div><div class="ttdef"><b>Definition</b> Library.cpp:283</div></div>
+<div class="ttc" id="aclass_library_html_a5d811063caa78061ed3d7b581cc2c93e"><div class="ttname"><a href="class_library.html#a5d811063caa78061ed3d7b581cc2c93e">Library::tricroissant</a></div><div class="ttdeci">void tricroissant(Library liste)</div><div class="ttdef"><b>Definition</b> Library.cpp:145</div></div>
+<div class="ttc" id="aclass_library_html_a5f727de4ab180ee5a6a9ce5af138d4c4"><div class="ttname"><a href="class_library.html#a5f727de4ab180ee5a6a9ce5af138d4c4">Library::head</a></div><div class="ttdeci">std::shared_ptr&lt; INode &gt; head</div><div class="ttdef"><b>Definition</b> Library.hpp:40</div></div>
+<div class="ttc" id="aclass_library_html_a5fc8170fb53102e054a8b056328a30d7"><div class="ttname"><a href="class_library.html#a5fc8170fb53102e054a8b056328a30d7">Library::modifierAcces</a></div><div class="ttdeci">void modifierAcces(int numero, const std::string &amp;nomFichier)</div><div class="ttdef"><b>Definition</b> Library.cpp:211</div></div>
+<div class="ttc" id="aclass_library_html_a62120f28a9b50cc5b151d868e42ab936"><div class="ttname"><a href="class_library.html#a62120f28a9b50cc5b151d868e42ab936">Library::~Library</a></div><div class="ttdeci">~Library()</div><div class="ttdef"><b>Definition</b> Library.cpp:775</div></div>
+<div class="ttc" id="aclass_library_html_a641799ca72913e9c8ce222ac5c69fca5"><div class="ttname"><a href="class_library.html#a641799ca72913e9c8ce222ac5c69fca5">Library::supprimerDescripteurs</a></div><div class="ttdeci">void supprimerDescripteurs(int numero)</div><div class="ttdef"><b>Definition</b> Library.cpp:120</div></div>
+<div class="ttc" id="aclass_library_html_a71caad1e75da6284afbd4dcb0a8507ac"><div class="ttname"><a href="class_library.html#a71caad1e75da6284afbd4dcb0a8507ac">Library::determineBibliotheque</a></div><div class="ttdeci">QString determineBibliotheque(double prix) const</div><div class="ttdef"><b>Definition</b> Library.cpp:105</div></div>
+<div class="ttc" id="aclass_library_html_a7a1c4c3073211a7a7f47f6e51d156fe8"><div class="ttname"><a href="class_library.html#a7a1c4c3073211a7a7f47f6e51d156fe8">Library::titrecheck</a></div><div class="ttdeci">int titrecheck(std::string _titre) const</div><div class="ttdef"><b>Definition</b> Library.cpp:742</div></div>
+<div class="ttc" id="aclass_library_html_a7a6f1f1b6bd776aa7eb3240869f369ad"><div class="ttname"><a href="class_library.html#a7a6f1f1b6bd776aa7eb3240869f369ad">Library::sousListetype</a></div><div class="ttdeci">void sousListetype(Library Liste)</div><div class="ttdef"><b>Definition</b> Library.cpp:326</div></div>
+<div class="ttc" id="aclass_library_html_a82338219d8bf51962ff5f60a0db21b19"><div class="ttname"><a href="class_library.html#a82338219d8bf51962ff5f60a0db21b19">Library::Library</a></div><div class="ttdeci">Library()</div><div class="ttdef"><b>Definition</b> Library.cpp:23</div></div>
+<div class="ttc" id="aclass_library_html_a954915dfe6f7adc5b90b380f7d396653"><div class="ttname"><a href="class_library.html#a954915dfe6f7adc5b90b380f7d396653">Library::sauvegarderImage</a></div><div class="ttdeci">bool sauvegarderImage(const std::string &amp;cheminImage, double prix, const std::string &amp;titre)</div><div class="ttdef"><b>Definition</b> Library.cpp:70</div></div>
+<div class="ttc" id="aclass_library_html_a998cf39776f465108c8dae3e24b63dc6"><div class="ttname"><a href="class_library.html#a998cf39776f465108c8dae3e24b63dc6">Library::copyFile</a></div><div class="ttdeci">void copyFile(const std::string &amp;sourcePath, const std::string &amp;destinationFolder)</div></div>
+<div class="ttc" id="aclass_library_html_aa39d5bd45586cfa87243b3c11827bee6"><div class="ttname"><a href="class_library.html#aa39d5bd45586cfa87243b3c11827bee6">Library::tailleListe</a></div><div class="ttdeci">int tailleListe()</div><div class="ttdef"><b>Definition</b> Library.cpp:271</div></div>
+<div class="ttc" id="aclass_library_html_aa77de8eae1707674dab014366fd52bee"><div class="ttname"><a href="class_library.html#aa77de8eae1707674dab014366fd52bee">Library::trinbtraitement</a></div><div class="ttdeci">void trinbtraitement(Library liste)</div><div class="ttdef"><b>Definition</b> Library.cpp:168</div></div>
+<div class="ttc" id="aclass_library_html_ab28ff78eab793b22b5229a30f6e298d9"><div class="ttname"><a href="class_library.html#ab28ff78eab793b22b5229a30f6e298d9">Library::sauvegarderDansFichier</a></div><div class="ttdeci">void sauvegarderDansFichier(const std::string &amp;nomFichier) const</div><div class="ttdef"><b>Definition</b> Library.cpp:507</div></div>
+<div class="ttc" id="aclass_library_html_ab30a67a69592adb87e341b6a7faa176b"><div class="ttname"><a href="class_library.html#ab30a67a69592adb87e341b6a7faa176b">Library::getDossierParPrix</a></div><div class="ttdeci">std::string getDossierParPrix(double prix) const</div><div class="ttdef"><b>Definition</b> Library.cpp:39</div></div>
+<div class="ttc" id="aclass_library_html_ad2c871e949db33fe15d2f438fef330cd"><div class="ttname"><a href="class_library.html#ad2c871e949db33fe15d2f438fef330cd">Library::save</a></div><div class="ttdeci">void save()</div><div class="ttdef"><b>Definition</b> Library.cpp:633</div></div>
+<div class="ttc" id="aclass_library_html_ad7c3908f606b9a46a9085101a568b288"><div class="ttname"><a href="class_library.html#ad7c3908f606b9a46a9085101a568b288">Library::afficher</a></div><div class="ttdeci">void afficher() const</div><div class="ttdef"><b>Definition</b> Library.cpp:187</div></div>
+<div class="ttc" id="aclass_library_html_ae142cb949291a0878ab3f36c3cc9b22b"><div class="ttname"><a href="class_library.html#ae142cb949291a0878ab3f36c3cc9b22b">Library::chargerDepuisFichier</a></div><div class="ttdeci">void chargerDepuisFichier(const std::string &amp;nomFichier)</div><div class="ttdef"><b>Definition</b> Library.cpp:545</div></div>
+<div class="ttc" id="astruct_library_1_1_i_node_html"><div class="ttname"><a href="struct_library_1_1_i_node.html">Library::INode</a></div><div class="ttdef"><b>Definition</b> Library.hpp:29</div></div>
+<div class="ttc" id="astruct_library_1_1_i_node_html_a18654b6600a77b8e98e1897d5fb3bfe9"><div class="ttname"><a href="struct_library_1_1_i_node.html#a18654b6600a77b8e98e1897d5fb3bfe9">Library::INode::data</a></div><div class="ttdeci">Image data</div><div class="ttdef"><b>Definition</b> Library.hpp:30</div></div>
+<div class="ttc" id="astruct_library_1_1_i_node_html_a2f80f455d0c928825a49e312a893bd53"><div class="ttname"><a href="struct_library_1_1_i_node.html#a2f80f455d0c928825a49e312a893bd53">Library::INode::next</a></div><div class="ttdeci">std::shared_ptr&lt; INode &gt; next</div><div class="ttdef"><b>Definition</b> Library.hpp:31</div></div>
+<div class="ttc" id="astruct_library_1_1_i_node_html_ada7441cd5764966a6dd38cfac4c82e27"><div class="ttname"><a href="struct_library_1_1_i_node.html#ada7441cd5764966a6dd38cfac4c82e27">Library::INode::INode</a></div><div class="ttdeci">INode(const Image &amp;img)</div><div class="ttdef"><b>Definition</b> Library.hpp:37</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0
+</small></address>
+</div><!-- doc-content -->
+</body>
+</html>

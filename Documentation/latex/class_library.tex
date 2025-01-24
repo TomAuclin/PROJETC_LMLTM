@@ -1,0 +1,288 @@
+\doxysection{Référence de la classe Library}
+\hypertarget{class_library}{}\label{class_library}\index{Library@{Library}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_library_1_1_i_node}{INode}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Fonctions membres publiques}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_library_a82338219d8bf51962ff5f60a0db21b19}{Library}} ()
+\item 
+void \mbox{\hyperlink{class_library_a2e643f8aa619bd7f3b9fbecea86e4f11}{ajouter\+Descripteurs}} (const \mbox{\hyperlink{class_image}{Image}} \&img)
+\item 
+void \mbox{\hyperlink{class_library_a641799ca72913e9c8ce222ac5c69fca5}{supprimer\+Descripteurs}} (int numero)
+\item 
+void \mbox{\hyperlink{class_library_a3f3bcf972d8707970426a2fcc8f7c7e6}{modifdescripteurs}} (int numero, \mbox{\hyperlink{class_library}{Library}} bibli)
+\item 
+QString \mbox{\hyperlink{class_library_a71caad1e75da6284afbd4dcb0a8507ac}{determine\+Bibliotheque}} (double prix) const
+\item 
+std\+::string \mbox{\hyperlink{class_library_ab30a67a69592adb87e341b6a7faa176b}{get\+Dossier\+Par\+Prix}} (double prix) const
+\item 
+bool \mbox{\hyperlink{class_library_a954915dfe6f7adc5b90b380f7d396653}{sauvegarder\+Image}} (const std\+::string \&chemin\+Image, double prix, const std\+::string \&titre)
+\item 
+std\+::string \mbox{\hyperlink{class_library_a4965b883993e5d5b7683187c37f08b1e}{get\+Chemin\+Projet}} () const
+\item 
+void \mbox{\hyperlink{class_library_a5d811063caa78061ed3d7b581cc2c93e}{tricroissant}} (\mbox{\hyperlink{class_library}{Library}} liste)
+\item 
+void \mbox{\hyperlink{class_library_aa77de8eae1707674dab014366fd52bee}{trinbtraitement}} (\mbox{\hyperlink{class_library}{Library}} liste)
+\item 
+void \mbox{\hyperlink{class_library_ad7c3908f606b9a46a9085101a568b288}{afficher}} () const
+\item 
+void \mbox{\hyperlink{class_library_a10903df82320dafbafeeb9ba732f2a23}{afficher\+Gratuites}} () const
+\item 
+void \mbox{\hyperlink{class_library_a5fc8170fb53102e054a8b056328a30d7}{modifier\+Acces}} (int numero, const std\+::string \&nom\+Fichier)
+\item 
+void \mbox{\hyperlink{class_library_a09899f6572158e0e3812e59ea0209713}{modifier\+Acces\+Dans\+Fichier}} (const std\+::string \&nom\+Fichier, int numero)
+\item 
+int \mbox{\hyperlink{class_library_aa39d5bd45586cfa87243b3c11827bee6}{taille\+Liste}} ()
+\item 
+void \mbox{\hyperlink{class_library_a5524af38f24b61ea19b93440dba86fd3}{sous\+Liste\+Prix}} (\mbox{\hyperlink{class_library}{Library}} liste)
+\item 
+void \mbox{\hyperlink{class_library_ad7f7822f7ba89ba2837ad54b13ce690e}{sous\+Liste\+Prix}} (int numero)
+\item 
+void \mbox{\hyperlink{class_library_a7a6f1f1b6bd776aa7eb3240869f369ad}{sous\+Listetype}} (\mbox{\hyperlink{class_library}{Library}} Liste)
+\item 
+void \mbox{\hyperlink{class_library_abe51466f393c7542fad345e0ec91550c}{sous\+Listetype}} (int numero)
+\item 
+void \mbox{\hyperlink{class_library_a47c006286609390eab98b9bd5c654cdc}{afficher\+Images\+Avec\+AccesO}} (const std\+::string \&nom\+Fichier) const
+\item 
+void \mbox{\hyperlink{class_library_ab28ff78eab793b22b5229a30f6e298d9}{sauvegarder\+Dans\+Fichier}} (const std\+::string \&nom\+Fichier) const
+\item 
+void \mbox{\hyperlink{class_library_ae142cb949291a0878ab3f36c3cc9b22b}{charger\+Depuis\+Fichier}} (const std\+::string \&nom\+Fichier)
+\item 
+void \mbox{\hyperlink{class_library_ad2c871e949db33fe15d2f438fef330cd}{save}} ()
+\item 
+void \mbox{\hyperlink{class_library_a0a177fbd0deb71bb1e938c2b02bae6bf}{permuter\+Images}} (int numero1, int numero2)
+\item 
+void \mbox{\hyperlink{class_library_a998cf39776f465108c8dae3e24b63dc6}{copy\+File}} (const std\+::string \&source\+Path, const std\+::string \&destination\+Folder)
+\item 
+void \mbox{\hyperlink{class_library_a17432fcd2f679ab9f1092f371aa9af72}{fusion}} (\mbox{\hyperlink{class_library}{Library}} liste2)
+\item 
+int \mbox{\hyperlink{class_library_a7a1c4c3073211a7a7f47f6e51d156fe8}{titrecheck}} (std\+::string \+\_\+titre) const
+\item 
+std\+::string \mbox{\hyperlink{class_library_a33eeb26662f9f769b21de6f4d811db23}{rechercher\+Image\+Par\+Numero}} (int numero) const
+\item 
+int \mbox{\hyperlink{class_library_a44c43715a122d9f9d1ead74a5035ba91}{numerocheck}} (int num) const
+\item 
+\mbox{\hyperlink{class_library_a62120f28a9b50cc5b151d868e42ab936}{\texorpdfstring{$\sim$}{\string~}\+Library}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Attributs publics}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_library_1_1_i_node}{INode}} $>$ \mbox{\hyperlink{class_library_a5f727de4ab180ee5a6a9ce5af138d4c4}{head}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Documentation des constructeurs et destructeur}
+\Hypertarget{class_library_a82338219d8bf51962ff5f60a0db21b19}\index{Library@{Library}!Library@{Library}}
+\index{Library@{Library}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{Library()}{Library()}}
+{\footnotesize\ttfamily \label{class_library_a82338219d8bf51962ff5f60a0db21b19} 
+Library\+::\+Library (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Constructeur de la bibliothèque, initialisation de la liste vide.
+
+Initialise une liste chaînée vide en définissant la tête de la liste à nullptr. \Hypertarget{class_library_a62120f28a9b50cc5b151d868e42ab936}\index{Library@{Library}!````~Library@{\texorpdfstring{$\sim$}{\string~}Library}}
+\index{````~Library@{\texorpdfstring{$\sim$}{\string~}Library}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Library()}{\string~Library()}}
+{\footnotesize\ttfamily \label{class_library_a62120f28a9b50cc5b151d868e42ab936} 
+Library\+::\texorpdfstring{$\sim$}{\string~}\+Library (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Destructeur de la classe \doxylink{class_library}{Library}. Libère la mémoire allouée pour la liste chaînée. Destructeur qui libère la mémoire de la bibliothèque. 
+
+\doxysubsection{Documentation des fonctions membres}
+\Hypertarget{class_library_ad7c3908f606b9a46a9085101a568b288}\index{Library@{Library}!afficher@{afficher}}
+\index{afficher@{afficher}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{afficher()}{afficher()}}
+{\footnotesize\ttfamily \label{class_library_ad7c3908f606b9a46a9085101a568b288} 
+void Library\+::afficher (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+Affiche tous les descripteurs des images. \Hypertarget{class_library_a10903df82320dafbafeeb9ba732f2a23}\index{Library@{Library}!afficherGratuites@{afficherGratuites}}
+\index{afficherGratuites@{afficherGratuites}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{afficherGratuites()}{afficherGratuites()}}
+{\footnotesize\ttfamily \label{class_library_a10903df82320dafbafeeb9ba732f2a23} 
+void Library\+::afficher\+Gratuites (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+Affiche les images gratuites. \Hypertarget{class_library_a47c006286609390eab98b9bd5c654cdc}\index{Library@{Library}!afficherImagesAvecAccesO@{afficherImagesAvecAccesO}}
+\index{afficherImagesAvecAccesO@{afficherImagesAvecAccesO}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{afficherImagesAvecAccesO()}{afficherImagesAvecAccesO()}}
+{\footnotesize\ttfamily \label{class_library_a47c006286609390eab98b9bd5c654cdc} 
+void Library\+::afficher\+Images\+Avec\+AccesO (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{nom\+Fichier}{}\end{DoxyParamCaption}) const}
+
+Affiche les images ayant un accès ouvert. \Hypertarget{class_library_a2e643f8aa619bd7f3b9fbecea86e4f11}\index{Library@{Library}!ajouterDescripteurs@{ajouterDescripteurs}}
+\index{ajouterDescripteurs@{ajouterDescripteurs}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{ajouterDescripteurs()}{ajouterDescripteurs()}}
+{\footnotesize\ttfamily \label{class_library_a2e643f8aa619bd7f3b9fbecea86e4f11} 
+void Library\+::ajouter\+Descripteurs (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_image}{Image}} \&}]{img}{}\end{DoxyParamCaption})}
+
+Ajoute une image à la liste chaînée. img L\textquotesingle{}image à ajouter au début de la liste. Ajoute un descripteur d\textquotesingle{}image. Utilisé par les utilisateurs de niveau 1. \Hypertarget{class_library_ae142cb949291a0878ab3f36c3cc9b22b}\index{Library@{Library}!chargerDepuisFichier@{chargerDepuisFichier}}
+\index{chargerDepuisFichier@{chargerDepuisFichier}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{chargerDepuisFichier()}{chargerDepuisFichier()}}
+{\footnotesize\ttfamily \label{class_library_ae142cb949291a0878ab3f36c3cc9b22b} 
+void Library\+::charger\+Depuis\+Fichier (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{nom\+Fichier}{}\end{DoxyParamCaption})}
+
+Charge la bibliothèque depuis un fichier. \Hypertarget{class_library_a998cf39776f465108c8dae3e24b63dc6}\index{Library@{Library}!copyFile@{copyFile}}
+\index{copyFile@{copyFile}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{copyFile()}{copyFile()}}
+{\footnotesize\ttfamily \label{class_library_a998cf39776f465108c8dae3e24b63dc6} 
+void Library\+::copy\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{source\+Path}{, }\item[{const std\+::string \&}]{destination\+Folder}{}\end{DoxyParamCaption})}
+
+Copie un fichier d\textquotesingle{}une source vers un dossier de destination. \Hypertarget{class_library_a71caad1e75da6284afbd4dcb0a8507ac}\index{Library@{Library}!determineBibliotheque@{determineBibliotheque}}
+\index{determineBibliotheque@{determineBibliotheque}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{determineBibliotheque()}{determineBibliotheque()}}
+{\footnotesize\ttfamily \label{class_library_a71caad1e75da6284afbd4dcb0a8507ac} 
+QString Library\+::determine\+Bibliotheque (\begin{DoxyParamCaption}\item[{double}]{prix}{}\end{DoxyParamCaption}) const}
+
+Détermine la bibliothèque selon un prix donné. \Hypertarget{class_library_a17432fcd2f679ab9f1092f371aa9af72}\index{Library@{Library}!fusion@{fusion}}
+\index{fusion@{fusion}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{fusion()}{fusion()}}
+{\footnotesize\ttfamily \label{class_library_a17432fcd2f679ab9f1092f371aa9af72} 
+void Library\+::fusion (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_library}{Library}}}]{liste2}{}\end{DoxyParamCaption})}
+
+Fusionne deux bibliothèques. \Hypertarget{class_library_a4965b883993e5d5b7683187c37f08b1e}\index{Library@{Library}!getCheminProjet@{getCheminProjet}}
+\index{getCheminProjet@{getCheminProjet}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{getCheminProjet()}{getCheminProjet()}}
+{\footnotesize\ttfamily \label{class_library_a4965b883993e5d5b7683187c37f08b1e} 
+std\+::string Library\+::get\+Chemin\+Projet (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+Retourne le chemin du projet. \Hypertarget{class_library_ab30a67a69592adb87e341b6a7faa176b}\index{Library@{Library}!getDossierParPrix@{getDossierParPrix}}
+\index{getDossierParPrix@{getDossierParPrix}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{getDossierParPrix()}{getDossierParPrix()}}
+{\footnotesize\ttfamily \label{class_library_ab30a67a69592adb87e341b6a7faa176b} 
+std\+::string Library\+::get\+Dossier\+Par\+Prix (\begin{DoxyParamCaption}\item[{double}]{prix}{}\end{DoxyParamCaption}) const}
+
+Retourne le dossier des images par prix.
+
+Ajoute img une image à la liste chaînée. L\textquotesingle{}image est insérée au début de la liste en créant un nouveau nœud qui pointe vers l\textquotesingle{}ancien premier nœud. \Hypertarget{class_library_a3f3bcf972d8707970426a2fcc8f7c7e6}\index{Library@{Library}!modifdescripteurs@{modifdescripteurs}}
+\index{modifdescripteurs@{modifdescripteurs}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{modifdescripteurs()}{modifdescripteurs()}}
+{\footnotesize\ttfamily \label{class_library_a3f3bcf972d8707970426a2fcc8f7c7e6} 
+void Library\+::modifdescripteurs (\begin{DoxyParamCaption}\item[{int}]{numero}{, }\item[{\mbox{\hyperlink{class_library}{Library}}}]{bibli}{}\end{DoxyParamCaption})}
+
+Modifie un descripteur d\textquotesingle{}image. Utilisé par les utilisateurs de niveau 1. \Hypertarget{class_library_a5fc8170fb53102e054a8b056328a30d7}\index{Library@{Library}!modifierAcces@{modifierAcces}}
+\index{modifierAcces@{modifierAcces}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{modifierAcces()}{modifierAcces()}}
+{\footnotesize\ttfamily \label{class_library_a5fc8170fb53102e054a8b056328a30d7} 
+void Library\+::modifier\+Acces (\begin{DoxyParamCaption}\item[{int}]{numero}{, }\item[{const std\+::string \&}]{nom\+Fichier}{}\end{DoxyParamCaption})}
+
+Modifie l\textquotesingle{}accès d\textquotesingle{}une image pour les utilisateurs de niveau 2. \Hypertarget{class_library_a09899f6572158e0e3812e59ea0209713}\index{Library@{Library}!modifierAccesDansFichier@{modifierAccesDansFichier}}
+\index{modifierAccesDansFichier@{modifierAccesDansFichier}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{modifierAccesDansFichier()}{modifierAccesDansFichier()}}
+{\footnotesize\ttfamily \label{class_library_a09899f6572158e0e3812e59ea0209713} 
+void Library\+::modifier\+Acces\+Dans\+Fichier (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{nom\+Fichier}{, }\item[{int}]{numero}{}\end{DoxyParamCaption})}
+
+Modifie l\textquotesingle{}accès d\textquotesingle{}une image dans un fichier spécifique. \Hypertarget{class_library_a44c43715a122d9f9d1ead74a5035ba91}\index{Library@{Library}!numerocheck@{numerocheck}}
+\index{numerocheck@{numerocheck}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{numerocheck()}{numerocheck()}}
+{\footnotesize\ttfamily \label{class_library_a44c43715a122d9f9d1ead74a5035ba91} 
+int Library\+::numerocheck (\begin{DoxyParamCaption}\item[{int}]{num}{}\end{DoxyParamCaption}) const}
+
+Vérifie si un numéro est valide. \Hypertarget{class_library_a0a177fbd0deb71bb1e938c2b02bae6bf}\index{Library@{Library}!permuterImages@{permuterImages}}
+\index{permuterImages@{permuterImages}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{permuterImages()}{permuterImages()}}
+{\footnotesize\ttfamily \label{class_library_a0a177fbd0deb71bb1e938c2b02bae6bf} 
+void Library\+::permuter\+Images (\begin{DoxyParamCaption}\item[{int}]{numero1}{, }\item[{int}]{numero2}{}\end{DoxyParamCaption})}
+
+Permute deux images de la bibliothèque (niveau 1).
+
+Permet de permuter deux images dans la bibliothèque en se basant sur leurs numéros (ils sont uniques) \Hypertarget{class_library_a33eeb26662f9f769b21de6f4d811db23}\index{Library@{Library}!rechercherImageParNumero@{rechercherImageParNumero}}
+\index{rechercherImageParNumero@{rechercherImageParNumero}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{rechercherImageParNumero()}{rechercherImageParNumero()}}
+{\footnotesize\ttfamily \label{class_library_a33eeb26662f9f769b21de6f4d811db23} 
+std\+::string Library\+::rechercher\+Image\+Par\+Numero (\begin{DoxyParamCaption}\item[{int}]{numero}{}\end{DoxyParamCaption}) const}
+
+Recherche une image dans la liste par son numéro. numero Le numéro de l\textquotesingle{}image à rechercher. retourne Une chaîne contenant les informations de l\textquotesingle{}image si elle est trouvée, ou un message indiquant que l\textquotesingle{}image n\textquotesingle{}existe pas. Recherche une image dans la bibliothèque par son numéro d\textquotesingle{}identification.
+
+Recherche une image dans la liste en fonction de son numéro.
+
+retourne Une chaîne contenant le descripteur de l\textquotesingle{}image si elle est trouvée, ou un message indiquant que l\textquotesingle{}image n\textquotesingle{}existe pas.
+
+La méthode parcourt la liste chaînée à partir de la tête et compare les numéros des images jusqu\textquotesingle{}à trouver une correspondance ou atteindre la fin de la liste. \Hypertarget{class_library_ab28ff78eab793b22b5229a30f6e298d9}\index{Library@{Library}!sauvegarderDansFichier@{sauvegarderDansFichier}}
+\index{sauvegarderDansFichier@{sauvegarderDansFichier}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{sauvegarderDansFichier()}{sauvegarderDansFichier()}}
+{\footnotesize\ttfamily \label{class_library_ab28ff78eab793b22b5229a30f6e298d9} 
+void Library\+::sauvegarder\+Dans\+Fichier (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{nom\+Fichier}{}\end{DoxyParamCaption}) const}
+
+Sauvegarde la bibliothèque dans un fichier. \Hypertarget{class_library_a954915dfe6f7adc5b90b380f7d396653}\index{Library@{Library}!sauvegarderImage@{sauvegarderImage}}
+\index{sauvegarderImage@{sauvegarderImage}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{sauvegarderImage()}{sauvegarderImage()}}
+{\footnotesize\ttfamily \label{class_library_a954915dfe6f7adc5b90b380f7d396653} 
+bool Library\+::sauvegarder\+Image (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{chemin\+Image}{, }\item[{double}]{prix}{, }\item[{const std\+::string \&}]{titre}{}\end{DoxyParamCaption})}
+
+Sauvegarde une image avec son prix et titre dans la bibliothèque. \Hypertarget{class_library_ad2c871e949db33fe15d2f438fef330cd}\index{Library@{Library}!save@{save}}
+\index{save@{save}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily \label{class_library_ad2c871e949db33fe15d2f438fef330cd} 
+void Library\+::save (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Sauvegarde la bibliothèque actuelle. \Hypertarget{class_library_ad7f7822f7ba89ba2837ad54b13ce690e}\index{Library@{Library}!sousListePrix@{sousListePrix}}
+\index{sousListePrix@{sousListePrix}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{sousListePrix()}{sousListePrix()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_library_ad7f7822f7ba89ba2837ad54b13ce690e} 
+void Library\+::sous\+Liste\+Prix (\begin{DoxyParamCaption}\item[{int}]{numero}{}\end{DoxyParamCaption})}
+
+Crée une sous-\/liste d\textquotesingle{}images à partir d\textquotesingle{}un numéro donné. \Hypertarget{class_library_a5524af38f24b61ea19b93440dba86fd3}\index{Library@{Library}!sousListePrix@{sousListePrix}}
+\index{sousListePrix@{sousListePrix}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{sousListePrix()}{sousListePrix()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_library_a5524af38f24b61ea19b93440dba86fd3} 
+void Library\+::sous\+Liste\+Prix (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_library}{Library}}}]{liste}{}\end{DoxyParamCaption})}
+
+Crée une sous-\/liste d\textquotesingle{}images selon leur prix. \Hypertarget{class_library_abe51466f393c7542fad345e0ec91550c}\index{Library@{Library}!sousListetype@{sousListetype}}
+\index{sousListetype@{sousListetype}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{sousListetype()}{sousListetype()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_library_abe51466f393c7542fad345e0ec91550c} 
+void Library\+::sous\+Listetype (\begin{DoxyParamCaption}\item[{int}]{numero}{}\end{DoxyParamCaption})}
+
+Crée une sous-\/liste d\textquotesingle{}images à partir d\textquotesingle{}un numéro de type. \Hypertarget{class_library_a7a6f1f1b6bd776aa7eb3240869f369ad}\index{Library@{Library}!sousListetype@{sousListetype}}
+\index{sousListetype@{sousListetype}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{sousListetype()}{sousListetype()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_library_a7a6f1f1b6bd776aa7eb3240869f369ad} 
+void Library\+::sous\+Listetype (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_library}{Library}}}]{Liste}{}\end{DoxyParamCaption})}
+
+Crée une sous-\/liste d\textquotesingle{}images selon leur type. \Hypertarget{class_library_a641799ca72913e9c8ce222ac5c69fca5}\index{Library@{Library}!supprimerDescripteurs@{supprimerDescripteurs}}
+\index{supprimerDescripteurs@{supprimerDescripteurs}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{supprimerDescripteurs()}{supprimerDescripteurs()}}
+{\footnotesize\ttfamily \label{class_library_a641799ca72913e9c8ce222ac5c69fca5} 
+void Library\+::supprimer\+Descripteurs (\begin{DoxyParamCaption}\item[{int}]{numero}{}\end{DoxyParamCaption})}
+
+Supprime un descripteur d\textquotesingle{}image par numéro. Utilisé par les utilisateurs de niveau 1. \Hypertarget{class_library_aa39d5bd45586cfa87243b3c11827bee6}\index{Library@{Library}!tailleListe@{tailleListe}}
+\index{tailleListe@{tailleListe}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{tailleListe()}{tailleListe()}}
+{\footnotesize\ttfamily \label{class_library_aa39d5bd45586cfa87243b3c11827bee6} 
+int Library\+::taille\+Liste (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Retourne la taille de la liste chaînée. \Hypertarget{class_library_a7a1c4c3073211a7a7f47f6e51d156fe8}\index{Library@{Library}!titrecheck@{titrecheck}}
+\index{titrecheck@{titrecheck}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{titrecheck()}{titrecheck()}}
+{\footnotesize\ttfamily \label{class_library_a7a1c4c3073211a7a7f47f6e51d156fe8} 
+int Library\+::titrecheck (\begin{DoxyParamCaption}\item[{std\+::string}]{\+\_\+titre}{}\end{DoxyParamCaption}) const}
+
+Vérifie si un titre est valide. \Hypertarget{class_library_a5d811063caa78061ed3d7b581cc2c93e}\index{Library@{Library}!tricroissant@{tricroissant}}
+\index{tricroissant@{tricroissant}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{tricroissant()}{tricroissant()}}
+{\footnotesize\ttfamily \label{class_library_a5d811063caa78061ed3d7b581cc2c93e} 
+void Library\+::tricroissant (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_library}{Library}}}]{liste}{}\end{DoxyParamCaption})}
+
+Trie la bibliothèque par prix croissant. \Hypertarget{class_library_aa77de8eae1707674dab014366fd52bee}\index{Library@{Library}!trinbtraitement@{trinbtraitement}}
+\index{trinbtraitement@{trinbtraitement}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{trinbtraitement()}{trinbtraitement()}}
+{\footnotesize\ttfamily \label{class_library_aa77de8eae1707674dab014366fd52bee} 
+void Library\+::trinbtraitement (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_library}{Library}}}]{liste}{}\end{DoxyParamCaption})}
+
+Trie la bibliothèque par nombre de traitements. 
+
+\doxysubsection{Documentation des données membres}
+\Hypertarget{class_library_a5f727de4ab180ee5a6a9ce5af138d4c4}\index{Library@{Library}!head@{head}}
+\index{head@{head}!Library@{Library}}
+\doxysubsubsection{\texorpdfstring{head}{head}}
+{\footnotesize\ttfamily \label{class_library_a5f727de4ab180ee5a6a9ce5af138d4c4} 
+std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{struct_library_1_1_i_node}{INode}}$>$ Library\+::head}
+
+Pointeur partagé vers le premier nœud de la liste chaînée. 
+
+La documentation de cette classe a été générée à partir des fichiers suivants \+:\begin{DoxyCompactItemize}
+\item 
+Descripteurs/tessst/Library.\+hpp\item 
+Descripteurs/tessst/Library.\+cpp\end{DoxyCompactItemize}
