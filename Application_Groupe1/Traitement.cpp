@@ -279,7 +279,9 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     } else {
         grayImage = image.clone();  // Si l'image est déjà en niveaux de gris, on la garde telle quelle
     }
-
+    cv::Mat imageResized;
+    cv::resize(grayImage, imageResized, cv::Size(400, 400), 0, 0, cv::INTER_AREA);
+    grayImage=imageResized;
     // Détection des contours
     cv::Mat contours = detectionContours(grayImage);
     if (contours.empty()) {
@@ -291,7 +293,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     int largeur = contours.cols;
     int hauteur = contours.rows;
     int maxRho = static_cast<int>(sqrt(largeur * largeur + hauteur * hauteur));
-    int angleResolution = 180;  // La résolution angulaire de l'espace de Hough
+    int angleResolution = 360;  // La résolution angulaire de l'espace de Hough
 
     // Création de l'espace de Hough
     cv::Mat espaceHough = cv::Mat::zeros(2 * maxRho, angleResolution, CV_32SC1);
@@ -355,7 +357,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     }
 
     // Dessin des droites sur l'image d'origine
-    cv::Mat imgDroites = image.clone();
+    cv::Mat imgDroites = imageResized.clone();
     for (const auto &ligne : stockageFiltréSansDiagonales) {
         int rho = ligne.first;
         int theta = ligne.second;

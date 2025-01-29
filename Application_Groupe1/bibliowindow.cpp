@@ -831,6 +831,7 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
     if (images.empty())
     {
         QMessageBox::information(this, "Information", "Aucune image exploitable n'a été détectée.");
+
         return;
     }
 
@@ -939,9 +940,10 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
         ui->AffichageBiblio->addItem(newItem);
         compteur++;
     }
-
+     mettreAJourCompteurImages();
     //on informe l'utilisateur du succès de la suppression
     QMessageBox::information(this, "Succès", "Le descripteur et l'image associée ont été supprimés avec succès !");
+
 }
 
 //---------------------------------------------------------------------------------------------------------------------
