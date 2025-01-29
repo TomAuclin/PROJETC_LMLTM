@@ -372,8 +372,8 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         cv::line(imgDroites, pt1, pt2, cv::Scalar(250), 2, cv::LINE_AA);
     }
 
-    return imgDroites;
-}
+    return imgDroites;
+    }
 
 // ----------------------------------------------------------------------------------------------
 

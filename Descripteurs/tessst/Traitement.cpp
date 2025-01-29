@@ -279,9 +279,6 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     } else {
         grayImage = image.clone();  // Si l'image est déjà en niveaux de gris, on la garde telle quelle
     }
-    cv::Mat imageResized;
-    cv::resize(grayImage, imageResized, cv::Size(400, 400), 0, 0, cv::INTER_AREA);
-    grayImage=imageResized;
 
     // Détection des contours
     cv::Mat contours = detectionContours(grayImage);
