@@ -942,6 +942,9 @@ void BiblioWindow::on_actionSupprimerDescripteur_triggered()
 
     //on informe l'utilisateur du succès de la suppression
     QMessageBox::information(this, "Succès", "Le descripteur et l'image associée ont été supprimés avec succès !");
+
+    mettreAJourCompteurImages();
+    ui->AffichageBiblio->repaint();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
