@@ -538,7 +538,7 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered()
     }
 
     //on demande les informations nécessaires pour créer un descripteur
-    QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Titre de l'image :", QLineEdit::Normal, "", &ok);
+    QString titre = QInputDialog::getText(this, "Ajouter un descripteur", "Source de l'image :", QLineEdit::Normal, "", &ok);
     if (!ok || titre.isEmpty())
         return;
 
@@ -570,7 +570,11 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered()
         fichierDescripteur.seek(fichierDescripteur.size());
 
         fichierDescripteur.seek(qMax(0LL, fichierDescripteur.size() - 1));
-        QChar dernierCaractere;
+        char dernierCaractere;
+
+        //on regarde si ça fini par un saut de ligne
+        if (fichierDescripteur.getChar(&dernierCaractere) && dernierCaractere != '\n')
+            fluxEcriture << "\n";
 
         //on écrit les informations du descripteur
         fluxEcriture << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", "
@@ -690,7 +694,7 @@ void BiblioWindow::on_actionModifierDescripteur_triggered()
 
     //on demande à l'utilisateur les nouvelles valeurs pour chaque champ
     QString nouveauTitre = QInputDialog::getText(
-        this, "Modifier un descripteur", "Nouveau titre :", QLineEdit::Normal, elements[0], &ok);
+        this, "Modifier un descripteur", "Nouvelle Source :", QLineEdit::Normal, elements[0], &ok);
     if (!ok || nouveauTitre.isEmpty()) return;
 
     int nouveauNumero = QInputDialog::getInt(
