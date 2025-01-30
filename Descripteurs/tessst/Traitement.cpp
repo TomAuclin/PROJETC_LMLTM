@@ -279,7 +279,9 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     } else {
         grayImage = image.clone();  // Si l'image est déjà en niveaux de gris, on la garde telle quelle
     }
-
+    cv::Mat imageResized;
+    cv::resize(grayImage, imageResized, cv::Size(400, 400), 0, 0, cv::INTER_AREA);
+    grayImage=imageResized;
     // Détection des contours
     cv::Mat contours = detectionContours(grayImage);
     if (contours.empty()) {
@@ -291,7 +293,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     int largeur = contours.cols;
     int hauteur = contours.rows;
     int maxRho = static_cast<int>(sqrt(largeur * largeur + hauteur * hauteur));
-    int angleResolution = 180;  // La résolution angulaire de l'espace de Hough
+    int angleResolution = 360;  // La résolution angulaire de l'espace de Hough
 
     // Création de l'espace de Hough
     cv::Mat espaceHough = cv::Mat::zeros(2 * maxRho, angleResolution, CV_32SC1);
@@ -314,7 +316,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     // Détection des droites les plus probables dans l'espace de Hough
     double minVal, maxVal;
     cv::minMaxLoc(espaceHough, &minVal, &maxVal);
-    int seuil = static_cast<int>(0.80 * maxVal);  // seuil pour la détection des lignes
+    int seuil = static_cast<int>(0.60 * maxVal);  // seuil pour la détection des lignes
     std::vector<std::pair<int, int>> stockage;
     for (int rho = 0; rho < 2 * maxRho; rho++) {
         for (int theta = 0; theta < angleResolution; theta++) {
@@ -326,7 +328,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
 
     // Filtrage des droites proches
     std::vector<std::pair<int, int>> stockageFiltré;
-    const int seuilRho = 20, seuilTheta = 200;
+    const int seuilRho = 20, seuilTheta = 30;
     for (const auto &ligne : stockage) {
         bool tropProche = false;
         for (const auto &ref : stockageFiltré) {
@@ -355,7 +357,7 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
     }
 
     // Dessin des droites sur l'image d'origine
-    cv::Mat imgDroites = image.clone();
+    cv::Mat imgDroites = imageResized.clone();
     for (const auto &ligne : stockageFiltréSansDiagonales) {
         int rho = ligne.first;
         int theta = ligne.second;
@@ -370,10 +372,9 @@ cv::Mat Traitement::HoughDroite(const cv::Mat &image) {
         cv::line(imgDroites, pt1, pt2, cv::Scalar(250), 2, cv::LINE_AA);
     }
 
-    return imgDroites;
-}
-
-// ----------------------------------------------------------------------------------------------
+    return imgDroites;
+    }
+    // ----------------------------------------------------------------------------------------------
 
 // ************************ Segmentation couleur ************************
 
