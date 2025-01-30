@@ -564,25 +564,18 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered()
 
     //on ouvre le fichier descripteurs pour y ajouter les nouvelles données
     QFile fichierDescripteur(cheminDescripteur);
-    if (fichierDescripteur.open(QIODevice::ReadWrite | QIODevice::Text))
+    if (fichierDescripteur.open(QIODevice::Append | QIODevice::Text))
     {
-        QTextStream fluxLecture(&fichierDescripteur);
+        QTextStream fluxEcriture(&fichierDescripteur);
         fichierDescripteur.seek(fichierDescripteur.size());
 
         fichierDescripteur.seek(qMax(0LL, fichierDescripteur.size() - 1));
         QChar dernierCaractere;
-        fluxLecture >> dernierCaractere;
-
-        //on ajoute une nouvelle ligne seulement si nécessaire
-        if (dernierCaractere != '\n')
-        {
-            fluxLecture << "\n";
-        }
 
         //on écrit les informations du descripteur
-        fluxLecture << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", "
-                    << numero << ", " << prix << ", " << acces << ", " << type << ", "
-                    << nbTraitement << ", " << numero << "\n";
+        fluxEcriture << titre << ", " << QFileInfo(cheminImageSource).fileName() << ", "
+                     << numero << ", " << prix << ", " << acces << ", " << type << ", "
+                     << nbTraitement << ", " << numero << "\n";
 
         fichierDescripteur.close();
     }
@@ -603,7 +596,6 @@ void BiblioWindow::on_actionAjouterDescripteur_triggered()
     //on informe l'utilisateur du succès de l'ajout
     QMessageBox::information(this, "Succès", "Le descripteur et l'image ont été ajoutés avec succès !");
 }
-
 
 // Modifier
 void BiblioWindow::on_actionModifierDescripteur_triggered()
